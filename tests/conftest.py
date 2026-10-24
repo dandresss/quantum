@@ -1,13 +1,16 @@
 import os
 
 import pytest
+from dotenv import dotenv_values
 from fastapi.testclient import TestClient
 
 from quantum_app.api import app
 from quantum_app.db import connect, get_conn, get_optional_conn
 from scripts.migrate import migrate
 
-TEST_DATABASE_URL = os.environ.get("TEST_DATABASE_URL")
+TEST_DATABASE_URL = os.environ.get("TEST_DATABASE_URL") or dotenv_values(".env").get(
+    "TEST_DATABASE_URL"
+)
 
 
 def _no_db():
