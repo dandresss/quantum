@@ -3,6 +3,8 @@
 API + frontend para simular circuitos cuánticos con **Qiskit**, servida con **FastAPI** en
 **Vercel** y con historial de ejecuciones en **PostgreSQL** (SQL plano con `psycopg`, sin ORM).
 
+Producción: https://quantum-iota-ashen.vercel.app
+
 ## Estructura
 
 ```
