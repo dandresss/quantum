@@ -4,8 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Quest, Meow &amp; Labyrinth</title>
-<link rel="icon" href="data:,">
-<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;700&family=DotGothic16&family=VT323&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;700&family=Press+Start+2P&family=DotGothic16&family=VT323&display=swap" rel="stylesheet">
 <style>
 :root{--parch:#f7e8bb;--gold:#ffc83d;--ink:#1a1020;--sky:#1496d6;--navy:#201650;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -13,7 +12,7 @@ box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:en
 html,body{margin:0;min-height:100%}
 body{background:#000;color:var(--parch);font-family:"VT323",ui-monospace,monospace;display:flex;justify-content:center}
 svg{display:block;shape-rendering:crispEdges}
-.stage{position:relative;width:min(520px,100vw);min-height:100vh;overflow:hidden;display:flex;flex-direction:column;align-items:center;gap:20px;padding:28px 0 26px;background:linear-gradient(#090818,#171238 50%,#2b1d4d)}
+.stage{position:relative;width:100vw;min-height:100vh;min-height:100dvh;overflow:hidden;display:flex;flex-direction:column;align-items:center;gap:20px;padding:28px 0 0;background:linear-gradient(#090818,#171238 50%,#2b1d4d)}
 .star{position:absolute;width:4px;height:4px;background:#fff;opacity:.8}
 .tw{animation:tw 1.6s steps(1) infinite}
 .plaque{position:relative;z-index:2;padding:18px 26px 20px;background:#3b2a1a;border:4px solid var(--ink);
@@ -23,8 +22,21 @@ h1{margin:0;font-family:"Pixelify Sans",monospace;font-weight:700;font-size:clam
 text-shadow:3px 0 var(--ink),-3px 0 var(--ink),0 -3px var(--ink),3px 3px var(--ink),-3px 3px var(--ink),3px -3px var(--ink),-3px -3px var(--ink),0 6px 0 var(--sky),0 9px 0 var(--ink),3px 9px 0 var(--ink),-3px 9px 0 var(--ink)}
 h1 span{display:block;margin-bottom:8px}
 h1 b{color:var(--gold);font-size:1.3em;font-weight:700}
-.castlebox{position:relative;width:100%}
-#castle{width:100%;height:auto}
+.castlebox{position:relative;width:min(100%,620px,max(300px,calc((100vh - 400px)*1.39)));margin-top:auto;container-type:inline-size}
+.castlebox>i{--u:calc(100cqw/64);position:absolute;display:block;pointer-events:none}
+.ground{left:50%;transform:translateX(-50%);width:100vw;top:calc(40*var(--u));bottom:-100vh;
+background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 6' preserveAspectRatio='none' shape-rendering='crispEdges'%3E%3Crect x='3' y='2' width='2' height='1' fill='%2358bd63'/%3E%3Crect x='8' y='4' width='2' height='1' fill='%2358bd63'/%3E%3C/svg%3E") 0 var(--u)/calc(12*var(--u)) calc(6*var(--u)) repeat,linear-gradient(#2c6e35 0 var(--u),#3f9a4a var(--u))}
+.wing{top:calc(28*var(--u));height:calc(12*var(--u));width:calc(160*var(--u));
+background:linear-gradient(rgba(169,125,98,.4),rgba(169,125,98,.4)) 0 calc(5*var(--u))/100% var(--u) no-repeat,linear-gradient(rgba(169,125,98,.4),rgba(169,125,98,.4)) 0 calc(9*var(--u))/100% var(--u) no-repeat,linear-gradient(#c99a7c,#c99a7c) 0 calc(2*var(--u))/100% calc(10*var(--u)) no-repeat,var(--cren) 0 0/100% calc(2*var(--u)) no-repeat}
+.wing.l{right:100%;--cren:repeating-linear-gradient(90deg,#c99a7c 0 calc(2*var(--u)),transparent calc(2*var(--u)) calc(4*var(--u)))}
+.wing.r{left:100%;--cren:repeating-linear-gradient(90deg,transparent 0 calc(2*var(--u)),#c99a7c calc(2*var(--u)) calc(4*var(--u)))}
+.stage.run .cat{transform:translateX(-112vw);transition:transform 1.5s steps(20,end)}
+.stage.run .cat.b{transition-delay:.12s}
+.stage.run .cat .bob{animation:hop .16s steps(1) infinite}
+.stage.run .play{opacity:0;pointer-events:none;transition:opacity .15s}
+@keyframes hop{50%{transform:translateY(-2px)}}
+@media (prefers-reduced-motion:reduce){.stage.run .cat,.stage.run .cat .bob{animation:none;transition:none}}
+#castle{width:100%;height:auto;position:relative}
 .cat{position:absolute;bottom:2.5%;width:17%;height:auto}
 .cat.a{left:3%}.cat.b{right:3%}
 .play{position:absolute;left:50%;bottom:7%;transform:translateX(-50%);border:0;padding:0;background:none;cursor:pointer;filter:drop-shadow(0 6px 0 rgba(0,0,0,.45))}
@@ -66,81 +78,127 @@ box-shadow:inset 0 -6px 0 #d99a14,inset 0 6px 0 #ffe58a;clip-path:polygon(0 8px,
 .done .skip{display:none}
 @media (prefers-reduced-motion:reduce){.scene{transition-duration:.01s}.scene.on .rv,.scene.on .logo span{animation:none}.logo span{opacity:1}}
 
-.run .cat{animation:runl 1.6s steps(16) forwards}
-.run .cat.b{animation-delay:.18s}
-.run .bob{animation-duration:.2s}
-.run .play{opacity:0;pointer-events:none;transition:opacity .25s}
-@keyframes runl{to{transform:translateX(-130vw)}}
-.story{position:fixed;inset:0;z-index:6;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:16px;padding:16px 16px calc(20px + env(safe-area-inset-bottom,0px));background:rgba(5,4,16,.6);opacity:0;pointer-events:none;transition:opacity .5s;cursor:pointer;overflow-y:auto}
-.story.on{opacity:1;pointer-events:auto}
-.story>*{width:min(520px,100%);flex:none}
-.demo-wrap[hidden]{display:none}
-.chip{display:flex;align-items:center;gap:10px;margin-bottom:10px;font-size:1.5rem;color:var(--parch);text-shadow:2px 2px 0 var(--ink)}
-.chip i{font-style:normal;display:grid;place-items:center;min-width:38px;height:38px;padding:0 6px;font-family:"Pixelify Sans",monospace;font-weight:700;font-size:1.15rem;color:var(--ink);box-shadow:inset 4px 4px 0 rgba(255,255,255,.4),inset -4px -4px 0 rgba(0,0,0,.2),0 0 0 3px var(--ink)}
-.demo{position:relative;height:220px;overflow:hidden;background:#2fa84f;background-image:linear-gradient(45deg,#37b858 25%,transparent 25%,transparent 75%,#37b858 75%),linear-gradient(45deg,#37b858 25%,transparent 25%,transparent 75%,#37b858 75%);background-size:16px 16px;background-position:0 0,8px 8px;border:6px solid #14391f;box-shadow:6px 6px 0 rgba(0,0,0,.4)}
-.p{position:absolute;background:#e8be4c;box-shadow:inset 0 4px 0 #f6d878,inset 0 -4px 0 #b8902c}
-.dc{position:absolute;width:56px;height:auto}
-.gh{filter:drop-shadow(0 0 8px #7fd8ff) saturate(1.4);opacity:0}
-.door{position:absolute;width:30px;height:84px;background:#7a4a2a;border:4px solid #3a2210;transform-origin:top;background-image:repeating-linear-gradient(90deg,transparent 0 6px,rgba(0,0,0,.25) 6px 8px)}
-.cap{position:absolute;left:10px;bottom:8px;font-size:1.3rem;color:#fff;text-shadow:2px 2px 0 var(--ink)}
-.hm{left:calc(50% - 28px);bottom:4px;animation:hm 4.5s infinite}
-.hl,.hr{left:calc(50% - 28px);bottom:84px}
-.hl{animation:hl 4.5s infinite}.hr{animation:hr 4.5s infinite}
-@keyframes hm{0%,8%{transform:translateY(0);opacity:1}38%{transform:translateY(-80px);opacity:1}40%,100%{transform:translateY(-80px);opacity:0}}
-@keyframes hl{0%,38%{opacity:0;transform:translateX(0)}40%{opacity:.85;transform:translateX(0)}70%,88%{opacity:.85;transform:translateX(-150px)}95%,100%{opacity:0;transform:translateX(-150px)}}
-@keyframes hr{0%,38%{opacity:0;transform:translateX(0)}40%{opacity:.85;transform:translateX(0)}70%,88%{opacity:.85;transform:translateX(150px)}95%,100%{opacity:0;transform:translateX(150px)}}
-.xc{left:6%;top:66px;animation:xc 5s infinite}
-.xd{left:calc(50% - 15px);top:60px;animation:xd 5s infinite}
-.xi{position:absolute;left:calc(50% - 22px);top:6px;width:44px;height:44px;background:#3a7bff;display:grid;place-items:center;box-shadow:inset 4px 4px 0 rgba(255,255,255,.4),inset -4px -4px 0 rgba(0,0,0,.2),0 0 0 3px var(--ink);animation:xi 5s infinite}
-@keyframes xc{0%,28%{transform:translateX(0);opacity:1}62%,70%{transform:translateX(330px);opacity:1}74%,100%{transform:translateX(330px);opacity:0}}
-@keyframes xd{0%,20%{transform:scaleY(1)}26%,72%{transform:scaleY(.12)}78%,100%{transform:scaleY(1)}}
-@keyframes xi{0%,16%{opacity:0}18%,30%{opacity:1}32%,70%{opacity:0}74%,80%{opacity:1}84%,100%{opacity:0}}
-.zc{left:calc(50% - 28px);bottom:84px}
-.st{position:absolute;right:9%;top:50px;width:36px;animation:st 3.2s infinite}
-@keyframes st{0%,15%{opacity:0;transform:scale(.6)}30%,70%{opacity:1;transform:scale(1)}85%,100%{opacity:0;transform:scale(.6)}}
-.lb{position:absolute;left:12%;top:150px;width:46px;height:18px;background:#8d8d9c;box-shadow:inset 0 4px 0 #b6b6c4,0 0 0 3px var(--ink)}
-.ls{position:absolute;left:calc(12% + 19px);top:104px;width:8px;height:48px;background:#7a4a2a;transform-origin:50% 100%;box-shadow:0 0 0 3px var(--ink);animation:ls 5s infinite}
-.ls::before{content:"";position:absolute;left:-6px;top:-10px;width:20px;height:14px;background:#e8383d;box-shadow:0 0 0 3px var(--ink)}
-.wire{position:absolute;left:24%;right:22%;top:96px;border-top:4px dashed #fff;opacity:.7;animation:wr 5s infinite}
-.cd{right:12%;top:60px;animation:cd 5s infinite}
-.dot{position:absolute;left:calc(12% + 14px);top:26px;width:18px;height:18px;background:#3a7bff;box-shadow:0 0 0 3px var(--ink)}
-.xi.small{left:auto;right:calc(12% - 7px);animation:none}
-@keyframes ls{0%,26%{transform:rotate(-35deg)}32%,90%{transform:rotate(35deg)}96%,100%{transform:rotate(-35deg)}}
-@keyframes wr{0%,30%{border-color:#fff;opacity:.5}34%,86%{border-color:#ffc83d;opacity:1}92%,100%{border-color:#fff;opacity:.5}}
-@keyframes cd{0%,38%{transform:scaleY(1)}44%,86%{transform:scaleY(.12)}92%,100%{transform:scaleY(1)}}
-.box{position:relative;min-height:150px;background:#1a1230;color:var(--parch);border:6px solid var(--parch);box-shadow:0 0 0 4px var(--ink),8px 8px 0 4px rgba(0,0,0,.5);padding:26px 18px 36px;display:flex;gap:14px;align-items:flex-start}
-.nm{position:absolute;top:-20px;left:14px;background:var(--gold);color:var(--ink);font-family:"Pixelify Sans",monospace;font-weight:700;font-size:1.1rem;padding:2px 12px;box-shadow:3px 3px 0 var(--ink)}
-.port{flex:0 0 70px;height:70px;display:none}
-.box.hasp .port{display:block}
-.port svg{width:70px;height:70px}
-.txt{margin:0;font-size:1.6rem;line-height:1.08;min-height:5.4em;flex:1}
-.nx{position:absolute;right:16px;bottom:8px;font-size:1.3rem;color:var(--gold);animation:tw 1s steps(1) infinite}
-.nx[hidden]{visibility:hidden}
-.fg{animation:glow 1s steps(1) infinite}
-@media (prefers-reduced-motion:reduce){.run .cat{animation-duration:.01s}.hm,.hl,.hr,.xc,.xd,.xi,.st,.ls,.wire,.cd,.nx,.fg{animation:none}.hl,.hr{opacity:.85}.hl{transform:translateX(-120px)}.hr{transform:translateX(120px)}.hm{opacity:0}}
-/* ajustes */
-.btn{position:relative;z-index:2;font-family:"Pixelify Sans",monospace;font-weight:700;font-size:1.1rem;letter-spacing:.12em;background:var(--parch);color:var(--ink);border:0;padding:8px 16px;cursor:pointer;box-shadow:inset -4px -4px 0 #cdb877,4px 4px 0 rgba(0,0,0,.45)}
-.btn:hover,.btn:focus-visible{background:#fff3cf}
-.btn:focus-visible{outline:4px solid #fff;outline-offset:4px}
-.btn:active{transform:translateY(2px)}
-.dlg h2{margin:0 0 10px;font-family:"Pixelify Sans",monospace;font-size:1.5rem;color:var(--gold)}
-.dlg form{display:grid;grid-template-columns:auto 1fr;gap:10px 14px;align-items:center}
-.dlg label{font-size:1.4rem}
-.dlg select,.dlg input{font-family:"VT323",monospace;font-size:1.3rem;background:var(--parch);color:var(--ink);border:3px solid var(--ink);padding:2px 6px;width:100%}
-.dlg .row{grid-column:1/-1;display:flex;justify-content:flex-end;gap:10px}
-/* laberinto */
-#s4{flex-direction:column;justify-content:flex-start;gap:12px;padding:16px;background:linear-gradient(#090818,#171238 50%,#2b1d4d)}
-.bar{width:min(100%,900px);display:flex;justify-content:space-between;align-items:center;gap:12px}
-.bar .info{font-size:1.4rem;color:#9a96b8;text-align:right}
-#maze[hidden]{display:none}
-#maze{display:block;max-width:100%;border:4px solid var(--ink);box-shadow:0 0 0 4px #54402a,6px 6px 0 4px rgba(0,0,0,.45);image-rendering:pixelated}
-.msg{font-size:1.5rem;margin:0}
-.sum{width:min(100%,900px);margin:0;padding-left:1.6em;font-size:1.35rem;color:#9a96b8}
-.sum .ok{color:var(--gold)}
-.board{position:relative;max-width:100%}
-#botcat{position:absolute;left:0;top:0;pointer-events:none}
-#botcat[hidden]{display:none}
-.castlebox.run~.btn{opacity:0;pointer-events:none;transition:opacity .25s}
+/* ===== historia + tutorial + juego ===== */
+[hidden]{display:none!important}
+#s4,#s5,#s6,#s7{align-items:flex-start;background:linear-gradient(#090818,#171238 50%,#2b1d4d)}
+.menu{position:relative;z-index:3;display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:-6px 0 22px}
+#rv{width:min(100%,max(280px,calc((100vh - 260px)*1.48)))}
+.rsum{align-self:flex-start;margin:0;padding:0 0 0 1.6em;font-size:1.35rem;line-height:1.15;color:#9a96b8}
+.rsum li.ok{color:var(--gold)}
+.panel{position:relative;width:min(1180px,100vw);min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;align-items:center;gap:14px;padding:14px 16px 22px}
+.col{width:min(100%,860px);display:flex;flex-direction:column;align-items:center;gap:14px}
+.topbar{width:100%;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.lbl{font-family:"DotGothic16",monospace;font-size:1.05rem;letter-spacing:.1em;color:#9a96b8}
+.pbtn{font-family:"Pixelify Sans",monospace;font-weight:700;font-size:1.1rem;letter-spacing:.08em;background:var(--parch);color:var(--ink);border:0;padding:8px 14px;cursor:pointer;box-shadow:inset -4px -4px 0 #cdb877,3px 3px 0 rgba(0,0,0,.45)}
+.pbtn:hover,.pbtn:focus-visible{background:#fff3cf}
+.pbtn:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.pbtn:active{transform:translateY(2px)}
+.pbtn.gold{background:var(--gold);box-shadow:inset -4px -4px 0 #d99a14,3px 3px 0 rgba(0,0,0,.45)}
+.pbtn.gold:hover,.pbtn.gold:focus-visible{background:#ffd75e}
+.cv{display:block;image-rendering:pixelated;border:5px solid #54402a;box-shadow:0 0 0 3px var(--ink),6px 6px 0 rgba(0,0,0,.45);background:#4b3222}
+#sv{width:min(100%,max(280px,calc((100vh - 340px)*1.6)))}
+#dv{width:min(100%,max(280px,calc((100vh - 400px)*2.667)))}
+.chead{align-self:flex-start;display:flex;align-items:center;gap:8px;font-size:1.35rem;color:var(--parch)}
+.chead i{display:inline-grid;place-items:center;width:30px;height:30px;font-style:normal;font-family:"Pixelify Sans",monospace;font-weight:700;font-size:1rem;color:#fff;border:3px solid var(--ink);background:var(--c)}
+.tbox{position:relative;width:100%;min-height:132px;display:flex;gap:14px;align-items:flex-start;background:#1a1230;color:var(--parch);border:6px solid var(--parch);box-shadow:0 0 0 4px var(--ink),6px 6px 0 4px rgba(0,0,0,.5);padding:24px 18px 16px;cursor:pointer}
+.tbox .tag{position:absolute;left:14px;top:-18px;background:var(--gold);color:var(--navy);font-family:"Pixelify Sans",monospace;font-weight:700;font-size:1.05rem;padding:2px 12px;border:3px solid var(--ink)}
+.tbox .fp{flex:none;width:58px;height:58px;shape-rendering:crispEdges;filter:drop-shadow(0 0 6px rgba(255,138,216,.7))}
+.tbox p{margin:0;font-size:clamp(1.35rem,2.3vw,1.85rem);line-height:1.1;min-height:3.3em}
+.tbox.nar{padding-top:18px}
+.prog{width:100%;height:6px;background:#2b2150}
+.prog i{display:block;height:100%;width:0;background:var(--gold)}
+.tnav{width:100%;display:flex;justify-content:flex-end}
+.tvis{width:100%;display:flex;flex-direction:column;align-items:center;gap:10px}
+/* cartas de compuertas (CSS del documento "Quantum Maze: cartas de compuertas") */
+.hand{width:100%;display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x proximity;padding:8px 8px 16px;-webkit-overflow-scrolling:touch;scrollbar-color:#54402a transparent}
+.hand .qslot{flex:0 0 clamp(160px,46vw,200px);width:clamp(160px,46vw,200px);scroll-snap-align:start}
+.qslot{position:relative;transition:transform .15s}
+.hand .qslot:not(.off):hover{transform:translateY(-3px)}
+.qslot.off{filter:grayscale(1) brightness(.7);opacity:.75;cursor:not-allowed}
+.qslot.off .qc{cursor:not-allowed}
+.qslot.deal{animation:deal .4s steps(4) both}
+.qslot.pop{animation:pop .25s steps(3)}
+@keyframes deal{from{opacity:0;transform:translateY(-24px) rotate(-8deg)}to{opacity:1;transform:none}}
+@keyframes pop{50%{transform:scale(1.12)}}
+.qscale{position:absolute;left:0;top:0;width:260px;height:380px;transform-origin:0 0}
+.qc{--face:#fbf7ea;--pix:#22264a;--muted:#54597f;width:260px;height:380px;perspective:900px;background:none;border:0;padding:0;font:inherit;font-size:1.25rem;color:inherit;cursor:pointer;transition:filter .25s,transform .25s;position:relative;display:block}
+.qc:focus-visible{outline:4px solid #ffc83d;outline-offset:6px}
+.qc .inner{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .6s}
+.qc.on .inner{transform:rotateY(180deg)}
+.qc.on{transform:scale(1.07);z-index:2}
+.qc .face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--face);color:var(--pix);border:6px solid var(--c);box-shadow:6px 6px 0 rgba(0,0,0,.28);padding:12px 14px;display:flex;flex-direction:column;align-items:center;text-align:center}
+.qc .back{transform:rotateY(180deg);align-items:stretch;text-align:left}
+.qc .tag{align-self:flex-start;font-family:"Press Start 2P",monospace;font-size:.8rem;color:var(--c)}
+.qc .gate{width:112px;height:112px;margin:14px 0 14px;background:var(--g);display:grid;place-items:center;box-shadow:inset 6px 6px 0 rgba(255,255,255,.4),inset -6px -6px 0 rgba(0,0,0,.2),0 0 0 4px var(--c)}
+.qc .gate svg{width:68px;height:68px;shape-rendering:crispEdges}
+.qc .name{font-family:"Press Start 2P",monospace;font-size:.85rem;color:var(--c);line-height:1.3}
+.qc .power{font-size:1.7rem;margin:10px 0 4px}
+.qc .desc{font-size:1.45rem;line-height:1.05;margin:0}
+.qc .back h2{font-family:"Press Start 2P",monospace;font-size:.72rem;line-height:1.4;font-weight:400;color:var(--c);margin:6px 0 10px}
+.qc .back p{margin:0 0 8px;font-size:1.22rem;line-height:1.05}
+.qc .code{margin-top:auto;background:var(--pix);color:#f3f0dc;padding:6px 8px;font-size:1.2rem}
+#zoom{position:fixed;inset:0;z-index:20;background:rgba(5,4,16,.82);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:16px;overflow:auto}
+.zhint{margin:0;font-size:1.1rem;color:#c9c3e6;text-align:center}
+.zbtns{display:flex;gap:12px}
+/* juego */
+.gwrap{width:100%;display:flex;flex-direction:column;align-items:center;gap:12px}
+.hud{width:100%;display:flex;gap:12px;align-items:flex-start}
+.portrait{flex:none;width:96px;height:96px;display:flex;align-items:center;justify-content:center;background:#1a1230;border:4px solid var(--parch);box-shadow:0 0 0 3px var(--ink),0 0 18px 4px var(--aura);--aura:#ff7ac8;animation:glow 1.4s steps(1) infinite}
+.portrait.s1{--aura:#4aa8ff}
+.portrait.s01{box-shadow:0 0 0 3px var(--ink),-9px 0 18px 3px #ff7ac8,9px 0 18px 3px #4aa8ff}
+.portrait svg{width:78%;height:auto;filter:drop-shadow(0 0 6px var(--aura))}
+.chips{display:flex;flex-wrap:wrap;gap:6px;align-content:flex-start}
+.chip{background:var(--parch);color:var(--ink);font-size:1.35rem;line-height:1;padding:5px 10px;border:3px solid var(--ink);box-shadow:3px 3px 0 rgba(0,0,0,.45);white-space:nowrap}
+.chip.dayc{display:inline-flex;align-items:center;gap:6px;padding:2px 3px}
+.dayc button{font:inherit;line-height:1;width:26px;padding:2px 0;background:var(--ink);color:var(--parch);border:0;cursor:pointer}
+.dayc button:hover:not(:disabled),.dayc button:focus-visible{background:#54402a}
+.dayc button:disabled{opacity:.3;cursor:default}
+.mazewrap{width:100%;display:flex;justify-content:center}
+#mz{width:100%;height:auto}
+.mazecol{width:100%;display:flex;flex-direction:column;gap:12px}
+/* compositor de circuitos (estilo IBM Quantum Composer) */
+.composer{width:100%;display:flex;background:#161616;border:4px solid #393939;box-shadow:0 0 0 3px var(--ink),6px 6px 0 rgba(0,0,0,.45);color:#c6c6c6;user-select:none;-webkit-user-select:none}
+.cpal{flex:none;display:flex;flex-direction:column;gap:6px;padding:8px;border-right:2px solid #393939;background:#1f1f1f}
+.ctit{font-size:1.05rem;color:#a8a8a8;line-height:1}
+.cgates{display:flex;gap:6px}
+.gt{width:34px;height:34px;display:grid;place-items:center;border:0;padding:0;cursor:grab;touch-action:none;box-shadow:inset 0 -3px 0 rgba(0,0,0,.28)}
+.gt svg{width:62%;height:62%;shape-rendering:crispEdges;pointer-events:none}
+.gt[data-g="H"]{background:#e8383d}.gt[data-g="X"]{background:#2f63d6}
+.gt:focus-visible{outline:3px solid #fff;outline-offset:2px}
+.ccirc{flex:1;min-width:0;padding:6px 10px 8px}
+.chead2{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:2px}
+.cbtn{font-family:"VT323",monospace;font-size:1.05rem;background:#393939;color:#f4f4f4;border:0;padding:2px 10px;cursor:pointer}
+.cbtn:hover,.cbtn:focus-visible{background:#525252}
+.cbtns{display:flex;gap:6px}
+.chead2{flex-wrap:wrap}
+.cqk{margin-top:6px;display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.cqk pre{width:100%;margin:0;padding:8px 10px;background:#0b0b0b;border:2px solid #393939;color:#e6e6e6;font-family:"VT323",ui-monospace,monospace;font-size:1.15rem;line-height:1.1;overflow-x:auto;user-select:text;-webkit-user-select:text}
+#ccode[aria-expanded="true"]{background:#4589ff}
+.wire{display:flex;align-items:center;gap:8px;height:40px}
+.ql{flex:none;width:34px;font-size:1.15rem;color:#c6c6c6}
+.line{position:relative;flex:1;min-width:0;height:100%;display:flex;align-items:center;gap:6px;padding:0 6px;overflow-x:auto;scrollbar-width:none}
+.line::before{content:"";position:absolute;left:0;right:0;top:50%;height:2px;margin-top:-1px;background:#6f6f6f}
+.line.hot::before{background:var(--gold);height:4px;margin-top:-2px}
+.line .gt{position:relative;flex:none;width:30px;height:30px}
+.disk{flex:none;width:26px;height:26px;border-radius:50%;border:2px solid #c6c6c6;background:linear-gradient(to top,#4589ff var(--p,0%),#161616 var(--p,0%))}
+.ghost{position:fixed;z-index:30;pointer-events:none;transform:translate(-50%,-50%) scale(1.15);opacity:.9}
+.hand .qslot:not(.off) .qc{touch-action:pan-x}
+.side{width:100%;display:flex;flex-direction:column;align-items:center;gap:8px}
+.toast{margin:0;min-height:1.4rem;font-size:1.3rem;color:#c9c3e6;text-align:center}
+.toast.dim{font-size:1.05rem;color:#8a86a8}
+.dpad{display:grid;grid-template-columns:repeat(3,64px);grid-template-rows:repeat(2,56px);gap:6px;justify-content:center;touch-action:none}
+.dpad button{font-family:"Pixelify Sans",monospace;font-weight:700;font-size:1.6rem;background:var(--parch);color:var(--ink);border:0;box-shadow:inset -4px -4px 0 #cdb877,3px 3px 0 rgba(0,0,0,.45);touch-action:none;user-select:none}
+.dpad button:active{transform:translateY(2px)}
+.dpad .u{grid-column:2;grid-row:1}.dpad .l{grid-column:1;grid-row:2}.dpad .d{grid-column:2;grid-row:2}.dpad .r{grid-column:3;grid-row:2}
+@media (pointer:fine){.dpad{display:none}}
+@media (min-width:820px) and (min-aspect-ratio:1/1){
+ .gwrap{display:grid;grid-template-columns:minmax(0,1fr) clamp(300px,34vw,420px);grid-template-areas:"top top" "maze hud" "maze side";grid-template-rows:auto auto 1fr;gap:14px 24px;align-items:start}
+ .gwrap>.topbar{grid-area:top}.gwrap>.hud{grid-area:hud}.gwrap>.mazewrap{grid-area:maze}.gwrap>.side{grid-area:side}
+ .mazecol{width:min(100%,calc((100vh - 280px)*31/21))}
+ #hand{flex-wrap:wrap;overflow:visible;justify-content:center;padding:6px 0}
+ #hand .qslot{flex:0 0 max(120px,min(calc(50% - 6px),calc((100vh - 300px)/2.95)));width:max(120px,min(calc(50% - 6px),calc((100vh - 300px)/2.95)))}
+}
+@media (prefers-reduced-motion:reduce){.portrait,.qslot.deal,.qslot.pop{animation:none}.qc,.qc .inner{transition:none}}
 </style>
 </head>
 <body>
@@ -154,43 +212,86 @@ box-shadow:inset 0 -6px 0 #d99a14,inset 0 6px 0 #ffe58a;clip-path:polygon(0 8px,
 <main class="stage" id="stage">
 <section class="plaque"><h1><span><b>Q</b>uest,</span><span><b>M</b>eow &amp;</span><span><b>L</b>abyrinth.</span></h1></section>
 <div class="castlebox">
+<i class="ground"></i><i class="wing l"></i><i class="wing r"></i>
 <svg id="castle" viewBox="0 0 64 46" aria-hidden="true"></svg>
 <svg class="cat a" data-who="A" viewBox="-1 -1 22 26" aria-hidden="true"></svg>
 <svg class="cat b" data-who="B" viewBox="-1 -1 22 26" aria-hidden="true"></svg>
 <button class="play" id="play" aria-label="Play"><span class="o"><span class="i">PLAY</span></span></button>
 </div>
-<button class="btn" id="settings-btn">AJUSTES</button>
+<nav class="menu"><button class="pbtn" id="mStory">HISTORIA</button><button class="pbtn" id="mTrain">ENTRENAMIENTO</button></nav>
 </main>
 </div>
-<div class="story" id="story" aria-live="polite">
-<div class="demo-wrap" id="demoWrap" hidden>
-<div class="chip" id="chip"></div>
-<div class="demo" id="demo"></div>
-</div>
-<div class="box" id="box">
-<span class="nm" id="nm"></span>
-<div class="port" id="port"></div>
-<p class="txt" id="txt"></p>
-<span class="nx" id="nx" hidden>Siguiente ▼</span>
-</div>
+<div class="scene" id="s6">
+<div class="panel"><div class="col">
+<div class="topbar"><button class="pbtn" id="vprev">‹ ATRÁS</button><span class="lbl" id="vcount">1/7</span><button class="pbtn" id="vskip">SALTAR ›</button></div>
+<canvas class="cv" id="sv" aria-label="Historia de Qubitlandia"></canvas>
+<div class="tbox nar" id="vbox"><p id="vt" aria-live="polite"></p></div>
+<div class="prog"><i id="vprog"></i></div>
+<div class="tnav"><button class="pbtn gold" id="vnext">SIGUIENTE ›</button></div>
+</div></div>
 </div>
 <div class="scene" id="s4">
-<div class="bar"><button class="btn" id="back">‹ INTRO</button><span class="info" id="info"></span><button class="btn" id="speed" aria-label="Velocidad">x4</button></div>
-<p class="msg" id="msg" hidden></p>
-<div class="board"><canvas id="maze" aria-label="Laberinto"></canvas><svg id="botcat" viewBox="-1 -1 22 26" aria-label="Gato blanco (bot)" hidden></svg></div>
-<ol class="sum" id="sum"></ol>
+<div class="panel"><div class="col">
+<div class="topbar"><button class="pbtn" id="tprev">‹ ATRÁS</button><span class="lbl" id="tcount">1/8</span></div>
+<div class="tvis">
+<div class="chead" id="chead" hidden><i id="chi"></i><span id="cht"></span></div>
+<canvas class="cv" id="dv" aria-label="Demostración"></canvas>
+<div class="hand" id="tcards" hidden></div>
 </div>
-<div class="dlg" id="dlg" hidden role="dialog" aria-labelledby="dlg-title">
-<h2 id="dlg-title">Ajustes</h2>
-<form id="settings">
-<label for="algorithm">Algoritmo</label>
-<select id="algorithm" name="algorithm"><option value="binary_tree">Binary tree</option><option value="backtracker">Backtracker</option></select>
-<label for="braid">Dificultad</label>
-<select id="braid" name="braid"><option value="0.5">Fácil</option><option value="0.2" selected>Normal</option><option value="0">Difícil</option></select>
-<label for="width">Ancho</label><input id="width" name="width" type="number" min="2" max="15" value="15" required>
-<label for="height">Alto</label><input id="height" name="height" type="number" min="2" max="15" value="10" required>
-<div class="row"><button class="btn" type="submit" id="ok">Listo</button></div>
-</form>
+<div class="tbox" id="tbox"><span class="tag">Hada de las Cartas</span><svg class="fp" id="fairy" viewBox="0 0 13 13" aria-hidden="true"></svg><p id="tt" aria-live="polite"></p></div>
+<div class="prog"><i id="tprog"></i></div>
+<div class="tnav"><button class="pbtn gold" id="tnext">SIGUIENTE ›</button></div>
+</div></div>
+</div>
+<div class="scene" id="s5">
+<div class="panel"><div class="gwrap">
+<div class="topbar"><button class="pbtn" id="gback">‹ MENÚ</button><span class="lbl" id="mlbl">Laberinto · 15×10</span></div>
+<div class="hud">
+<div class="portrait s0" id="portrait"><svg viewBox="-1 -1 22 26" id="pcat" aria-hidden="true"></svg></div>
+<div class="chips">
+<span class="chip" id="hName">Nombre: Quibi</span>
+<span class="chip" id="hEst">Estado: 0</span>
+<span class="chip" id="hTime">Tiempo: 00:00</span>
+<span class="chip dayc"><button id="dPrev" aria-label="Día anterior">‹</button><span id="hDay">Día 1</span><button id="dNext" aria-label="Día siguiente">›</button></span>
+</div>
+</div>
+<div class="mazewrap"><div class="mazecol">
+<canvas class="cv" id="mz" aria-label="Laberinto"></canvas>
+<section class="composer" id="comp" aria-label="Compositor de circuitos">
+<div class="cpal"><span class="ctit">Operaciones</span><div class="cgates"><button class="gt" data-g="H" aria-label="Compuerta H"></button><button class="gt" data-g="X" aria-label="Compuerta X"></button></div></div>
+<div class="ccirc"><div class="chead2"><span class="ctit">Compositor · arrastra H o X a un qubit</span><span class="cbtns"><button class="cbtn" id="ccode" aria-expanded="false">&lt;/&gt; Qiskit</button><button class="cbtn" id="cclear">Limpiar</button></span></div><div id="wires"></div>
+<div class="cqk" id="cqk" hidden><pre id="cpre"></pre><button class="cbtn" id="ccopy">Copiar código</button></div></div>
+</section>
+</div></div>
+<div class="side">
+<p class="toast" id="toast" aria-live="polite"></p>
+<div class="dpad" id="dpad">
+<button class="u" data-d="0,-1" aria-label="Arriba">▲</button>
+<button class="l" data-d="-1,0" aria-label="Izquierda">◀</button>
+<button class="d" data-d="0,1" aria-label="Abajo">▼</button>
+<button class="r" data-d="1,0" aria-label="Derecha">▶</button>
+</div>
+<div class="hand" id="hand"></div>
+<p class="toast dim">Flechas o WASD para moverte · cartas H y X con 1 y 2 · toca una carta para ampliarla o arrástrala al compositor</p>
+</div>
+</div></div>
+</div>
+<div class="scene" id="s7">
+<div class="panel"><div class="col">
+<div class="topbar"><button class="pbtn" id="rback">‹ MENÚ</button><span class="lbl" id="rinfo">Entrenamiento</span><button class="pbtn" id="rspeed" aria-label="Velocidad">x1</button></div>
+<canvas class="cv" id="rv" aria-label="Entrenamiento de Bit-Bot"></canvas>
+<p class="toast" id="rmsg" aria-live="polite"></p>
+<ol class="rsum" id="rsum"></ol>
+</div></div>
+</div>
+<div id="zoom" hidden role="dialog" aria-label="Carta">
+<div id="zbox"></div>
+<p class="zhint" id="zhint">Toca la carta para voltearla. Toca fuera para cerrar.</p>
+<div class="zbtns"><button class="pbtn gold" id="zuse">USAR CARTA</button><button class="pbtn" id="zclose">CERRAR</button></div>
+</div>
+<div class="dlg" id="win" hidden role="dialog" aria-live="polite">
+<div id="winTxt"></div>
+<button id="winOk">Jugar otra vez</button>
 </div>
 <script>
 /* estrellas */
@@ -263,67 +364,6 @@ for(var y=0;y<H;y++)for(var x=0;x<W;x++)if(g[y][x])body+=rc(x,y,g[y][x]);
 var gl='<g class="glow">';cr.forEach(function(q){gl+=rc(q[0],q[1],q[2])});gl+='</g>';
 return '<g class="bob">'+out+body+gl+'</g>'}
 document.querySelectorAll("svg[data-who]").forEach(function(el){el.innerHTML=sprite(PAL[el.dataset.who])});
-/* interacción: ajustes, play -> laberinto, volver a la intro */
-var dlg=document.getElementById("dlg"),form=document.getElementById("settings"),
-s3=document.getElementById("s3"),s4=document.getElementById("s4"),msg=document.getElementById("msg"),canvas=document.getElementById("maze");
-document.getElementById("settings-btn").addEventListener("click",function(){dlg.hidden=false;document.getElementById("algorithm").focus()});
-form.addEventListener("submit",function(e){e.preventDefault();dlg.hidden=true});
-/* run: cada PLAY o volver invalida la partida anterior (fetch/animación en curso) */
-var run=0,cell=0,speeds=[1,4,16],speed=4,sum=document.getElementById("sum"),cat=document.getElementById("botcat"),speedBtn=document.getElementById("speed");
-cat.innerHTML=sprite(PAL.B);
-speedBtn.addEventListener("click",function(){speed=speeds[(speeds.indexOf(speed)+1)%speeds.length];speedBtn.textContent="x"+speed});
-function back(){run++;document.querySelector(".castlebox").classList.remove("run");s4.classList.remove("on");s3.classList.add("on");document.getElementById("play").focus()}
-document.getElementById("back").addEventListener("click",back);
-document.addEventListener("keydown",function(e){if(e.key!=="Escape")return;if(!dlg.hidden)dlg.hidden=true;else if(s4.classList.contains("on"))back()});
-function getJSON(url,opts){return fetch(url,opts).then(function(r){return r.json().then(function(b){
-if(!r.ok)throw new Error(r.status===422?"Ajustes inválidos: ancho y alto entre 2 y 15.":"Error "+r.status);return b})})}
-window.startGame=function(){
-var my=++run;
-dlg.hidden=true;s3.classList.remove("on");s4.classList.add("on");
-var f=form.elements,params=new URLSearchParams(new FormData(form));
-document.getElementById("info").textContent=f.algorithm.selectedOptions[0].text+" · "+f.braid.selectedOptions[0].text+" · "+f.width.value+"×"+f.height.value;
-msg.hidden=false;msg.textContent="Generando…";canvas.hidden=true;cat.toggleAttribute("hidden",true);sum.innerHTML="";
-getJSON("/api/maze?"+params).then(function(b){
-if(my!==run)return;
-canvas.hidden=false;drawMaze(b.grid);
-msg.textContent="El gato blanco está aprendiendo el laberinto…";
-return getJSON("/api/bot/play",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({grid:b.grid})})
-.then(function(res){if(my===run)animate(b.grid,res,my,0)})})
-.catch(function(err){if(my===run){msg.hidden=false;msg.textContent=err.message}})};
-document.getElementById("play").addEventListener("click",function(){window.startStory&&window.startStory()});
-/* intentos progresivos: el bot recorre cada trayectoria con la tabla Q más entrenada que la anterior;
-   las celdas repetidas son choques contra una pared */
-function animate(grid,res,my,k){
-var a=res.attempts[k],path=a.path,i=0,
-label="Intento "+(k+1)+"/"+res.attempts.length+" · entrenado al "+Math.round(a.trained*100)+"%";
-drawMaze(grid);cat.toggleAttribute("hidden",false);
-var ctx=canvas.getContext("2d");
-(function tick(){
-if(my!==run)return;
-var p=path[i],scale=canvas.clientWidth/canvas.width,w=cell*scale;
-if(i>0){var q=path[i-1];ctx.fillStyle="rgba(255,255,255,.18)";ctx.fillRect(q[1]*cell,q[0]*cell,cell,cell)}
-cat.style.width=w+"px";cat.style.height=(w*26/22)+"px";
-cat.style.transform="translate("+(4+p[1]*w)+"px,"+(4+(p[0]+1)*w-w*26/22)+"px)";
-msg.textContent=label+" · paso "+i+" / "+a.steps;
-if(++i<path.length){setTimeout(tick,res.tick_ms/speed);return}
-var li=document.createElement("li");li.className=a.reached?"ok":"";
-li.textContent="Entrenado al "+Math.round(a.trained*100)+"%: "+(a.reached?"escapó en "+a.steps+" pasos":"no escapó ("+a.steps+" pasos)");
-sum.appendChild(li);
-if(k+1<res.attempts.length){msg.textContent=label+(a.reached?" · ¡escapó!":" · no escapó")+" — siguiente intento…";
-setTimeout(function(){if(my===run)animate(grid,res,my,k+1)},1500)}
-else msg.textContent="Así aprendió el gato blanco a escapar del laberinto.";
-})()}
-function drawMaze(grid){
-var rows=grid.length,cols=grid[0].length,
-size=Math.max(3,Math.floor(Math.min((Math.min(innerWidth,900)-40)/cols,(innerHeight-120)/rows)));
-cell=size;canvas.width=cols*size;canvas.height=rows*size;
-var ctx=canvas.getContext("2d");
-grid.forEach(function(row,r){row.forEach(function(v,c){ctx.fillStyle=v?"#cdbf9f":"#4a3320";ctx.fillRect(c*size,r*size,size,size);
-if(v){ctx.fillStyle="#8f8166";ctx.fillRect(c*size,r*size+size-Math.ceil(size/5),size,Math.ceil(size/5))}})});
-/* inicio (arriba-izquierda) y meta (abajo-derecha) */
-ctx.fillStyle="#ffc83d";ctx.fillRect(size,size,size,size);
-ctx.fillStyle="#f0845a";ctx.fillRect((cols-2)*size,(rows-2)*size,size,size)}
-
 
 /* intro: logo + maullido, firma y pantalla de inicio */
 (function(){
@@ -362,63 +402,535 @@ at(7700,done);
 function done(){tm.forEach(clearTimeout);gone=true;s1.classList.remove("on");s2.classList.remove("on");s3.classList.add("on");document.body.classList.add("done")}
 document.getElementById("skip").addEventListener("click",function(e){e.stopPropagation();done()});
 })();
+</script>
 
-/* historia y tutorial */
+<script>
+/* ===== historia + tutorial + juego ===== */
 (function(){
-var story=document.getElementById("story"),box=document.getElementById("box"),nm=document.getElementById("nm"),txt=document.getElementById("txt"),nx=document.getElementById("nx"),
-port=document.getElementById("port"),dw=document.getElementById("demoWrap"),demo=document.getElementById("demo"),chip=document.getElementById("chip");
-function grid(rows,fill,u){var s='<svg viewBox="0 0 '+rows[0].length+' '+rows.length+'" width="'+u*rows[0].length+'" height="'+u*rows.length+'" style="shape-rendering:crispEdges">';
-rows.forEach(function(r,y){for(var x=0;x<r.length;x++)if(r[x]==="X")s+='<rect x="'+x+'" y="'+y+'" width="1" height="1" fill="'+fill+'"/>'});return s+'</svg>'}
-var GX=["..XXXXX..",".X..X..X.","X...X...X","X...X...X","XXXXXXXXX","X...X...X","X...X...X",".X..X..X.","..XXXXX.."];
-var GS=["...X...","..XXX..",".XXXXX.","XXXXXXX",".XXXXX.","..XXX..","...X..."];
-var FA=[
-"......HH......",".....HHHH.....",".....HSSH.....",".....HSSH.....",".WW..DDDD..WW.","WWw..DDDD..wWW","WWw.DDDDDD.wWW",".Ww.DDDDDD.wW.","....DDDDDD....","....dDDDDd....",".....S..S.....",".....S..S....."];
-var FC={H:"#ffc83d",S:"#ffe0c8",D:"#ff8fd0",d:"#d45fa8",W:"#d9f2ff",w:"#7fc8ff"};
-function fairy(){var h=FA.length,w=FA[0].length,s='<svg viewBox="-1 -1 '+(w+2)+' '+(h+2)+'" class="fg" style="shape-rendering:crispEdges">';
-function on(x,y){return x>=0&&x<w&&y>=0&&y<h&&FA[y][x]!=="."}
-for(var y=-1;y<=h;y++)for(var x=-1;x<=w;x++){if(on(x,y))continue;if([[1,0],[-1,0],[0,1],[0,-1]].some(function(d){return on(x+d[0],y+d[1])}))s+='<rect x="'+x+'" y="'+y+'" width="1" height="1" fill="#1a1020"/>'}
-for(y=0;y<h;y++)for(x=0;x<w;x++)if(FA[y][x]!==".")s+='<rect x="'+x+'" y="'+y+'" width="1" height="1" fill="'+FC[FA[y][x]]+'"/>';
-return s+'</svg>'}
-function cat(c){return '<svg class="dc '+c+'" viewBox="-1 -1 22 26" aria-hidden="true">'+sprite(PAL.A)+'</svg>'}
-var T='<div class="p" style="left:calc(50% - 22px);width:44px;top:92px;bottom:0"></div><div class="p" style="left:6%;right:6%;top:92px;height:44px"></div>';
-var DEMOS={
-H:T+cat("hm")+cat("hl gh")+cat("hr gh"),
-X:'<div class="p" style="left:0;right:0;top:92px;height:44px"></div><div class="door xd"></div>'+cat("xc")+'<div class="xi">'+grid(GX,"#1d2030",3)+'</div>',
-Z:T+cat("zc")+'<div class="st">'+grid(GS,"#ffc83d",5)+'</div><span class="cap">Solo Quibi ve la marca</span>',
-C:'<div class="p" style="left:50%;right:0;top:92px;height:44px"></div><div class="lb"></div><div class="ls"></div><div class="wire"></div><div class="door cd"></div><div class="dot"></div><div class="xi small">'+grid(GX,"#1d2030",3)+'</div>'};
-var CH={H:["#ff4d52","H","Carta H · Hadamard"],X:["#3a7bff","X","Carta X · NOT"],Z:["#b9e3f8","Z","Carta Z · Fase"],C:["#3a7bff","CNOT","Carta CNOT · Enlace"]};
-var N="Narrador",F="Hada de las Cartas";
-var L=[
-{w:N,t:"En Qubitlandia, los seres de luz vivían en armonía resguardando la estrella dorada, hasta que el Rey Robot Clásico atacó."},
-{w:N,t:"Construyó un laberinto gigante para atrapar a todas las criaturitas de luz."},
-{w:N,t:"Ahora el bosque se despierta cada mañana con un laberinto distinto. Los pasillos se mueven mientras todos duermen, y por eso nadie conoce el camino de hoy."},
-{w:N,t:"Su ayudante, el robot Bit-Bot, revisa cada pasillo uno por uno, con paciencia, sin cansarse. Pero solo puede ir por un camino a la vez, para evitar que exista algún infiltrado."},
-{w:N,t:"La heroína es Quibi, una criaturita de luz que entra al laberinto para recuperar la estrella, antes de que Bit-Bot la atrape."},
-{w:N,t:"Para lograrlo, el Hada de las Cartas le regala unas cartas mágicas."},
-{w:N,t:"Si Quibi vuelve cada día a practicar, la llama de su racha 🔥 crece y el hada le regala cartas más poderosas."},
-{w:F,t:"¡Hola, Quibi! Soy el Hada de las Cartas. Te enseñaré a usar cada una."},
-{w:F,t:"Carta H: “¡Con este superpoder puedes estar en dos caminos a la vez!”",d:"H"},
-{w:F,t:"Carta X: “¡Abre una puerta cerrada o cierra una abierta!”",d:"X"},
-{w:F,t:"Carta Z: “¡Marca en secreto el camino correcto, sin revelarlo!”",d:"Z"},
-{w:F,t:"Carta CNOT: “¡Una palanca en un punto abre una puerta en otro!”",d:"C"},
-{w:F,t:"¡Eso es todo! Usa tus cartas con cuidado y recupera la estrella dorada antes de que Bit-Bot te atrape.",last:1}];
-var i=0,typing=false,tm=null,full="",on=false,seen=false,reduce=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
-port.innerHTML=fairy();
-function show(){var l=L[i];nm.textContent=l.w;box.classList.toggle("hasp",l.w===F);
-if(l.d){var c=CH[l.d];chip.innerHTML='<i style="background:'+c[0]+'">'+c[1]+'</i><span>'+c[2]+'</span>';demo.innerHTML="";dw.hidden=false;void demo.offsetWidth;demo.innerHTML=DEMOS[l.d]}else dw.hidden=true;
-nx.hidden=true;nx.textContent=l.last?"¡Jugar! ▶":"Siguiente ▼";full=l.t;txt.textContent="";
-if(reduce){txt.textContent=full;typing=false;nx.hidden=false;return}
-var ch=Array.from(full),k=0;typing=true;clearInterval(tm);
-tm=setInterval(function(){txt.textContent+=ch[k++];if(k>=ch.length){clearInterval(tm);typing=false;nx.hidden=false}},24)}
-function next(){if(!on)return;
-if(typing){clearInterval(tm);typing=false;txt.textContent=full;nx.hidden=false;return}
-i++;if(i>=L.length){on=false;story.classList.remove("on");seen=true;window.startGame();return}
-show()}
-story.addEventListener("click",next);
-document.addEventListener("keydown",function(e){if(on&&(e.key==="Enter"||e.key===" "||e.key==="ArrowRight")){e.preventDefault();next()}});
-window.startStory=function(){var cb=document.querySelector(".castlebox");if(cb.classList.contains("run"))return;
-cb.classList.add("run");setTimeout(function(){if(seen){window.startGame();return}i=0;on=true;story.classList.add("on");show()},reduce?100:1900)};
+var $=function(i){return document.getElementById(i)};
+var SCENES=["s1","s2","s3","s4","s5","s6","s7"],cur="s1";
+var reduce=!!(window.matchMedia&&matchMedia("(prefers-reduced-motion:reduce)").matches);
+function clock(){return performance.now()/1000}
+function go(id){cur=id;SCENES.forEach(function(i){$(i).classList.toggle("on",i===id)})}
+
+/* sonido ¡OOF! (el mp3 que mandaste, incrustado) */
+var OOF=new Audio("data:audio/mpeg;base64,SUQzBAAAAAABAFRYWFgAAAASAAADbWFqb3JfYnJhbmQAZGFzaABUWFhYAAAAEQAAA21pbm9yX3ZlcnNpb24AMABUWFhYAAAAHAAAA2NvbXBhdGlibGVfYnJhbmRzAGlzbzZtcDQxAFRTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//uwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAB1AAEg+QAGCAoNDxMVFxocHiIkJykrLTE0Njg6PEFDRUdJS1BSVFZYW19hY2Voam5wcnV3eX1/goSGio2PkZOVmpyeoKKkqautr7G0uLq8vsHDx8nLztDS1tjb3d/h5ejq7O7w9ff5+/0AAAAATGF2YzYwLjMxAAAAAAAAAAAAAAAAJARAAAAAAAABIPlX1GgCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/+7BkAA/wAABpAAAACAAADSAAAAEAAAGkAAAAIAAANIAAAARMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/7smQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/7smQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/7smQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/7smQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/7smQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/7smQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/7smQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/7smQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/7smQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/7smQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/7smQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/7smQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/7smQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/7smQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/7smQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/7smQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/7sGQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//uyZAAP8AAAaQAAAAgAAA0gAAABAAABpAAAACAAADSAAAAETEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//uyZAAP8AAAaQAAAAgAAA0gAAABAAABpAAAACAAADSAAAAETEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//uyZAAP8AAAaQAAAAgAAA0gAAABAAABpAAAACAAADSAAAAETEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVChyNxLJ4nKMk80YwOChN/ecO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qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr/+7JkAA/wAABpAAAACAAADSAAAAEAAAGkAAAAIAAANIAAAARMQU1FMy4xMDCqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqkxBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr/+7JkAA/wAABpAAAACAAADSAAAAEAAAGkAAAAIAAANIAAAARMQU1FMy4xMDCqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqkxBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr/+7JkAA/wAABpAAAACAAADSAAAAEAAAGkAAAAIAAANIAAAARMQU1FMy4xMDCqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqkxBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr/+7JkAA/wAABpAAAACAAADSAAAAEAAAGkAAAAIAAANIAAAARMQU1FMy4xMDCqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqkxBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr/+7JkAA/wAABpAAAACAAADSAAAAEAAAGkAAAAIAAANIAAAARMQU1FMy4xMDCqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqkxBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr/+7JkAA/wAABpAAAACAAADSAAAAEAAAGkAAAAIAAANIAAAARMQU1FMy4xMDCqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqkxBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr/+7JkAA/wAABpAAAACAAADSAAAAEAAAGkAAAAIAAANIAAAARMQU1FMy4xMDCqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqkxBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr/+7BkAA/wAABpAAAACAAADSAAAAEAAAGkAAAAIAAANIAAAARMQU1FMy4xMDCqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqTEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqv/7smQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqTEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqv/7smQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqTEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqv/7smQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqTEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqv/7smQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqTEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqv/7smQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqTEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqv/7smQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqTEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqv/7smQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqTEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqv/7smQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqTEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqv/7smQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqTEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqv/7smQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqTEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqv/7smQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqTEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqv/7smQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqTEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqv/7smQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqTEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqv/7smQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqTEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqv/7smQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqTEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqv/7smQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqTEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqv/7sGQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqpMQU1FMy4xMDCqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uyZAAP8AAAaQAAAAgAAA0gAAABAAABpAAAACAAADSAAAAETEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqpMQU1FMy4xMDCqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uyZAAP8AAAaQAAAAgAAA0gAAABAAABpAAAACAAADSAAAAETEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqpMQU1FMy4xMDCqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uyZAAP8AAAaQAAAAgAAA0gAAABAAABpAAAACAAADSAAAAETEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqpMQU1FMy4xMDCqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uyZAAP8AAAaQAAAAgAAA0gAAABAAABpAAAACAAADSAAAAETEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqpMQU1FMy4xMDCqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uyZAAP8AAAaQAAAAgAAA0gAAABAAABpAAAACAAADSAAAAETEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqpMQU1FMy4xMDCqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uyZAAP8AAAaQAAAAgAAA0gAAABAAABpAAAACAAADSAAAAETEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqpMQU1FMy4xMDCqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uyZAAP8AAAaQAAAAgAAA0gAAABAAABpAAAACAAADSAAAAETEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqpMQU1FMy4xMDCqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uyZAAP8AAAaQAAAAgAAA0gAAABAAABpAAAACAAADSAAAAETEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqpMQU1FMy4xMDCqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uyZAAP8AAAaQAAAAgAAA0gAAABAAABpAAAACAAADSAAAAETEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqpMQU1FMy4xMDCqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uyZAAP8AAAaQAAAAgAAA0gAAABAAABpAAAACAAADSAAAAETEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqpMQU1FMy4xMDCqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uyZAAP8AAAaQAAAAgAAA0gAAABAAABpAAAACAAADSAAAAETEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqpMQU1FMy4xMDCqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uyZAAP8AAAaQAAAAgAAA0gAAABAAABpAAAACAAADSAAAAETEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqpMQU1FMy4xMDCqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uyZAAP8AAAaQAAAAgAAA0gAAABAAABpAAAACAAADSAAAAETEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqpMQU1FMy4xMDCqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uyZAAP8AAAaQAAAAgAAA0gAAABAAABpAAAACAAADSAAAAETEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqpMQU1FMy4xMDCqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uyZAAP8AAAaQAAAAgAAA0gAAABAAABpAAAACAAADSAAAAETEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqpMQU1FMy4xMDCqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uwZAAP8AAAaQAAAAgAAA0gAAABAAABpAAAACAAADSAAAAETEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqkxBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr/+7JkAA/wAABpAAAACAAADSAAAAEAAAGkAAAAIAAANIAAAARMQU1FMy4xMDCqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqkxBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr/+7JkAA/wAABpAAAACAAADSAAAAEAAAGkAAAAIAAANIAAAARMQU1FMy4xMDCqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqkxBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr/+7JkAA/wAABpAAAACAAADSAAAAEAAAGkAAAAIAAANIAAAARMQU1FMy4xMDCqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqkxBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr/+7JkAA/wAABpAAAACAAADSAAAAEAAAGkAAAAIAAANIAAAARMQU1FMy4xMDCqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqkxBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr/+7JkAA/wAABpAAAACAAADSAAAAEAAAGkAAAAIAAANIAAAARMQU1FMy4xMDCqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqkxBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr/+7JkAA/wAABpAAAACAAADSAAAAEAAAGkAAAAIAAANIAAAARMQU1FMy4xMDCqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqkxBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr/+7JkAA/wAABpAAAACAAADSAAAAEAAAGkAAAAIAAANIAAAARMQU1FMy4xMDCqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqkxBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr/+7JkAA/wAABpAAAACAAADSAAAAEAAAGkAAAAIAAANIAAAARMQU1FMy4xMDCqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqkxBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr/+7JkAA/wAABpAAAACAAADSAAAAEAAAGkAAAAIAAANIAAAARMQU1FMy4xMDCqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqkxBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr/+7JkAA/wAABpAAAACAAADSAAAAEAAAGkAAAAIAAANIAAAARMQU1FMy4xMDCqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqkxBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr/+7JkAA/wAABpAAAACAAADSAAAAEAAAGkAAAAIAAANIAAAARMQU1FMy4xMDCqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqkxBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr/+7JkAA/wAABpAAAACAAADSAAAAEAAAGkAAAAIAAANIAAAARMQU1FMy4xMDCqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqkxBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr/+7JkAA/wAABpAAAACAAADSAAAAEAAAGkAAAAIAAANIAAAARMQU1FMy4xMDCqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqkxBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr/+7JkAA/wAABpAAAACAAADSAAAAEAAAGkAAAAIAAANIAAAARMQU1FMy4xMDCqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqkxBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr/+7JkAA/wAABpAAAACAAADSAAAAEAAAGkAAAAIAAANIAAAARMQU1FMy4xMDCqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqkxBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr/+7BkAA/wAABpAAAACAAADSAAAAEAAAGkAAAAIAAANIAAAARMQU1FMy4xMDCqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqTEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqv/7smQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqTEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqv/7smQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqTEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqv/7smQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqTEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqv/7smQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqTEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqv/7smQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqTEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqv/7smQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqTEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqv/7smQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqTEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqv/7smQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqTEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqv/7smQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqTEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqv/7smQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqTEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqv/7smQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqTEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqv/7smQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqTEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqv/7smQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqTEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqv/7smQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqTEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqv/7smQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqTEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqv/7smQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqTEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqv/7sGQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqpMQU1FMy4xMDCqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uyZAAP8AAAaQAAAAgAAA0gAAABAAABpAAAACAAADSAAAAETEFNRTMuMTAwqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqpMQU1FMy4xMDCqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq");OOF.preload="auto";OOF.volume=.9;
+function oof(){try{OOF.currentTime=0;var p=OOF.play();if(p&&p.catch)p.catch(function(){})}catch(e){}}
+
+/* laberinto (15x10 celdas = 31x21 tiles). # pared · . piso · S inicio · E salida.
+   El del día llega de /api/maze (setMaze); este estático es el de la historia y el respaldo sin servidor. */
+var MAZE=["###############################", "#S............................#", "#.###.###.#####.#.#####.#######", "#...#...#.......#.....#.......#", "#.###.#.#######.#.#.#.#.#######", "#...#.#.......#.....#.#.......#", "#.###.#######.#.#.#####.#######", "#...#.........#.#.....#.......#", "#.#.###.#####.#####.###########", "#.#...#.....#.....#...........#", "#.#.#.###.#.###.#.#####.#######", "#.#.#...#.#...#.#.....#.......#", "#.#####.#.#####.###.#####.#.###", "#.....#.#.....#...#.....#.#...#", "#.###.#.#.###.###.###.#.###.#.#", "#.....#.#...........#.#.....#.#", "#.#####.#.#.#######.#.###.#####", "#.....#...#.......#.#...#.....#", "#.#.#.#.#########.#.###.#####.#", "#.#.#.#.........#.#...#.....#E#", "###############################"];
+var MH,MW,START,EXIT,SOLUTION,TRACE;
+function setMaze(rows){MAZE=rows;MH=MAZE.length;MW=MAZE[0].length;START={x:1,y:1};EXIT={x:MW-2,y:MH-2};
+ MAZE.forEach(function(r,y){for(var x=0;x<r.length;x++){if(r[x]==="S")START={x:x,y:y};if(r[x]==="E")EXIT={x:x,y:y}}});
+ SOLUTION=bfs(START.x,START.y);TRACE=dfsTrace()}
+/* grilla de la API (1 = pared, 0 = pasillo; inicio arriba-izquierda, salida abajo-derecha) -> filas de texto */
+function gridRows(g){return g.map(function(row,y){return row.map(function(v,x){
+ return y===1&&x===1?"S":y===g.length-2&&x===row.length-2?"E":v?"#":"."}).join("")})}
+function wall(x,y){return y<0||y>=MH||x<0||x>=MW||MAZE[y][x]==="#"}
+function inner(x,y){return x>=1&&x<=MW-2&&y>=1&&y<=MH-2}
+var DIRS=[[1,0],[0,1],[-1,0],[0,-1]];
+function bfs(sx,sy){var q=[[sx,sy]],prev={},k=function(x,y){return x+","+y};prev[k(sx,sy)]=null;
+ while(q.length){var p=q.shift();if(p[0]===EXIT.x&&p[1]===EXIT.y)break;
+  DIRS.forEach(function(d){var nx=p[0]+d[0],ny=p[1]+d[1];if(!wall(nx,ny)&&!(k(nx,ny) in prev)){prev[k(nx,ny)]=p;q.push([nx,ny])}})}
+ if(!(k(EXIT.x,EXIT.y) in prev))return null;
+ var path=[],c=[EXIT.x,EXIT.y];while(c){path.unshift(c);c=prev[k(c[0],c[1])]}return path}
+function dfsTrace(){var st=[[START.x,START.y]],seen={},tr=[[START.x,START.y]],k=function(x,y){return x+","+y};seen[k(START.x,START.y)]=1;
+ while(st.length){var p=st[st.length-1];if(p[0]===EXIT.x&&p[1]===EXIT.y)break;var nx=null;
+  for(var i=0;i<4&&!nx;i++){var x=p[0]+DIRS[i][0],y=p[1]+DIRS[i][1];if(!wall(x,y)&&!seen[k(x,y)])nx=[x,y]}
+  if(nx){seen[k(nx[0],nx[1])]=1;st.push(nx);tr.push(nx)}else{st.pop();if(st.length)tr.push(st[st.length-1])}}
+ return tr}
+setMaze(MAZE);
+
+/* utilidades de dibujo pixel art */
+function R(c,x,y,w,h,col){c.fillStyle=col;c.fillRect(x,y,w,h)}
+function grid(c,g,pal,x,y,s){for(var j=0;j<g.length;j++)for(var i=0;i<g[j].length;i++){var k=g[j][i];if(k!=="."&&pal[k]){c.fillStyle=pal[k];c.fillRect(x+i*s,y+j*s,s,s)}}}
+var ONE=[".X.","XX.",".X.",".X.","XXX"],ZERO=["XXX","X.X","X.X","X.X","XXX"];
+function one(c,cx,cy,s,col,g){g=g||ONE;c.fillStyle=col;for(var j=0;j<5;j++)for(var i=0;i<3;i++)if(g[j][i]==="X")c.fillRect(Math.round(cx-1.5*s+i*s),Math.round(cy-2.5*s+j*s),s,s)}
+function aura(c,x,y,r,rgb,a){var g=c.createRadialGradient(x,y,2,x,y,r);g.addColorStop(0,"rgba("+rgb+","+(.85*a)+")");g.addColorStop(1,"rgba("+rgb+",0)");c.fillStyle=g;c.beginPath();c.arc(x,y,r,0,6.2832);c.fill()}
+function glow(c,x,y,r,rgb,a){aura(c,x,y,r,rgb,a/.85)}
+var COL0="255,122,200",COL1="74,168,255";
+function chip(c,txt,cx,y,fg,bg){c.font='16px "VT323",monospace';c.textAlign="center";c.textBaseline="middle";var w=Math.ceil(c.measureText(txt).width)+12;
+ R(c,Math.round(cx-w/2),y,w,16,"#1a1020");R(c,Math.round(cx-w/2)+1,y+1,w-2,14,bg||"#f7e8bb");c.fillStyle=fg||"#1a1020";c.fillText(txt,cx,y+8.5)}
+function spark(c,x,y,r,a){c.globalAlpha=Math.max(0,Math.min(1,a));R(c,x-r,y-1,r*2+1,2,"#ffd23a");R(c,x-1,y-r,2,r*2+1,"#ffd23a");R(c,x-1,y-1,2,2,"#fff");c.globalAlpha=1}
+
+/* sprites */
+var FAIRY=["....HHHHH....","...HHHHHHH...","...HSSSSSH...","...HSKSKSH...","....SSSSS....",".WW..DDD..WW.","WWWW.DDD.WWWW","WWWWDDDDDWWWW",".WW.DDDDD.WW.","....DDDDD....","...DDDDDDD...","....S...S....","....S...S...."];
+var FPAL={H:"#ffe27a",S:"#f0c4a4",K:"#1d1d27",D:"#ff8ad8",W:"#bfe9ff"};
+(function(){var s="";FAIRY.forEach(function(row,y){for(var x=0;x<13;x++){var c=row[x];if(c!==".")s+='<rect x="'+x+'" y="'+y+'" width="1" height="1" fill="'+FPAL[c]+'"/>'}});$("fairy").innerHTML=s})();
+var STARG=["....Y....","....Y....","...YYY...","YYYYWYYYY",".YYYWYYY.","..YYYYY..","..YYYYY..",".YYY.YYY.",".YY...YY."];
+var CRE=[".WWW.","WWWWW","WKWKW","WWWWW",".W.W."];
+var catSvg=sprite(PAL.A);
+$("pcat").innerHTML=catSvg;
+var catImg=new Image();
+catImg.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="220" height="260" viewBox="-1 -1 22 26" shape-rendering="crispEdges">'+catSvg+'</svg>');
+function catAt(c,px,base,h,alpha){if(!(catImg.complete&&catImg.naturalWidth))return;var w=h*22/26;c.globalAlpha=alpha;c.drawImage(catImg,px-w/2,base-h,w,h);c.globalAlpha=1}
+function robotKing(c,x,y,s,eye){var K="#0b0b14",G1="#8a90a8",G2="#6c728c",G3="#b8bdd0",Y="#ffc83d";
+ R(c,x+7*s,y,3*s,4*s,Y);R(c,x+12*s,y-s,3*s,5*s,Y);R(c,x+17*s,y,3*s,4*s,Y);R(c,x+6*s,y+4*s,15*s,2*s,Y);
+ R(c,x+5*s,y+6*s,17*s,12*s,K);R(c,x+6*s,y+7*s,15*s,10*s,G1);R(c,x+6*s,y+7*s,15*s,2*s,G3);
+ R(c,x+8*s,y+10*s,4*s,3*s,eye);R(c,x+15*s,y+10*s,4*s,3*s,eye);R(c,x+9*s,y+15*s,9*s,s,K);
+ R(c,x+10*s,y+14*s,s,s,G3);R(c,x+12*s,y+14*s,s,s,G3);R(c,x+14*s,y+14*s,s,s,G3);R(c,x+16*s,y+14*s,s,s,G3);
+ R(c,x+3*s,y+19*s,21*s,13*s,K);R(c,x+4*s,y+20*s,19*s,11*s,G2);R(c,x+9*s,y+22*s,9*s,7*s,K);R(c,x+12*s,y+24*s,3*s,3*s,eye);
+ R(c,x-1*s,y+20*s,5*s,11*s,K);R(c,x,y+21*s,3*s,9*s,G1);R(c,x+23*s,y+20*s,5*s,11*s,K);R(c,x+24*s,y+21*s,3*s,9*s,G1);
+ R(c,x+3*s,y+33*s,21*s,5*s,K);R(c,x+5*s,y+34*s,5*s,3*s,G1);R(c,x+17*s,y+34*s,5*s,3*s,G1)}
+function bitBot(c,x,y,s,bl){var K="#0b0b14",T="#4fd1c5",D="#2b8f88";
+ R(c,x+5*s,y,s,3*s,K);R(c,x+4*s,y-s,3*s,2*s,"#ff5f52");
+ R(c,x+1*s,y+3*s,10*s,7*s,K);R(c,x+2*s,y+4*s,8*s,5*s,T);R(c,x+3*s,y+5*s,6*s,3*s,"#fff");R(c,x+5*s+(bl||0)*s,y+5*s,2*s,3*s,K);
+ R(c,x+2*s,y+11*s,8*s,5*s,K);R(c,x+3*s,y+12*s,6*s,3*s,D);R(c,x+1*s,y+16*s,4*s,2*s,K);R(c,x+7*s,y+16*s,4*s,2*s,K)}
+
+/* cartas de compuertas (mismo marcado que el documento de cartas; textos de H y X con las reglas del laberinto) */
+var GL={
+H:["X.....X","X.....X","X.....X","XXXXXXX","X.....X","X.....X","X.....X"],
+Z:["XXXXXXX",".....XX","....XX.","...XX..","..XX...","XX.....","XXXXXXX"],
+X:["..XXXXX..",".X..X..X.","X...X...X","X...X...X","XXXXXXXXX","X...X...X","X...X...X",".X..X..X.","..XXXXX.."],
+C:["...XXX...","..XXXXX..","...XXX...","....X....","....X....","..XXXXX..",".X..X..X.","X...X...X","X...X...X","XXXXXXXXX","X...X...X","X...X...X",".X..X..X.","..XXXXX.."]};
+function gateSvg(k,col){var g=GL[k],w=g[0].length,h=g.length,t='<svg viewBox="0 0 '+w+' '+h+'" aria-hidden="true" fill="'+(col||"#22264a")+'">';
+ g.forEach(function(r,y){for(var x=0;x<w;x++){if(r[x]==="X")t+='<rect x="'+x+'" y="'+y+'" width="1" height="1"/>'}});return t+'</svg>'}
+var CARDS=[
+ {id:"H",c:"#e8383d",g:"#ff4d52",px:"H",aria:"Carta Hadamard",tag:"H",name:"Hadamard",power:"Superposición",
+  desc:"Quibi se divide en dos: uno queda en 0 y el otro pasa a 1.",
+  bt:"Hadamard, en cuántico",p1:"Lleva un qubit en |0⟩ a (|0⟩ + |1⟩)/√2.",
+  p2:"Al medirlo sale 0 o 1 con 50 %. En el juego, si el 0 choca con una pared suena ¡OOF! y los dos intercambian su estado. H otra vez los junta.",code:"qc.h(0)"},
+ {id:"X",c:"#2f63d6",g:"#3a7bff",px:"X",aria:"Carta X NOT",tag:"X",name:"X (NOT)",power:"Inversión",
+  desc:"Pasa de 0 a 1 y atraviesa las paredes, que están en 1.",
+  bt:"X (NOT), en cuántico",p1:"Es el NOT cuántico: cambia |0⟩ por |1⟩ y |1⟩ por |0⟩.",
+  p2:"En el juego el piso está en 0 y las paredes en 1: Quibi solo pisa casillas de su mismo estado. Usa X otra vez para volver a los pasillos.",code:"qc.x(0)"},
+ {id:"Z",off:true,c:"#4a9fcf",g:"#b9e3f8",px:"Z",aria:"Carta Z fase",tag:"Z",name:"Z (Fase)",power:"Marca",
+  desc:"Señala en secreto el camino correcto sin revelarlo.",
+  bt:"Z (fase), en cuántico",p1:"Deja |0⟩ igual y cambia el signo de |1⟩: |1⟩ pasa a −|1⟩.",
+  p2:"Las probabilidades de medir no cambian; solo cambia la fase relativa, que se hace visible al combinarla con H. Grover la usa para marcar la respuesta.",code:"qc.z(0)"},
+ {id:"C",off:true,c:"#2f63d6",g:"#3a7bff",px:"C",aria:"Carta CNOT",tag:"CNOT",name:"CNOT",power:"Enlace",
+  desc:"Una palanca en un punto abre una puerta en otro; o un clon imita tus movimientos.",
+  bt:"CNOT, en cuántico",p1:"Actúa sobre dos qubits: si el de control es |1⟩, aplica X al objetivo; si es |0⟩, no hace nada.",
+  p2:"Con el control en superposición crea entrelazamiento: H y luego CNOT dan (|00⟩ + |11⟩)/√2. La palanca y la puerta quedan ligadas.",code:"qc.cx(0, 1)"}];
+function cardHTML(c){return '<div class="inner">'+
+ '<div class="face front"><span class="tag">'+c.tag+'</span><div class="gate">'+gateSvg(c.px)+'</div>'+
+ '<div class="name">'+c.name+'</div><div class="power">'+c.power+'</div><p class="desc">'+c.desc+'</p></div>'+
+ '<div class="face back"><span class="tag">'+c.tag+'</span><h2>'+c.bt+'</h2><p>'+c.p1+'</p><p>'+c.p2+'</p><div class="code">'+c.code+'</div></div></div>'}
+function makeSlot(c,onclick){var slot=document.createElement("div"),sc=document.createElement("div"),b=document.createElement("button");
+ slot.className="qslot"+(c.off?" off":"");if(c.off)b.disabled=true;sc.className="qscale";b.className="qc";b.setAttribute("aria-label",c.aria);b.style.setProperty("--c",c.c);b.style.setProperty("--g",c.g);
+ b.innerHTML=cardHTML(c);b.addEventListener("click",function(e){e.stopPropagation();onclick(b,slot)});sc.appendChild(b);slot.appendChild(sc);return slot}
+function fitSlot(slot,w){w=w||slot.clientWidth;if(!w)return;slot.style.height=(w*380/260)+"px";slot.firstChild.style.transform="scale("+(w/260)+")"}
+function fitAll(){document.querySelectorAll(".hand .qslot").forEach(function(sl){fitSlot(sl)})}
+window.addEventListener("resize",fitAll);
+if(window.ResizeObserver){new ResizeObserver(fitAll).observe(document.body)}
+var zoomIdx=-1;
+function openZoom(i,canUse){zoomIdx=i;var box=$("zbox");box.innerHTML="";
+ var w=Math.max(150,Math.min(300,window.innerWidth*.82,(window.innerHeight-190)*260/380));
+ var slot=makeSlot(CARDS[i],function(b){b.classList.toggle("on")});slot.style.width=w+"px";box.appendChild(slot);fitSlot(slot,w);
+ $("zuse").hidden=!canUse;$("zoom").hidden=false;
+ var b=slot.querySelector(".qc");void b.offsetWidth;requestAnimationFrame(function(){requestAnimationFrame(function(){b.classList.add("on")})})}
+function closeZoom(){$("zoom").hidden=true;$("zbox").innerHTML="";zoomIdx=-1}
+$("zoom").addEventListener("click",function(e){if(e.target===$("zoom")||e.target===$("zbox")||e.target===$("zhint"))closeZoom()});
+$("zclose").addEventListener("click",closeZoom);
+$("zuse").addEventListener("click",function(){var i=zoomIdx;closeZoom();useCard(i)});
+
+/* texto con efecto máquina de escribir (tocar la caja lo completa) */
+var twT={},twFull={};
+function typeInto(el,txt,id){clearInterval(twT[id]);twFull[id]=[el,txt];if(reduce){el.textContent=txt;return}
+ var i=0;el.textContent="";twT[id]=setInterval(function(){i++;el.textContent=txt.slice(0,i);if(i>=txt.length)clearInterval(twT[id])},20)}
+function finishType(id){if(twFull[id]){clearInterval(twT[id]);twFull[id][0].textContent=twFull[id][1]}}
+
+/* ---------- demos del tutorial (mini escenas en estilo laberinto) ---------- */
+var DW=256,DH=96,DT=16,dv=$("dv"),dc=dv.getContext("2d");dv.width=DW;dv.height=DH;
+var DEMO="state",dstart=0;
+function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
+function dfloor(plug,blue){R(dc,0,0,DW,DH,"#4b3222");
+ for(var y=0;y<6;y++)for(var x=0;x<16;x++){if(y===3&&x!==plug){one(dc,x*DT+8,y*DT+8,2,"rgba(255,150,210,.5)",ZERO);continue}
+  R(dc,x*DT,y*DT,DT,DT,"#cebfa0");if((y===2&&x!==plug)||y===5)R(dc,x*DT,y*DT+DT-3,DT,3,"#a8987a");
+  one(dc,x*DT+8,y*DT+7,2,blue?"#2f63d6":"rgba(75,50,34,.45)")}}
+function dcat(x,state,alpha,xo,yo){var px=(x+.5)*DT+(xo||0),base=4*DT+2+(yo||0);aura(dc,px,base-12,24,state?COL1:COL0,alpha);catAt(dc,px,base,30,alpha)}
+function dicon(letter,col,cx,y,a){dc.globalAlpha=clamp(a,0,1);R(dc,cx-9,y,18,18,"#1a1020");R(dc,cx-7,y+2,14,14,col);dc.font='bold 14px "Pixelify Sans",monospace';dc.fillStyle="#fff";dc.textAlign="center";dc.textBaseline="middle";dc.fillText(letter,cx,y+10);dc.globalAlpha=1}
+function dstar(x,y,a){grid(dc,STARG,{Y:"#ffc83d",W:"#fff"},Math.round(x-9),Math.round(y-9),2);glow(dc,x,y,22,"255,200,60",a==null?.6:a)}
+function demoState(t){var s=Math.floor(t/1.5)%2;dfloor(-1,s===1);dcat(7.5,s,1);chip(dc,"Estado: "+s,8*DT,8)}
+function demoWall(t){t%=4.6;dfloor(8,false);var x=1+6*Math.min(t/2.2,1),bump=t>2.2&&t<3.6,xo=bump?(Math.floor(t*14)%2?2:-2):0;
+ dcat(x,0,1,xo);if(bump)chip(dc,"¡No pasa!",(x+.5)*DT,8,"#fff","#d8423d");else chip(dc,"Estado: 0",(x+.5)*DT,8)}
+function demoH(t){t%=9;var two=t>=1&&t<6.6,blueDigits=t>=1&&t<6.6;
+ var m=clamp((t-1.7)/1.6,0,1),xa=2+5*m,xb=xa,swapped=t>=3.5;
+ if(t>=3.7){xb=7;xa=7+clamp((t-3.7)/.5,0,1)}
+ dfloor(8,blueDigits);
+ var sA=swapped?1:0,sB=swapped?0:1;
+ function gh(x,s){return s===1&&x>7.6&&x<8.4?.6:1}
+ if(two){var fade=t>6?1-clamp((t-6)/.6,0,1):1;
+  var bumpA=t>=3.3&&t<3.5?(Math.floor(t*30)%2?2:-2):0;
+  /* A = el gato original, B = su copia */
+  var ghostIsA=swapped;
+  if(ghostIsA){dcat(xa,1,gh(xa,1)*fade,0,-2);dcat(xb,0,1,0,2)}else{dcat(xb,1,1,0,-2);dcat(xa,0,1,bumpA,2)}
+ }else{dcat(t<1?2:7,0,1)}
+ if(t>=1&&t<1.7)dicon("H","#e8383d",(2.5)*DT,2,Math.min(1,(t-1)/.2));
+ if(t>=6&&t<6.8)dicon("H","#e8383d",7.5*DT,2,1);
+ var lx=(Math.min(xa,7.2)+.5)*DT,txt,fg,bg;
+ if(t<1)txt="Estado: 0";else if(t<3.3)txt="0 y 1";else if(t<4.4){txt="¡OOF!";fg="#fff";bg="#d8423d"}else if(t<6)txt="Se intercambian";else txt="Vuelve a ser uno";
+ chip(dc,txt,clamp(lx,50,200),22,fg,bg)}
+function demoX(t){t%=8;var one1=t>=2.4&&t<3.9;dfloor(8,one1);
+ var x=t<1.4?1+6*t/1.4:t<2.6?7:t<3.2?7+(t-2.6)/.6:t<4.2?8:t<5.6?8+4*(t-4.2)/1.4:12,bump=t>=1.4&&t<2.1,xo=bump?(Math.floor(t*14)%2?2:-2):0;
+ var st=one1?1:0,al=st===1&&x>7.6&&x<8.4?.6:1;
+ dcat(x,st,al,xo);
+ if(t>=2.0&&t<2.7)dicon("X","#2f63d6",(x+.5)*DT,2,1);
+ if(t>=3.6&&t<4.3)dicon("X","#2f63d6",(x+.5)*DT,2,1);
+ var txt="Estado: "+st,fg,bg;if(bump){txt="¡No pasa!";fg="#fff";bg="#d8423d"}
+ chip(dc,txt,clamp((x+.5)*DT,50,200),22,fg,bg)}
+function demoZ(t){t%=7;dfloor(-1,false);dcat(4,0,1,0,Math.floor(t*2)%2?-1:0);
+ for(var i=0;i<7;i++){var ti=1+i*.3;if(t>ti&&t<5.2){var a=Math.min(1,(t-ti)/.3)*(t>4.4?Math.max(0,(5.2-t)/.8):1);spark(dc,(6+i+.5)*DT,4*DT-6,i===6?7:4,a*(Math.floor(t*6+i)%2?1:.6))}}
+ chip(dc,"Solo Quibi ve la marca",128,80)}
+function lever(x,on){var bx=x*DT+2,by=4*DT-6;R(dc,bx,by,12,5,"#1a1020");R(dc,bx+1,by+1,10,3,"#8a90a8");
+ var dx=on?1:-1,px=bx+6,py=by;for(var k=0;k<9;k++)R(dc,px+dx*Math.round(k*.6)-1,py-k,3,2,"#1a1020");for(var k2=0;k2<8;k2++)R(dc,px+dx*Math.round(k2*.6),py-k2,1,2,"#d8423d");R(dc,px+dx*5-1,py-10,4,4,"#ff5f52")}
+function demoC(t){t%=8;dfloor(-1,false);var on=t>=1.9&&t<7.4,open=clamp((t-2.2)/.7,0,1)*(t>=7.2?1-clamp((t-7.2)/.4,0,1):1);
+ var x=t<1.8?.5+1.7*t/1.8:t<2.9?2.2:t<5.4?2.2+9.8*(t-2.9)/2.5:12;
+ /* línea punteada entre el control y el objetivo */
+ for(var i=0;i<7;i++)R(dc,3*DT+10+i*14,23,8,2,on?"#ffd23a":"rgba(255,255,255,.7)");
+ R(dc,3*DT+2,18,10,10,"#1a1020");R(dc,3*DT+4,20,6,6,"#3a7bff");
+ R(dc,8*DT,14,16,16,"#1a1020");R(dc,8*DT+2,16,12,12,"#3a7bff");R(dc,8*DT+7,18,2,8,"#fff");R(dc,8*DT+4,21,8,2,"#fff");
+ lever(3,on);
+ var dh=Math.round(20*(1-open));if(dh>0){R(dc,8*DT+3,4*DT-dh+2,10,dh,"#1a1020");R(dc,8*DT+4,4*DT-dh+3,8,Math.max(0,dh-2),"#8a5530");if(dh>6)R(dc,8*DT+7,4*DT-dh+3,1,dh-2,"#5a3419")}
+ dcat(x,0,1);chip(dc,"Palanca → puerta",128,80)}
+function demoGo(t){t%=5;dfloor(-1,false);R(dc,14*DT,3*DT,DT,DT,"#f0845a");dstar(14.5*DT,4*DT-12,.5+.3*Math.sin(t*6));
+ var x=1+12.5*clamp(t/3,0,1);dcat(x,0,1);
+ if(t>3){for(var i=0;i<6;i++)spark(dc,14.5*DT+Math.cos(i*1.05+t*3)*18,4*DT-14+Math.sin(i*1.05+t*3)*14,3,1-clamp((t-3)/2,0,1))}
+ chip(dc,"¡Llega a la salida!",9*DT,8)}
+function drawDemo(t){var d={state:demoState,wall:demoWall,H:demoH,X:demoX,Z:demoZ,C:demoC,go:demoGo}[DEMO];if(d)d(t)}
+
+/* pasos del tutorial (Hada de las Cartas) */
+var TUT=[
+ {m:"state",t:"¡Hola! Soy el Hada de las Cartas. Quibi es un gato-qubit: su Estado es 0 (aura rosa) o 1 (aura azul)."},
+ {m:"wall",t:"El piso está en estado 0 y las paredes en 1: mira los números. Quibi solo puede pisar casillas de su mismo estado."},
+ {m:"cards",t:"Te entrego 4 cartas mágicas. Toca una para voltearla y leer su explicación."},
+ {m:"H",chip:["H","#e8383d","Carta H · Hadamard"],t:"Carta H: ¡Quibi se divide en dos! Uno queda en 0 y el otro pasa a 1. Si el de 0 choca con una pared suena ¡OOF! y los dos intercambian su estado. H otra vez los junta."},
+ {m:"X",chip:["X","#2f63d6","Carta X · NOT"],t:"Carta X: ¡Cambia 0 por 1! En 1, Quibi solo se mueve por las paredes, que también están en 1. Usa X otra vez para volver a los pasillos."},
+ {m:"Z",chip:["Z","#4a9fcf","Carta Z · Fase"],t:"Carta Z: ¡Marca en secreto el camino correcto, sin revelarlo! Por ahora está bloqueada: la verás en gris."},
+ {m:"C",chip:["C","#2f63d6","Carta CNOT · Enlace"],t:"Carta CNOT: ¡Enlaza dos puntos! Una palanca abre una puerta lejana. Por ahora también está bloqueada."},
+ {m:"go",t:"¡Eso es todo! Llega a la salida naranja antes que Bit-Bot. Muévete con flechas o WASD y usa las cartas H y X con 1 y 2."}];
+var tstep=0;
+function buildTutCards(){var h=$("tcards");h.innerHTML="";
+ CARDS.forEach(function(c,i){var e=makeSlot(c,function(){if(!c.off)openZoom(i,false)});e.classList.add("deal");if(!reduce)e.style.animationDelay=(i*.15)+"s";h.appendChild(e)});fitAll()}
+function renderTut(){var S=TUT[tstep];DEMO=S.m;dstart=clock();
+ $("tcount").textContent=(tstep+1)+"/"+TUT.length;$("tprog").style.width=((tstep+1)/TUT.length*100)+"%";
+ $("tprev").textContent=tstep===0?"‹ HISTORIA":"‹ ATRÁS";$("tnext").textContent=tstep===TUT.length-1?"ENTRAR ›":"SIGUIENTE ›";
+ var isCards=S.m==="cards";$("dv").hidden=isCards;$("tcards").hidden=!isCards;
+ var ch=$("chead");ch.hidden=!S.chip;if(S.chip){$("chi").textContent=S.chip[0];ch.style.setProperty("--c",S.chip[1]);$("cht").textContent=S.chip[2]}
+ if(isCards)buildTutCards();
+ typeInto($("tt"),S.t,"t")}
+
+/* ---------- historia de Qubitlandia (animada) ---------- */
+var SW=320,SH=200,sv=$("sv"),sc=sv.getContext("2d");sv.width=SW;sv.height=SH;
+var STORY=[
+ "En Qubitlandia, los seres de luz vivían en armonía resguardando la Estrella Dorada.",
+ "Hasta que el Rey Robot Clásico atacó.",
+ "Construyó un laberinto gigante para atrapar a todas las criaturitas de luz.",
+ "Ahora el bosque se despierta cada mañana con un laberinto distinto. Los pasillos se mueven mientras todos duermen, y por eso nadie conoce el camino de hoy.",
+ "Su ayudante, el robot Bit-Bot, revisa cada pasillo uno por uno, con paciencia, sin cansarse. Pero solo puede ir por un camino a la vez, para que ningún infiltrado se cuele.",
+ "La heroína es Quibi, una criaturita de luz que entra al laberinto para recuperar la estrella antes de que Bit-Bot la atrape.",
+ "Para lograrlo, el Hada de las Cartas le regala unas cartas mágicas."];
+var vstep=0,vstart=0;
+var STARS=[];for(var si=0;si<46;si++)STARS.push([(si*53)%320,(si*37)%120,si%3]);
+var CCOLS=["#ff9ad8","#7fc4ff","#ffe27a","#9affc8"];
+function sSky(t,day){var b=day?["#3b2a6a","#6a3f7a","#a8527a","#e07a5f","#f2b36b"]:["#07061a","#0c0a28","#120e3a","#1a1350","#241a63"];
+ for(var i=0;i<5;i++)R(sc,0,i*30,SW,30,b[i]);
+ if(!day)STARS.forEach(function(s,i){if(s[2]||Math.floor(t*2+i)%3)R(sc,s[0],s[1],1,1,"#fff")})}
+function moon(x,y){R(sc,x+1,y,4,1,"#f6f1d0");R(sc,x,y+1,6,4,"#f6f1d0");R(sc,x+1,y+5,4,1,"#f6f1d0");R(sc,x+2,y+2,1,1,"#dcd5a8")}
+function sun(x,y,t){R(sc,x+2,y,6,10,"#ffd23a");R(sc,x,y+2,10,6,"#ffd23a");R(sc,x+1,y+1,8,8,"#ffe27a");
+ for(var i=0;i<8;i++){var a=i*.785+t;R(sc,Math.round(x+5+Math.cos(a)*10),Math.round(y+5+Math.sin(a)*10),2,2,"#ffd23a")}}
+function tri(cx,by,h,col){for(var k=0;k<h;k+=2){var w=Math.max(2,(h-k)*.6);R(sc,Math.round(cx-w/2),by-k-2,Math.round(w),2,col)}}
+function sForest(dim){R(sc,0,150,SW,50,"#16301f");for(var x=-6;x<330;x+=18)tri(x,152,22+((x*13+40)%17),dim?"#091810":"#0c2016");R(sc,0,160,SW,40,dim?"#173a24":"#1f4a2c");
+ for(var g=0;g<24;g++)R(sc,(g*47)%320,165+(g*13)%30,2,1,dim?"#27603a":"#2f7a45")}
+function sStar(cx,cy,s,a){glow(sc,cx,cy,s*9,"255,200,60",a*.7);sc.globalAlpha=a;grid(sc,STARG,{Y:"#ffc83d",W:"#fff"},Math.round(cx-4.5*s),Math.round(cy-4.5*s),s);sc.globalAlpha=1}
+function creature(x,y,col){glow(sc,x,y,12,"255,255,255",.25);grid(sc,CRE,{W:col,K:"#1a1020"},Math.round(x-5),Math.round(y-5),2)}
+function sMaze(ox,oy,ts,rows,v,gl,t){R(sc,ox-3,oy-3,MW*ts+6,MH*ts+6,"#54402a");R(sc,ox,oy,MW*ts,MH*ts,"#4b3222");
+ sc.save();sc.beginPath();sc.rect(ox,oy,MW*ts,MH*ts);sc.clip();
+ for(var y=0;y<rows&&y<MH;y++){var off=gl?((Math.floor(t*18)+y*7)%5-2)*3*(y%2?1:-1):0;
+  for(var x=0;x<MW;x++){var sx=(v&1)?MW-1-x:x,sy=(v&2)?MH-1-y:y;if(MAZE[sy][sx]==="#")R(sc,ox+x*ts+off,oy+y*ts,ts,ts,"#cebfa0")}}
+ sc.restore()}
+var MOX=67,MOY=30,MTS=6;
+function tilePx(x,y){return[MOX+x*MTS+MTS/2,MOY+y*MTS+MTS/2]}
+function sScene1(t){sSky(t);moon(280,18);sForest();R(sc,110,148,100,6,"#2a5b36");R(sc,125,142,70,6,"#2f6a3e");R(sc,142,136,36,6,"#357044");
+ sStar(160,84+Math.round(2*Math.sin(t*2)),4,.9+.1*Math.sin(t*4));
+ for(var i=0;i<8;i++){var a=t*.6+i*.785;creature(160+Math.cos(a)*78,112+Math.sin(a)*22,CCOLS[i%4])}}
+function sScene2(t){sSky(t);moon(280,18);sForest(true);
+ var ax=clamp(t/1.6,0,1),kx=340-150*ax,land=t>1.6;
+ sc.save();if(land&&Math.floor(t*20)%2)sc.translate(1,0);
+ sStar(160,84,4,land?(Math.floor(t*8)%2?.9:.25):1);
+ for(var i=0;i<8;i++){var a=i*.785,fl=land?Math.min((t-1.6)*70,150):0;creature(160+Math.cos(a)*78-fl*(.6+(i%2)*.4),112+Math.sin(a)*22-(land?fl*.1:0),CCOLS[i%4])}
+ robotKing(sc,Math.round(kx),84,2,land&&Math.floor(t*6)%2?"#ff9a9a":"#ff2d2d");
+ sc.restore();
+ R(sc,0,0,SW,SH,"rgba(150,0,25,"+(.1+(land?.1*Math.sin(t*9)+.08:0))+")");
+ if(land&&Math.floor(t*4)%5===0)R(sc,0,0,SW,SH,"rgba(255,255,255,.25)")}
+function sScene3(t){sSky(t);sForest(true);var rows=Math.min(MH,Math.floor(t*6)+1);sMaze(MOX,MOY,MTS,rows,0,false,t);
+ if(rows>=MH){for(var i=0;i<5;i++){var p=SOLUTION[6+i*8],q=tilePx(p[0],p[1]);creature(q[0],q[1]+Math.round(Math.sin(t*4+i)),CCOLS[i%4])}}
+ robotKing(sc,8,100,2,Math.floor(t*3)%2?"#ff2d2d":"#ff7a7a")}
+function sScene4(t){var cyc=(t%6)/6,day=cyc>.5;sSky(t,day);if(day)sun(34,22,t);else moon(34,22);sForest(!day);
+ var v=Math.floor(t/3)%4,gl=(t%3)>2.5;sMaze(MOX,MOY,MTS,MH,v,gl,t)}
+function sScene5(t){sSky(t);sForest(true);sMaze(MOX,MOY,MTS,MH,0,false,t);
+ var idx=Math.min(TRACE.length-1,Math.floor(t*18));
+ for(var j=0;j<=idx;j++){var p=TRACE[j];R(sc,MOX+p[0]*MTS,MOY+p[1]*MTS,MTS,MTS,j===idx?"rgba(79,209,197,.9)":"rgba(79,209,197,.38)")}
+ var e=tilePx(EXIT.x,EXIT.y);sStar(e[0],e[1]-2,1,.9);
+ var cp=TRACE[idx],q=tilePx(cp[0],cp[1]);bitBot(sc,Math.round(q[0]-6),Math.round(q[1]-14),1,Math.floor(t*4)%3-1)}
+function sScene6(t){var run=SOLUTION.length/11,tt=t%(run+3);sSky(t);sForest(true);sMaze(MOX,MOY,MTS,MH,0,false,t);
+ var e=tilePx(EXIT.x,EXIT.y);sStar(e[0],e[1]-2,1,.8+.2*Math.sin(t*6));
+ var bi=Math.min(TRACE.length-1,Math.floor(Math.max(0,tt-1.2)*9)),bp=TRACE[bi],bq=tilePx(bp[0],bp[1]);bitBot(sc,Math.round(bq[0]-6),Math.round(bq[1]-14),1,0);
+ var pi=Math.min(SOLUTION.length-1,Math.floor(tt*11)),pp=SOLUTION[pi],pq=tilePx(pp[0],pp[1]);
+ aura(sc,pq[0],pq[1]-2,13,COL0,.9);catAt(sc,pq[0],pq[1]+6,18,1);
+ if(tt>run){for(var i=0;i<8;i++)spark(sc,Math.round(e[0]+Math.cos(i*.785+tt*3)*(8+(tt-run)*6)),Math.round(e[1]+Math.sin(i*.785+tt*3)*(8+(tt-run)*6)),2,1-clamp((tt-run)/3,0,1))}}
+function sScene7(t){sSky(t);moon(280,18);sForest();
+ var fy=62+Math.round(3*Math.sin(t*2.5));glow(sc,160,fy+30,60,"255,138,216",.35);grid(sc,FAIRY,FPAL,160-33,fy,5);
+ var cols=["#e8383d","#2f63d6","#b9e3f8","#2f63d6"],ls=["H","X","Z","+"];
+ for(var i=0;i<4;i++){var p=easeOut(clamp((t-.5-i*.4)/.6,0,1)),tx=160+(i-1.5)*56,ty=134,x=160+(tx-160)*p,y=100+(ty-100)*p;
+  if(p>0){sc.globalAlpha=p;R(sc,Math.round(x-14),Math.round(y-19),28,38,"#1a1020");R(sc,Math.round(x-12),Math.round(y-17),24,34,"#fbf7ea");R(sc,Math.round(x-8),Math.round(y-13),16,16,cols[i]);
+   sc.font='bold 14px "Pixelify Sans",monospace';sc.fillStyle="#fff";sc.textAlign="center";sc.textBaseline="middle";sc.fillText(ls[i],x,y-4);sc.globalAlpha=1}}
+ for(var s=0;s<10;s++)spark(sc,Math.round(160+Math.cos(s*.63+t*1.2)*(50+s*3)),Math.round(86+Math.sin(s*.63+t*1.2)*(26+s*2)),2,.5+.5*Math.sin(t*4+s))}
+function easeOut(p){return 1-(1-p)*(1-p)}
+function drawStory(t){sc.imageSmoothingEnabled=false;[sScene1,sScene2,sScene3,sScene4,sScene5,sScene6,sScene7][vstep](t)}
+function renderStory(){$("vcount").textContent=(vstep+1)+"/"+STORY.length;$("vprog").style.width=((vstep+1)/STORY.length*100)+"%";
+ $("vprev").textContent=vstep===0?"‹ INICIO":"‹ ATRÁS";$("vnext").textContent=vstep===STORY.length-1?"TUTORIAL ›":"SIGUIENTE ›";
+ vstart=clock();typeInto($("vt"),STORY[vstep],"v")}
+
+/* ---------- juego ---------- */
+var KEY="qml.v1",save={secs:0,days:[]};
+try{var o=JSON.parse(localStorage.getItem(KEY)||"null");if(o&&typeof o.secs==="number"&&Array.isArray(o.days))save=o}catch(e){}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify(save))}catch(e){}}
+function todayKey(){var d=new Date();return d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2)}
+var T=20,cv=$("mz"),gx=cv.getContext("2d");
+function floorLayer(col){var c=document.createElement("canvas");c.width=MW*T;c.height=MH*T;var x=c.getContext("2d");
+ for(var y=0;y<MH;y++)for(var i=0;i<MW;i++)if(MAZE[y][i]!=="#")one(x,i*T+T/2,y*T+T/2,2,col,ZERO);return c}
+var FLOOR0,FLOOR1,WALL0,WALL1;
+function wallLayer(dc2){var c=document.createElement("canvas");c.width=MW*T;c.height=MH*T;var x=c.getContext("2d");
+ for(var y=0;y<MH;y++)for(var i=0;i<MW;i++)if(MAZE[y][i]==="#"){R(x,i*T,y*T,T,T,"#cebfa0");if(y===MH-1||MAZE[y+1][i]!=="#")R(x,i*T,y*T+T-4,T,4,"#a8987a");one(x,i*T+T/2,y*T+T/2-2,2,dc2)}
+ return c}
+function buildLayers(){cv.width=MW*T;cv.height=MH*T;
+ FLOOR0=floorLayer("rgba(247,232,187,.16)");FLOOR1=floorLayer("rgba(255,122,200,.6)");
+ WALL0=wallLayer("rgba(75,50,34,.45)");WALL1=wallLayer("#2f63d6")}
+buildLayers();
+
+var cats=[],running=false,shakeUntil=0,hint=null,ticks=0;
+/* Bit-Bot: recorre la trayectoria de su Q-learning ya entrenado ([fila, col]; celdas repetidas = choque) */
+var bot=null,gameRun=0;
+/* desde el día 5 el laberinto sale de qubits y Bit-Bot obtiene poder cuántico (Grover); el 7, sin decoherencia.
+   El día se cambia con ‹ › en el HUD (se guarda en save.pick); ?dia=N en la URL lo fuerza al cargar */
+var QDAY=5,LASTDAY=7,DAYQ=parseInt(new URLSearchParams(location.search).get("dia"),10);
+function dayNum(){return clamp(Math.round(DAYQ>0?DAYQ:save.pick||save.days.length||1),1,LASTDAY)}
+function setDay(d){DAYQ=0;save.pick=clamp(d,1,LASTDAY);persist();enterGame()}
+$("dPrev").addEventListener("click",function(){setDay(dayNum()-1)});
+$("dNext").addEventListener("click",function(){setDay(dayNum()+1)});
+function getJSON(url,opts){return fetch(url,opts).then(function(r){if(!r.ok)throw new Error("Error "+r.status);return r.json()})}
+var hand=$("hand");
+CARDS.forEach(function(c,i){hand.appendChild(makeSlot(c,function(){if(running&&!c.off)openZoom(i,true)}))});
+
+function fmt(s){var m=Math.floor(s/60),r=s%60;return("0"+m).slice(-2)+":"+("0"+r).slice(-2)}
+function hud(){var two=cats.length===2;
+ $("hEst").textContent="Estado: "+(two?"0 y 1":cats[0].s);$("hTime").textContent="Tiempo: "+fmt(save.secs);var day=dayNum();$("hDay").textContent="Día "+day;$("dPrev").disabled=day<=1;$("dNext").disabled=day>=LASTDAY;
+ $("portrait").className="portrait "+(two?"s01":"s"+cats[0].s)}
+function toast(m){$("toast").textContent=m}
+/* el piso está en 0 y las paredes en 1: cada gato solo pisa casillas de su mismo estado */
+function canEnter(c,x,y){return c.s===0?!wall(x,y):inner(x,y)&&wall(x,y)}
+function planMoves(dx,dy){var bumper=null;
+ cats.forEach(function(c){var nx=c.x+dx,ny=c.y+dy;if(canEnter(c,nx,ny)){c.nx=nx;c.ny=ny}else{c.nx=c.x;c.ny=c.y;if(c.s===0&&wall(nx,ny)&&!bumper)bumper=c}});
+ return bumper}
+function move(dx,dy){if(!running||!$("zoom").hidden)return;
+ var bumper=planMoves(dx,dy);
+ if(bumper&&cats.length===2){
+  /* choque en superposición: ¡OOF! y los dos gatos intercambian su estado */
+  oof();shakeUntil=performance.now()+260;
+  var other=cats[0]===bumper?cats[1]:cats[0],tmp=bumper.s;bumper.s=other.s;other.s=tmp;
+  toast("¡OOF! Los dos gatos intercambian su estado");
+  planMoves(dx,dy)}
+ cats.forEach(function(c){c.x=c.nx;c.y=c.ny});
+ hud();
+ if(cats.some(function(c){return c.x===EXIT.x&&c.y===EXIT.y}))win()}
+function useCard(i){if(!running||i<0)return;if(CARDS[i].off){toast("Esta carta aún está bloqueada");return}var id=CARDS[i].id,el=hand.children[i];
+ if(id==="H"){
+  if(cats.length===2){var z=cats.filter(function(c){return c.s===0})[0]||cats[0];z.s=0;cats=[z];toast("H: los dos gatos se juntan en 0")}
+  else{var c0=cats[0];
+   cats.push({x:c0.x,y:c0.y,s:1-c0.s});toast("H: ¡Quibi se divide! Uno en 0 y otro en 1")}}
+ else if(id==="X"){
+  cats.forEach(function(c){c.s=1-c.s});
+  toast(cats.length===2?"X: los dos gatos invierten su estado":cats[0].s?"X: Quibi está en 1 y solo pisa paredes":"X: Quibi vuelve a 0 y a los pasillos")}
+ else if(id==="Z"){
+  var f=cats.filter(function(c){return!wall(c.x,c.y)})[0];
+  if(!f){toast("Sal de la pared para ver la marca");return}
+  var p=bfs(f.x,f.y);if(!p){toast("Z: no hay marca desde aquí");return}
+  hint={t0:performance.now(),path:p.slice(1,10)};toast("Z: ¡camino marcado! Solo Quibi lo ve")}
+ else{toast("CNOT: aún no hay palancas en este laberinto")}
+ hud();if(!reduce&&el){el.classList.remove("pop");void el.offsetWidth;el.classList.add("pop")}}
+
+/* laberinto + bot de cada día, pedidos por adelantado (al tocar PLAY) para que el juego arranque sin esperas.
+   Semilla = fecha + día: cada mañana un laberinto distinto y cada día de la aventura el suyo */
+var preps={};
+function prepare(day){var k=todayKey(),id=k+"/"+day;if(preps[id])return preps[id];
+ var qd=day>=QDAY,q="algorithm=backtracker&width=15&height=10&braid=0.2&seed="+k.replace(/-/g,"")+day+(qd?"&quantum=true":"");
+ var maze=getJSON("/api/maze?"+q),botp=maze.then(function(b){var body=qd?{grid:b.grid,level:day>=7?"expert":"hard"}:{grid:b.grid};
+  return getJSON(qd?"/api/bot/quantum":"/api/bot/play",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)})});
+ var p=preps[id]={qd:qd,maze:maze,bot:botp};
+ botp.catch(function(){if(preps[id]===p)delete preps[id]});   /* si falló, se vuelve a pedir la próxima vez */
+ return p}
+function enterGame(){var my=++gameRun,day=dayNum(),p=prepare(day),qd=p.qd;
+ cats=[{x:START.x,y:START.y,s:0}];running=false;hint=null;bot=null;
+ var k=todayKey();if(save.days.indexOf(k)<0){save.days.push(k);persist()}
+ hud();$("win").hidden=true;closeZoom();go("s5");fitAll();
+ $("mlbl").textContent=(qd?"Laberinto cuántico":"Laberinto")+" · 15×10";
+ toast(qd?"Día "+day+": los qubits están moviendo los pasillos…":"Los pasillos se están moviendo…");
+ /* Quibi se mueve apenas llega el laberinto; Bit-Bot sale cuando termina de prepararse */
+ p.maze.then(function(b){if(my!==gameRun)return;
+  setMaze(gridRows(b.grid));buildLayers();cats=[{x:START.x,y:START.y,s:0}];running=true;hud();
+  toast(qd?"¡Corre! Bit-Bot está despertando su poder cuántico…":"¡Corre! Bit-Bot está estudiando el laberinto…");
+  p.bot.then(function(res){if(my!==gameRun||!running)return;var a=qd?res:res.attempts[res.attempts.length-1];
+   bot={path:a.path,i:0,tick:res.tick_ms,next:performance.now()+res.tick_ms,q:qd};
+   toast(qd?"¡Bit-Bot obtuvo poder cuántico! Consulta todas las direcciones a la vez":"¡Bit-Bot salió a buscar la estrella!")},
+  function(){if(my===gameRun&&running)toast("Bit-Bot no pudo salir hoy: el laberinto es todo tuyo")})},
+ function(){if(my!==gameRun)return;running=true;toast("Sin servidor: laberinto de práctica, sin Bit-Bot")})}
+function stepBot(now){if(!bot||!running)return;
+ if(now-bot.next>1000)bot.next=now;   /* pestaña oculta: Bit-Bot espera, igual que el reloj */
+ while(now>=bot.next&&bot.i<bot.path.length-1){bot.i++;bot.next+=bot.tick}
+ var p=bot.path[bot.i];if(p[1]===EXIT.x&&p[0]===EXIT.y)lose()}
+function drawBot(cx){if(!bot)return;
+ for(var j=0;j<bot.i;j++){var q=bot.path[j];R(cx,q[1]*T,q[0]*T,T,T,bot.q?"rgba(74,168,255,.25)":"rgba(79,209,197,.22)")}
+ var p=bot.path[bot.i];if(bot.q)aura(cx,(p[1]+.5)*T,(p[0]+.5)*T,T*1.3,COL1,.8);
+ bitBot(cx,p[1]*T+4,p[0]*T+2,1,Math.floor(performance.now()/250)%3-1)}
+function lose(){running=false;persist();
+ $("winTxt").textContent=bot&&bot.q?"Bit-Bot, con poder cuántico, llegó primero a la estrella. ¡Usa tus cartas e inténtalo otra vez!":"Bit-Bot llegó primero a la estrella. ¡Inténtalo otra vez!";
+ $("win").hidden=false;$("winOk").focus()}
+function leaveGame(){gameRun++;bot=null;closeZoom();running=false;persist();$("win").hidden=true}
+
+/* ---------- entrenamiento: los 4 intentos de Bit-Bot con su Q-learning al 10, 30, 60 y 100 % ---------- */
+var rv=$("rv"),rx=rv.getContext("2d"),SPEEDS=[1,4,16],rspeed=1,train=null,trainRun=0;
+function rmsg(m){$("rmsg").textContent=m}
+function mazeCanvas(rows){var c=document.createElement("canvas"),H=rows.length,W=rows[0].length;c.width=W*T;c.height=H*T;var x=c.getContext("2d");
+ R(x,0,0,c.width,c.height,"#4b3222");
+ rows.forEach(function(r,y){for(var i=0;i<W;i++)if(r[i]==="#"){R(x,i*T,y*T,T,T,"#cebfa0");if(y===H-1||rows[y+1][i]!=="#")R(x,i*T,y*T+T-4,T,4,"#a8987a")}});
+ R(x,T,T,T,T,"#ffc83d");R(x,(W-2)*T,(H-2)*T,T,T,"#f0845a");return c}
+/* los días cuánticos Bit-Bot no entrena: se muestra el último laberinto clásico */
+function startTrain(){var my=++trainRun,day=Math.min(dayNum(),QDAY-1),p=prepare(day);train=null;go("s7");
+ $("rsum").innerHTML="";$("rinfo").textContent="Entrenamiento · día "+day;rmsg("Bit-Bot está entrenando en el laberinto…");
+ Promise.all([p.maze,p.bot]).then(function(v){if(my!==trainRun)return;var rows=gridRows(v[0].grid);
+  rv.width=rows[0].length*T;rv.height=rows.length*T;
+  train={layer:mazeCanvas(rows),res:v[1],k:0,i:0,next:performance.now()+v[1].tick_ms,pause:0,done:false}},
+ function(){if(my===trainRun)rmsg("Sin servidor: no se puede ver el entrenamiento")})}
+function drawTrain(){var tr=train,now=performance.now();if(!tr)return;
+ var atts=tr.res.attempts,a=atts[tr.k],tick=tr.res.tick_ms/rspeed,pct=Math.round(a.trained*100);
+ if(tr.pause&&now>=tr.pause){tr.k++;tr.i=0;tr.pause=0;tr.next=now+tick;a=atts[tr.k];pct=Math.round(a.trained*100)}
+ if(!tr.pause&&!tr.done){if(now-tr.next>1000)tr.next=now;
+  while(now>=tr.next&&tr.i<a.path.length-1){tr.i++;tr.next+=tick}
+  var lbl="Intento "+(tr.k+1)+"/"+atts.length+" · entrenado al "+pct+" %";
+  if(tr.i<a.path.length-1)rmsg(lbl+" · paso "+tr.i+" / "+a.steps);
+  else{var li=document.createElement("li");li.className=a.reached?"ok":"";
+   li.textContent="Entrenado al "+pct+" %: "+(a.reached?"escapó en "+a.steps+" pasos":"no escapó ("+a.steps+" pasos)");$("rsum").appendChild(li);
+   if(tr.k<atts.length-1){tr.pause=now+1500;rmsg(lbl+(a.reached?" · ¡escapó!":" · no escapó")+" — siguiente intento…")}
+   else{tr.done=true;rmsg("Así aprendió Bit-Bot el laberinto. En el juego corre con el último intento.")}}}
+ rx.imageSmoothingEnabled=false;rx.drawImage(tr.layer,0,0);
+ for(var j=0;j<tr.i;j++){var q=a.path[j];R(rx,q[1]*T,q[0]*T,T,T,"rgba(79,209,197,.3)")}
+ var p=a.path[tr.i];bitBot(rx,p[1]*T+4,p[0]*T+2,1,Math.floor(now/250)%3-1)}
+$("rspeed").addEventListener("click",function(){rspeed=SPEEDS[(SPEEDS.indexOf(rspeed)+1)%SPEEDS.length];this.textContent="x"+rspeed});
+$("rback").addEventListener("click",function(){trainRun++;train=null;go("s3")});
+function win(){running=false;persist();$("winTxt").textContent="¡Quibi recuperó la estrella! Tiempo total: "+fmt(save.secs)+".";$("win").hidden=false;$("winOk").focus()}
+$("winOk").addEventListener("click",enterGame);
+setInterval(function(){if(running&&!document.hidden){save.secs++;ticks++;if(ticks%5===0)persist();$("hTime").textContent="Tiempo: "+fmt(save.secs)}},1000);
+window.addEventListener("pagehide",persist);
+
+function drawGame(){var now=performance.now(),cx=gx;cx.imageSmoothingEnabled=false;
+ cx.save();if(now<shakeUntil)cx.translate(Math.floor(now/40)%2?3:-3,0);
+ R(cx,-4,-4,cv.width+8,cv.height+8,"#4b3222");
+ cx.drawImage(cats.some(function(c){return c.s===0})?FLOOR1:FLOOR0,0,0);
+ cx.drawImage(cats.some(function(c){return c.s===1})?WALL1:WALL0,0,0);
+ R(cx,START.x*T,START.y*T,T,T,"#ffc83d");R(cx,EXIT.x*T,EXIT.y*T,T,T,"#f0845a");
+ if(hint){var age=(now-hint.t0)/1000;if(age>4)hint=null;else hint.path.forEach(function(p,i){var a=clamp(Math.min((age-i*.15)/.3,(4-age)/.8),0,1);if(a>0)spark(cx,p[0]*T+T/2,p[1]*T+T/2,4,a*(Math.floor(now/120+i)%2?1:.65))})}
+ stepBot(now);drawBot(cx);
+ var order=cats.slice().sort(function(a,b){return b.s-a.s}),t=now/1000;
+ order.forEach(function(c){var px=(c.x+.5)*T,base=(c.y+1)*T+2,same=cats.length===2&&cats[0].x===cats[1].x&&cats[0].y===cats[1].y,xo=same?(c.s?4:-4):0,al=(c.s===1&&wall(c.x,c.y))?.75:1;
+  aura(cx,px+xo,base-T*.5,T*(1.6+(reduce?0:.18*Math.sin(t*3.8))),c.s?COL1:COL0,al);catAt(cx,px+xo,base,T*1.75,al)});
+ cx.restore()}
+
+/* ---------- compositor: por ahora solo para armar el circuito (no afecta al juego) ---------- */
+var NQ=2,MAXG=10,circ=[],drag=null,suppressClick=false;for(var q=0;q<NQ;q++)circ.push([]);
+function gateEl(g){var b=document.createElement("button");b.className="gt";b.dataset.g=g;b.setAttribute("aria-label","Compuerta "+g);b.innerHTML=gateSvg(g,"#fff");return b}
+function prob1(list){var a=1,b=0;list.forEach(function(g){if(g==="X"){var t=a;a=b;b=t}else{var na=(a+b)/Math.SQRT2,nb=(a-b)/Math.SQRT2;a=na;b=nb}});return b*b}
+function addGate(q,g,i){if(circ[q].length>=MAXG){toast("Ese qubit ya está lleno");return}circ[q].splice(i==null?circ[q].length:i,0,g)}
+function renderCirc(){var W=$("wires");W.innerHTML="";
+ circ.forEach(function(list,q){var row=document.createElement("div"),line=document.createElement("div"),disk=document.createElement("span");
+  row.className="wire";row.innerHTML='<span class="ql">q['+q+']</span>';line.className="line";line.dataset.q=q;
+  list.forEach(function(g,i){var b=gateEl(g);b.title="Toca para quitar · arrastra para mover";
+   b.addEventListener("pointerdown",function(e){e.preventDefault();circ[q].splice(i,1);renderCirc();beginDrag(e,g,null)});
+   b.addEventListener("click",function(e){if(e.detail===0){circ[q].splice(i,1);renderCirc()}});line.appendChild(b)});
+  var p=Math.round(prob1(list)*100);disk.className="disk";disk.style.setProperty("--p",p+"%");disk.title="Probabilidad de medir 1: "+p+" %";
+  row.appendChild(line);row.appendChild(disk);W.appendChild(row)});
+ $("cpre").textContent=qiskitCode()}
+/* el circuito armado, como código Qiskit (columna por columna, igual que en el compositor) */
+function qiskitCode(){var L=["from qiskit import QuantumCircuit","from qiskit.quantum_info import Statevector","","qc = QuantumCircuit("+NQ+")"],mx=0;
+ circ.forEach(function(l){mx=Math.max(mx,l.length)});
+ for(var i=0;i<mx;i++)for(var q=0;q<NQ;q++)if(circ[q][i])L.push("qc."+circ[q][i].toLowerCase()+"("+q+")");
+ if(!mx)L.push("# arrastra H o X al compositor");
+ L.push("","print(qc.draw())","print(Statevector(qc).probabilities_dict())");
+ L.push("# probabilidad de medir 1 que muestra el juego: "+circ.map(function(l,q){return"q["+q+"] "+Math.round(prob1(l)*100)+" %"}).join(", "));
+ return L.join("\n")}
+function lineAt(x,y){var el=document.elementFromPoint?document.elementFromPoint(x,y):null;return el&&el.closest?el.closest(".line"):null}
+function insertIndex(line,x){var gs=line.querySelectorAll(".gt"),i=0;for(;i<gs.length;i++){var r=gs[i].getBoundingClientRect();if(x<r.left+r.width/2)break}return i}
+function clearHot(){document.querySelectorAll(".line.hot").forEach(function(l){l.classList.remove("hot")})}
+function beginDrag(e,g,onTap){drag={g:g,x0:e.clientX,y0:e.clientY,on:false,ghost:null,onTap:onTap}}
+function moveGhost(e){drag.ghost.style.left=e.clientX+"px";drag.ghost.style.top=e.clientY+"px";clearHot();var l=lineAt(e.clientX,e.clientY);if(l)l.classList.add("hot")}
+document.addEventListener("pointermove",function(e){if(!drag)return;
+ if(!drag.on){if(Math.abs(e.clientX-drag.x0)+Math.abs(e.clientY-drag.y0)<8)return;drag.on=true;drag.ghost=gateEl(drag.g);drag.ghost.classList.add("ghost");drag.ghost.tabIndex=-1;document.body.appendChild(drag.ghost)}
+ moveGhost(e)});
+document.addEventListener("pointerup",function(e){if(!drag)return;var d=drag;drag=null;clearHot();if(d.ghost)d.ghost.remove();
+ if(!d.on){if(d.onTap)d.onTap();renderCirc();return}
+ suppressClick=true;setTimeout(function(){suppressClick=false},0);
+ var l=lineAt(e.clientX,e.clientY);if(l)addGate(+l.dataset.q,d.g,insertIndex(l,e.clientX));renderCirc()});
+document.addEventListener("pointercancel",function(){if(!drag)return;if(drag.ghost)drag.ghost.remove();drag=null;clearHot();renderCirc()});
+document.addEventListener("click",function(e){if(suppressClick){suppressClick=false;e.stopPropagation();e.preventDefault()}},true);
+document.querySelectorAll(".cpal .gt").forEach(function(b){var g=b.dataset.g;b.innerHTML=gateSvg(g,"#fff");
+ b.addEventListener("pointerdown",function(e){e.preventDefault();beginDrag(e,g,function(){addGate(0,g)})});
+ b.addEventListener("click",function(e){if(e.detail===0){addGate(0,g);renderCirc()}})});
+/* las cartas H y X de la mano también se pueden arrastrar al compositor */
+Array.prototype.forEach.call(hand.children,function(slot,i){var c=CARDS[i];if(c.off)return;
+ slot.querySelector(".qc").addEventListener("pointerdown",function(e){if(e.pointerType==="mouse")e.preventDefault();beginDrag(e,c.id,null)})});
+$("cclear").addEventListener("click",function(){circ.forEach(function(l){l.length=0});renderCirc()});
+$("ccode").addEventListener("click",function(){var open=$("cqk").hidden;$("cqk").hidden=!open;this.setAttribute("aria-expanded",String(open))});
+$("ccopy").addEventListener("click",function(){var t=qiskitCode();
+ function fallback(){var r=document.createRange();r.selectNodeContents($("cpre"));var s=window.getSelection();s.removeAllRanges();s.addRange(r);toast("Código seleccionado: cópialo con Ctrl+C")}
+ try{navigator.clipboard.writeText(t).then(function(){toast("Código Qiskit copiado")},fallback)}catch(e){fallback()}});
+renderCirc();
+
+/* ---------- navegación ---------- */
+var leaving=false;
+function startStory(){vstep=0;renderStory();go("s6")}
+function startTut(){tstep=0;renderTut();go("s4")}
+/* PLAY entra directo a jugar (el laberinto se pide mientras corren los gatos); la historia queda en el menú */
+$("play").addEventListener("click",function(){if(leaving)return;var st=$("stage");prepare(dayNum());
+ if(reduce){enterGame();return}
+ leaving=true;st.classList.add("run");
+ setTimeout(function(){enterGame();setTimeout(function(){st.classList.remove("run");leaving=false},800)},1750)});
+$("mStory").addEventListener("click",startStory);
+$("mTrain").addEventListener("click",startTrain);
+$("vprev").addEventListener("click",function(){if(vstep===0)go("s3");else{vstep--;renderStory()}});
+$("vnext").addEventListener("click",function(){if(vstep<STORY.length-1){vstep++;renderStory()}else startTut()});
+$("vskip").addEventListener("click",startTut);
+$("vbox").addEventListener("click",function(){finishType("v")});
+$("tbox").addEventListener("click",function(){finishType("t")});
+$("tprev").addEventListener("click",function(){if(tstep===0){vstep=STORY.length-1;renderStory();go("s6")}else{tstep--;renderTut()}});
+$("tnext").addEventListener("click",function(){if(tstep<TUT.length-1){tstep++;renderTut()}else enterGame()});
+$("gback").addEventListener("click",function(){leaveGame();go("s3")});
+
+document.addEventListener("keydown",function(e){
+ if(e.key==="Escape"&&!$("zoom").hidden){closeZoom();return}
+ if(e.key==="Escape"&&cur==="s7"){$("rback").click();return}
+ if(cur==="s5"){
+  var m={ArrowUp:[0,-1],w:[0,-1],W:[0,-1],ArrowDown:[0,1],s:[0,1],S:[0,1],ArrowLeft:[-1,0],a:[-1,0],A:[-1,0],ArrowRight:[1,0],d:[1,0],D:[1,0]}[e.key];
+  if(m){e.preventDefault();move(m[0],m[1]);return}
+  var n=parseInt(e.key,10);if(n>=1&&n<=CARDS.length&&$("zoom").hidden)useCard(n-1);return}
+ if((cur==="s4"||cur==="s6")&&e.target===document.body){
+  var nx=e.key==="ArrowRight"||e.key==="Enter"||e.key===" ",pv=e.key==="ArrowLeft";
+  if(nx||pv){e.preventDefault();$(cur==="s4"?(nx?"tnext":"tprev"):(nx?"vnext":"vprev")).click()}}});
+var rep=null;function stopRep(){clearInterval(rep);rep=null}
+document.querySelectorAll("#dpad button").forEach(function(b){var d=b.dataset.d.split(",").map(Number);
+ b.addEventListener("pointerdown",function(e){e.preventDefault();stopRep();move(d[0],d[1]);rep=setInterval(function(){move(d[0],d[1])},140)});
+ ["pointerup","pointerleave","pointercancel"].forEach(function(ev){b.addEventListener(ev,stopRep)})});
+
+/* bucle de dibujo: solo pinta la escena visible */
+function loop(){var t=clock();
+ if(cur==="s6")drawStory(t-vstart);
+ else if(cur==="s4"&&DEMO!=="cards")drawDemo(t-dstart);
+ else if(cur==="s5")drawGame();
+ else if(cur==="s7")drawTrain();
+ requestAnimationFrame(loop)}
+requestAnimationFrame(loop);
 })();
 </script>
+
 </body>
 </html>

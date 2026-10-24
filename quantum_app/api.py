@@ -6,10 +6,12 @@ from fastapi import Depends, FastAPI, HTTPException, Query, Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
+import quantum_maze
 from bot import BotRival
 from quantum_app import circuits, crud, maze
 from quantum_app.config import get_settings
 from quantum_app.db import Connection, get_conn, get_optional_conn
+from quantum_bot import QuantumBot
 
 app = FastAPI(title="Quantum", docs_url="/api/docs", openapi_url="/api/openapi.json")
 
@@ -65,8 +67,11 @@ def get_maze(
     height: Annotated[int, Query(ge=2, le=50)] = 10,
     braid: Annotated[float, Query(ge=0, le=1)] = 0.2,
     seed: int | None = None,
+    quantum: bool = False,
 ):
-    return {"grid": maze.generate(algorithm, width, height, braid, seed)}
+    """`quantum=true` draws every random decision from measured qubits (quantum_maze.py)."""
+    generate = quantum_maze.generate if quantum else maze.generate
+    return {"grid": generate(algorithm, width, height, braid, seed)}
 
 
 # Training time grows quickly with maze size; 31x31 is a 15x15-cell maze (~10s).
@@ -78,17 +83,37 @@ class BotPlayRequest(BaseModel):
     level: Literal["easy", "medium"] = "medium"
 
 
+class QuantumBotRequest(BaseModel):
+    grid: list[list[Literal[0, 1]]]
+    level: Literal["hard", "expert"] = "hard"
+
+
+def _endpoints(grid: list[list[int]]) -> tuple[tuple[int, int], tuple[int, int]]:
+    """Validate the grid shape and return (start, goal): top-left and bottom-right cells."""
+    rows, cols = len(grid), len(grid[0]) if grid else 0
+    if not (3 <= rows <= BOT_MAX_GRID and 3 <= cols <= BOT_MAX_GRID):
+        raise HTTPException(422, f"grid must be between 3x3 and {BOT_MAX_GRID}x{BOT_MAX_GRID}")
+    if any(len(row) != cols for row in grid):
+        raise HTTPException(422, "grid rows must have the same length")
+    return (1, 1), (rows - 2, cols - 2)
+
+
 @app.post("/api/bot/play")
 def bot_play(req: BotPlayRequest):
     """Train the Q-learning bot on this maze and return its attempts as it learns."""
-    rows, cols = len(req.grid), len(req.grid[0]) if req.grid else 0
-    if not (3 <= rows <= BOT_MAX_GRID and 3 <= cols <= BOT_MAX_GRID):
-        raise HTTPException(422, f"grid must be between 3x3 and {BOT_MAX_GRID}x{BOT_MAX_GRID}")
-    if any(len(row) != cols for row in req.grid):
-        raise HTTPException(422, "grid rows must have the same length")
-    start, goal = (1, 1), (rows - 2, cols - 2)
+    start, goal = _endpoints(req.grid)
     try:
         return BotRival(req.grid, start, goal).attempts(req.level)
+    except ValueError as exc:  # no path from start to goal
+        raise HTTPException(422, str(exc)) from exc
+
+
+@app.post("/api/bot/quantum")
+def bot_quantum(req: QuantumBotRequest):
+    """The bot with quantum power: no training, one Grover query per move (quantum_bot.py)."""
+    start, goal = _endpoints(req.grid)
+    try:
+        return QuantumBot(req.grid, start, goal).play(req.level)
     except ValueError as exc:  # no path from start to goal
         raise HTTPException(422, str(exc)) from exc
 
