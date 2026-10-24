@@ -1,0 +1,31 @@
+[project]
+name = "quantum"
+version = "0.1.0"
+description = "Quantum circuits API with Qiskit, FastAPI, PostgreSQL and Vercel"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.162.0",
+    "psycopg[binary]>=3.3.6",
+    "pydantic-settings>=2.16.1",
+    "qiskit>=2.6.1",
+]
+
+[dependency-groups]
+dev = [
+    "httpx2>=2.16.0",
+    "pytest>=9.1.1",
+    "ruff>=0.17.2",
+    "uvicorn[standard]>=0.54.0",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]

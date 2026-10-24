@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quantum</title>
+  <style>
+    :root { --bg: #fafafa; --fg: #1a1a1a; --muted: #666; --card: #fff; --line: #e3e3e3; --accent: #4f46e5; }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #111; --fg: #eee; --muted: #999; --card: #1b1b1b; --line: #2c2c2c; --accent: #818cf8; }
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 2rem 1rem; font: 15px/1.5 system-ui, sans-serif; background: var(--bg); color: var(--fg); }
+    main { max-width: 760px; margin: 0 auto; display: grid; gap: 1.25rem; }
+    h1 { margin: 0; font-size: 1.5rem; }
+    .muted { color: var(--muted); font-size: .875rem; }
+    section { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 1rem 1.25rem; }
+    form { display: flex; flex-wrap: wrap; gap: .75rem; align-items: end; }
+    label { display: grid; gap: .25rem; font-size: .8rem; color: var(--muted); }
+    input, select, button { font: inherit; padding: .4rem .6rem; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--fg); }
+    input[type=number] { width: 7rem; }
+    button { background: var(--accent); color: #fff; border: 0; cursor: pointer; }
+    button:disabled { opacity: .6; cursor: wait; }
+    .bar { display: grid; grid-template-columns: 6rem 1fr 4rem; gap: .5rem; align-items: center; font-family: ui-monospace, monospace; font-size: .85rem; }
+    .bar div { height: 14px; background: var(--accent); border-radius: 3px; min-width: 2px; }
+    .bar span:last-child { text-align: right; color: var(--muted); }
+    pre { overflow-x: auto; font-size: .8rem; background: var(--bg); padding: .75rem; border-radius: 6px; }
+    table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+    td, th { text-align: left; padding: .35rem .25rem; border-bottom: 1px solid var(--line); }
+    .error { color: #dc2626; }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Quantum</h1>
+    <div class="muted" id="health">Comprobando API…</div>
+  </header>
+
+  <section>
+    <form id="run-form">
+      <label>Circuito <select name="circuit" id="circuit"></select></label>
+      <label>Qubits <input name="num_qubits" type="number" min="1" max="12" value="2"></label>
+      <label>Shots <input name="shots" type="number" min="1" max="10000" value="1024"></label>
+      <label>Etiqueta <input name="label" placeholder="opcional"></label>
+      <button type="submit">Ejecutar</button>
+    </form>
+  </section>
+
+  <section id="result" hidden>
+    <div id="bars"></div>
+    <details><summary class="muted">OpenQASM</summary><pre id="qasm"></pre></details>
+  </section>
+
+  <section>
+    <strong>Historial</strong>
+    <div id="runs" class="muted">—</div>
+  </section>
+</main>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
+
+  async function api(path, opts = {}) {
+    const res = await fetch(path, { headers: { "Content-Type": "application/json" }, ...opts });
+    const body = res.status === 204 ? null : await res.json();
+    if (!res.ok) throw new Error(body?.detail ?? res.statusText);
+    return body;
+  }
+
+  function renderCounts(counts, shots) {
+    const entries = Object.entries(counts).sort(([a], [b]) => a.localeCompare(b));
+    $("bars").replaceChildren(...entries.map(([state, n]) => {
+      const row = document.createElement("div");
+      row.className = "bar";
+      row.innerHTML = `<span>|${state}⟩</span><div style="width:${(100 * n / shots).toFixed(1)}%"></div><span>${n}</span>`;
+      return row;
+    }));
+  }
+
+  async function loadRuns() {
+    try {
+      const runs = await api("/api/runs?limit=10");
+      if (!runs.length) return ($("runs").textContent = "Sin ejecuciones guardadas.");
+      const rows = runs.map((r) =>
+        `<tr><td>#${r.id}</td><td>${esc(r.circuit)}</td><td>${r.num_qubits}q</td><td>${r.shots}</td>` +
+        `<td>${esc(r.label)}</td><td>${new Date(r.created_at).toLocaleString()}</td></tr>`).join("");
+      $("runs").innerHTML = `<table><tr><th>ID</th><th>Circuito</th><th>Qubits</th><th>Shots</th><th>Etiqueta</th><th>Fecha</th></tr>${rows}</table>`;
+    } catch (e) {
+      $("runs").textContent = `Historial no disponible: ${e.message}`;
+    }
+  }
+
+  $("run-form").addEventListener("submit", async (ev) => {
+    ev.preventDefault();
+    const btn = ev.submitter;
+    const data = Object.fromEntries(new FormData(ev.target));
+    btn.disabled = true;
+    try {
+      const run = await api("/api/circuits/run", {
+        method: "POST",
+        body: JSON.stringify({ ...data, num_qubits: +data.num_qubits, shots: +data.shots, label: data.label || null }),
+      });
+      $("result").hidden = false;
+      renderCounts(run.counts, run.shots);
+      $("qasm").textContent = run.qasm;
+      loadRuns();
+    } catch (e) {
+      $("result").hidden = false;
+      $("bars").innerHTML = `<p class="error"></p>`;
+      $("bars").firstChild.textContent = e.message;
+    } finally {
+      btn.disabled = false;
+    }
+  });
+
+  $("circuit").addEventListener("change", (ev) => {
+    if (ev.target.value === "bell") document.querySelector("[name=num_qubits]").value = 2;
+  });
+
+  (async () => {
+    const [{ circuits }, health] = await Promise.all([api("/api/circuits"), api("/api/health")]);
+    $("circuit").replaceChildren(...circuits.map((c) => new Option(c, c)));
+    $("health").textContent = `API ok · base de datos: ${health.database}`;
+    loadRuns();
+  })().catch((e) => ($("health").textContent = `API no disponible: ${e.message}`));
+</script>
+</body>
+</html>
