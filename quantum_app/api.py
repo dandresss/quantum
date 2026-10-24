@@ -80,7 +80,7 @@ class BotPlayRequest(BaseModel):
 
 @app.post("/api/bot/play")
 def bot_play(req: BotPlayRequest):
-    """Train the Q-learning bot on this maze and return one escape attempt."""
+    """Train the Q-learning bot on this maze and return its attempts as it learns."""
     rows, cols = len(req.grid), len(req.grid[0]) if req.grid else 0
     if not (3 <= rows <= BOT_MAX_GRID and 3 <= cols <= BOT_MAX_GRID):
         raise HTTPException(422, f"grid must be between 3x3 and {BOT_MAX_GRID}x{BOT_MAX_GRID}")
@@ -88,7 +88,7 @@ def bot_play(req: BotPlayRequest):
         raise HTTPException(422, "grid rows must have the same length")
     start, goal = (1, 1), (rows - 2, cols - 2)
     try:
-        return BotRival(req.grid, start, goal).play(req.level)
+        return BotRival(req.grid, start, goal).attempts(req.level)
     except ValueError as exc:  # no path from start to goal
         raise HTTPException(422, str(exc)) from exc
 

@@ -14,6 +14,9 @@ LEVELS = {
     "medium": {"train_frac": 0.10, "eps": 0.15, "tick_ms": 360},   # media
 }
 
+# Intentos progresivos: el mismo entrenamiento visto en varios momentos, para que se vea aprender al bot
+ATTEMPTS = [0.10, 0.30, 0.60, 1.00]
+
 
 class BotRival:
     def __init__(self, grid, start, goal, episodes=None, seed=1):
@@ -23,8 +26,10 @@ class BotRival:
             episodes = int(400 * max(1.0, self._shortest(grid, start, goal) / 52))   # 400 está calibrado para un camino de 52 pasos
         self.agent = QAgent(grid, start, goal, seed=seed)
         marks = {lv: max(1, int(episodes * c["train_frac"])) for lv, c in LEVELS.items()}
-        snaps, self.history = self.agent.train(episodes, snapshots=set(marks.values()))
+        attempt_marks = [max(1, int(episodes * f)) for f in ATTEMPTS]
+        snaps, self.history = self.agent.train(episodes, snapshots=set(marks.values()) | set(attempt_marks))
         self.Q = {lv: snaps[ep] for lv, ep in marks.items()}
+        self.Q_attempts = [snaps[ep] for ep in attempt_marks]
 
     @staticmethod
     def _shortest(grid, start, goal):
@@ -50,6 +55,15 @@ class BotRival:
         if with_heatmap:
             out["heatmap"] = self.heatmap(level)
         return out
+
+    def attempts(self, level="medium"):
+        """Una partida por cada foto de ATTEMPTS (tabla Q cada vez más entrenada)."""
+        cfg, out = LEVELS[level], []
+        for frac, Q in zip(ATTEMPTS, self.Q_attempts):
+            path, reached = self.agent.rollout(Q, cfg["eps"])
+            out.append({"trained": frac, "path": [list(p) for p in path], "reached": reached,
+                        "steps": len(path) - 1})
+        return {"attempts": out, "tick_ms": cfg["tick_ms"]}
 
     def heatmap(self, level="medium"):
         Q, g = self.Q[level], self.agent.grid

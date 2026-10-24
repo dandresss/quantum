@@ -3,18 +3,23 @@ import pytest
 from quantum_app.maze import generate
 
 
-def test_bot_plays_a_valid_path(client):
+def test_bot_plays_progressive_attempts(client):
     grid = generate("binary_tree", 4, 3, 0.2, seed=2)
     resp = client.post("/api/bot/play", json={"grid": grid})
     assert resp.status_code == 200
     body = resp.json()
-    path = body["path"]
-    assert path[0] == [1, 1]
-    assert body["steps"] == len(path) - 1 and body["tick_ms"] > 0
-    for (r1, c1), (r2, c2) in zip(path, path[1:], strict=False):
-        assert abs(r1 - r2) + abs(c1 - c2) <= 1  # moves one cell or bumps a wall
-        assert grid[r2][c2] == 0
-    assert body["reached"] == (path[-1] == [len(grid) - 2, len(grid[0]) - 2])
+    assert body["tick_ms"] > 0
+    attempts = body["attempts"]
+    assert [a["trained"] for a in attempts] == [0.1, 0.3, 0.6, 1.0]
+    for attempt in attempts:
+        path = attempt["path"]
+        assert path[0] == [1, 1]
+        assert attempt["steps"] == len(path) - 1
+        for (r1, c1), (r2, c2) in zip(path, path[1:], strict=False):
+            assert abs(r1 - r2) + abs(c1 - c2) <= 1  # moves one cell or bumps a wall
+            assert grid[r2][c2] == 0
+        assert attempt["reached"] == (path[-1] == [len(grid) - 2, len(grid[0]) - 2])
+    assert attempts[-1]["reached"]  # fully trained bot escapes this small maze
 
 
 @pytest.mark.parametrize(
