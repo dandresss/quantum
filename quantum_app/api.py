@@ -6,6 +6,7 @@ from fastapi import Depends, FastAPI, HTTPException, Query, Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
+from bot import BotRival
 from quantum_app import circuits, crud, maze
 from quantum_app.config import get_settings
 from quantum_app.db import Connection, get_conn, get_optional_conn
@@ -66,6 +67,30 @@ def get_maze(
     seed: int | None = None,
 ):
     return {"grid": maze.generate(algorithm, width, height, braid, seed)}
+
+
+# Training time grows quickly with maze size; 31x31 is a 15x15-cell maze (~10s).
+BOT_MAX_GRID = 31
+
+
+class BotPlayRequest(BaseModel):
+    grid: list[list[Literal[0, 1]]]
+    level: Literal["easy", "medium"] = "medium"
+
+
+@app.post("/api/bot/play")
+def bot_play(req: BotPlayRequest):
+    """Train the Q-learning bot on this maze and return one escape attempt."""
+    rows, cols = len(req.grid), len(req.grid[0]) if req.grid else 0
+    if not (3 <= rows <= BOT_MAX_GRID and 3 <= cols <= BOT_MAX_GRID):
+        raise HTTPException(422, f"grid must be between 3x3 and {BOT_MAX_GRID}x{BOT_MAX_GRID}")
+    if any(len(row) != cols for row in req.grid):
+        raise HTTPException(422, "grid rows must have the same length")
+    start, goal = (1, 1), (rows - 2, cols - 2)
+    try:
+        return BotRival(req.grid, start, goal).play(req.level)
+    except ValueError as exc:  # no path from start to goal
+        raise HTTPException(422, str(exc)) from exc
 
 
 @app.get("/api/circuits")

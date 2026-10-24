@@ -27,6 +27,7 @@ tests/                   # pytest
 | ------ | -------------------- | --------------------------------------------- |
 | GET    | `/api/health`        | Estado de la API y de la BD                   |
 | GET    | `/api/maze`          | Genera un laberinto (`algorithm`=`binary_tree`\|`backtracker`, `width`, `height`, `braid` 0–1, `seed`) |
+| POST   | `/api/bot/play`      | Entrena el bot de Q-learning (`bot.py`/`agent.py`) en `{"grid": ...}` (máx. 31×31) y devuelve su intento de escape |
 | GET    | `/api/circuits`      | Circuitos disponibles (`bell`, `ghz`, `superposition`) |
 | POST   | `/api/circuits/run`  | Ejecuta un circuito y (opcional) lo guarda    |
 | GET    | `/api/runs`          | Lista ejecuciones (`limit`, `offset`)         |

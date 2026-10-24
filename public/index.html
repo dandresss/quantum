@@ -82,7 +82,10 @@ box-shadow:inset 0 -6px 0 #d99a14,inset 0 6px 0 #ffe58a;clip-path:polygon(0 8px,
 .bar .info{font-size:1.4rem;color:#9a96b8;text-align:right}
 #maze[hidden]{display:none}
 #maze{display:block;max-width:100%;border:4px solid var(--ink);box-shadow:0 0 0 4px #54402a,6px 6px 0 4px rgba(0,0,0,.45);image-rendering:pixelated}
-.msg{font-size:1.5rem}
+.msg{font-size:1.5rem;margin:0}
+.board{position:relative;max-width:100%}
+#botcat{position:absolute;left:0;top:0;pointer-events:none}
+#botcat[hidden]{display:none}
 </style>
 </head>
 <body>
@@ -105,9 +108,9 @@ box-shadow:inset 0 -6px 0 #d99a14,inset 0 6px 0 #ffe58a;clip-path:polygon(0 8px,
 </main>
 </div>
 <div class="scene" id="s4">
-<div class="bar"><button class="btn" id="back">‹ INTRO</button><span class="info" id="info"></span></div>
+<div class="bar"><button class="btn" id="back">‹ INTRO</button><span class="info" id="info"></span><button class="btn" id="speed" aria-label="Velocidad">x1</button></div>
 <p class="msg" id="msg" hidden></p>
-<canvas id="maze" aria-label="Laberinto"></canvas>
+<div class="board"><canvas id="maze" aria-label="Laberinto"></canvas><svg id="botcat" viewBox="-1 -1 22 26" aria-label="Gato blanco (bot)" hidden></svg></div>
 </div>
 <div class="dlg" id="dlg" hidden role="dialog" aria-labelledby="dlg-title">
 <h2 id="dlg-title">Ajustes</h2>
@@ -116,8 +119,8 @@ box-shadow:inset 0 -6px 0 #d99a14,inset 0 6px 0 #ffe58a;clip-path:polygon(0 8px,
 <select id="algorithm" name="algorithm"><option value="binary_tree">Binary tree</option><option value="backtracker">Backtracker</option></select>
 <label for="braid">Dificultad</label>
 <select id="braid" name="braid"><option value="0.5">Fácil</option><option value="0.2" selected>Normal</option><option value="0">Difícil</option></select>
-<label for="width">Ancho</label><input id="width" name="width" type="number" min="2" max="50" value="15" required>
-<label for="height">Alto</label><input id="height" name="height" type="number" min="2" max="50" value="10" required>
+<label for="width">Ancho</label><input id="width" name="width" type="number" min="2" max="15" value="15" required>
+<label for="height">Alto</label><input id="height" name="height" type="number" min="2" max="15" value="10" required>
 <div class="row"><button class="btn" type="submit" id="ok">Listo</button></div>
 </form>
 </div>
@@ -197,21 +200,46 @@ var dlg=document.getElementById("dlg"),form=document.getElementById("settings"),
 s3=document.getElementById("s3"),s4=document.getElementById("s4"),msg=document.getElementById("msg"),canvas=document.getElementById("maze");
 document.getElementById("settings-btn").addEventListener("click",function(){dlg.hidden=false;document.getElementById("algorithm").focus()});
 form.addEventListener("submit",function(e){e.preventDefault();dlg.hidden=true});
-function back(){s4.classList.remove("on");s3.classList.add("on");document.getElementById("play").focus()}
+/* run: cada PLAY o volver invalida la partida anterior (fetch/animación en curso) */
+var run=0,cell=0,speeds=[1,4,16],speed=1,cat=document.getElementById("botcat"),speedBtn=document.getElementById("speed");
+cat.innerHTML=sprite(PAL.B);
+speedBtn.addEventListener("click",function(){speed=speeds[(speeds.indexOf(speed)+1)%speeds.length];speedBtn.textContent="x"+speed});
+function back(){run++;s4.classList.remove("on");s3.classList.add("on");document.getElementById("play").focus()}
 document.getElementById("back").addEventListener("click",back);
 document.addEventListener("keydown",function(e){if(e.key!=="Escape")return;if(!dlg.hidden)dlg.hidden=true;else if(s4.classList.contains("on"))back()});
+function getJSON(url,opts){return fetch(url,opts).then(function(r){return r.json().then(function(b){
+if(!r.ok)throw new Error(r.status===422?"Ajustes inválidos: ancho y alto entre 2 y 15.":"Error "+r.status);return b})})}
 document.getElementById("play").addEventListener("click",function(){
+var my=++run;
 dlg.hidden=true;s3.classList.remove("on");s4.classList.add("on");
 var f=form.elements,params=new URLSearchParams(new FormData(form));
 document.getElementById("info").textContent=f.algorithm.selectedOptions[0].text+" · "+f.braid.selectedOptions[0].text+" · "+f.width.value+"×"+f.height.value;
-msg.hidden=false;msg.textContent="Generando…";canvas.hidden=true;
-fetch("/api/maze?"+params).then(function(r){return r.json().then(function(b){if(!r.ok)throw new Error(r.status===422?"Ajustes inválidos: ancho y alto entre 2 y 50.":"Error "+r.status);return b})})
-.then(function(b){msg.hidden=true;canvas.hidden=false;drawMaze(b.grid)})
-.catch(function(err){msg.textContent=err.message})});
+msg.hidden=false;msg.textContent="Generando…";canvas.hidden=true;cat.toggleAttribute("hidden",true);
+getJSON("/api/maze?"+params).then(function(b){
+if(my!==run)return;
+canvas.hidden=false;drawMaze(b.grid);
+msg.textContent="El gato blanco está aprendiendo el laberinto…";
+return getJSON("/api/bot/play",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({grid:b.grid})})
+.then(function(res){if(my===run)animate(res,my)})})
+.catch(function(err){if(my===run){msg.hidden=false;msg.textContent=err.message}})});
+/* el bot recorre su trayectoria; las celdas repetidas son choques contra una pared */
+function animate(res,my){
+var ctx=canvas.getContext("2d"),path=res.path,i=0;
+cat.toggleAttribute("hidden",false);
+(function tick(){
+if(my!==run)return;
+var p=path[i],scale=canvas.clientWidth/canvas.width,w=cell*scale;
+if(i>0){var q=path[i-1];ctx.fillStyle="rgba(255,255,255,.18)";ctx.fillRect(q[1]*cell,q[0]*cell,cell,cell)}
+cat.style.width=w+"px";cat.style.height=(w*26/22)+"px";
+cat.style.transform="translate("+(4+p[1]*w)+"px,"+(4+(p[0]+1)*w-w*26/22)+"px)";
+msg.textContent="Intentando escapar… paso "+i+" / "+res.steps;
+if(++i<path.length)setTimeout(tick,res.tick_ms/speed);
+else msg.textContent=res.reached?"¡El gato blanco escapó en "+res.steps+" pasos!":"No logró escapar tras "+res.steps+" pasos.";
+})()}
 function drawMaze(grid){
 var rows=grid.length,cols=grid[0].length,
 size=Math.max(3,Math.floor(Math.min((Math.min(innerWidth,900)-40)/cols,(innerHeight-120)/rows)));
-canvas.width=cols*size;canvas.height=rows*size;
+cell=size;canvas.width=cols*size;canvas.height=rows*size;
 var ctx=canvas.getContext("2d");
 grid.forEach(function(row,r){row.forEach(function(v,c){ctx.fillStyle=v?"#cdbf9f":"#4a3320";ctx.fillRect(c*size,r*size,size,size);
 if(v){ctx.fillStyle="#8f8166";ctx.fillRect(c*size,r*size+size-Math.ceil(size/5),size,Math.ceil(size/5))}})});
