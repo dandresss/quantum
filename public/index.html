@@ -488,9 +488,9 @@ function gateSvg(k,col){var g=GL[k],w=g[0].length,h=g.length,t='<svg viewBox="0 
  g.forEach(function(r,y){for(var x=0;x<w;x++){if(r[x]==="X")t+='<rect x="'+x+'" y="'+y+'" width="1" height="1"/>'}});return t+'</svg>'}
 var CARDS=[
  {id:"H",c:"#e8383d",g:"#ff4d52",px:"H",aria:"Carta Hadamard",tag:"H",name:"Hadamard",power:"Superposición",
-  desc:"Quibi se divide en dos: uno queda en 0 y el otro pasa a 1.",
+  desc:"Aparece otro Quibi en el estado contrario, en una casilla al azar.",
   bt:"Hadamard, en cuántico",p1:"Lleva un qubit en |0⟩ a (|0⟩ + |1⟩)/√2.",
-  p2:"Al medirlo sale 0 o 1 con 50 %. En el juego, si el 0 choca con una pared suena ¡OOF! y los dos intercambian su estado. H otra vez los junta.",code:"qc.h(0)"},
+  p2:"Al medirlo sale 0 o 1 con 50 %. En el juego aparece otro Quibi en el estado contrario, en una casilla al azar de ese estado. Se mueven a la vez y, cuando uno choca, suena ¡OOF! y el otro desaparece.",code:"qc.h(0)"},
  {id:"X",c:"#2f63d6",g:"#3a7bff",px:"X",aria:"Carta X NOT",tag:"X",name:"X (NOT)",power:"Inversión",
   desc:"Pasa de 0 a 1 y atraviesa las paredes, que están en 1.",
   bt:"X (NOT), en cuántico",p1:"Es el NOT cuántico: cambia |0⟩ por |1⟩ y |1⟩ por |0⟩.",
@@ -539,29 +539,23 @@ function dfloor(plug,blue){R(dc,0,0,DW,DH,"#4b3222");
  for(var y=0;y<6;y++)for(var x=0;x<16;x++){if(y===3&&x!==plug){one(dc,x*DT+8,y*DT+8,2,"rgba(255,150,210,.5)",ZERO);continue}
   R(dc,x*DT,y*DT,DT,DT,"#cebfa0");if((y===2&&x!==plug)||y===5)R(dc,x*DT,y*DT+DT-3,DT,3,"#a8987a");
   one(dc,x*DT+8,y*DT+7,2,blue?"#2f63d6":"rgba(75,50,34,.45)")}}
-function dcat(x,state,alpha,xo,yo){var px=(x+.5)*DT+(xo||0),base=4*DT+2+(yo||0);aura(dc,px,base-12,24,state?COL1:COL0,alpha);catAt(dc,px,base,30,alpha)}
+function dcat(x,state,alpha,xo,yo,row){var px=(x+.5)*DT+(xo||0),base=((row==null?3:row)+1)*DT+2+(yo||0);aura(dc,px,base-12,24,state?COL1:COL0,alpha);catAt(dc,px,base,30,alpha)}
 function dicon(letter,col,cx,y,a){dc.globalAlpha=clamp(a,0,1);R(dc,cx-9,y,18,18,"#1a1020");R(dc,cx-7,y+2,14,14,col);dc.font='bold 14px "Pixelify Sans",monospace';dc.fillStyle="#fff";dc.textAlign="center";dc.textBaseline="middle";dc.fillText(letter,cx,y+10);dc.globalAlpha=1}
 function dstar(x,y,a){grid(dc,STARG,{Y:"#ffc83d",W:"#fff"},Math.round(x-9),Math.round(y-9),2);glow(dc,x,y,22,"255,200,60",a==null?.6:a)}
 function demoState(t){var s=Math.floor(t/1.5)%2;dfloor(-1,s===1);dcat(7.5,s,1);chip(dc,"Estado: "+s,8*DT,8)}
 function demoWall(t){t%=4.6;dfloor(8,false);var x=1+6*Math.min(t/2.2,1),bump=t>2.2&&t<3.6,xo=bump?(Math.floor(t*14)%2?2:-2):0;
  dcat(x,0,1,xo);if(bump)chip(dc,"¡No pasa!",(x+.5)*DT,8,"#fff","#d8423d");else chip(dc,"Estado: 0",(x+.5)*DT,8)}
-function demoH(t){t%=9;var two=t>=1&&t<6.6,blueDigits=t>=1&&t<6.6;
- var m=clamp((t-1.7)/1.6,0,1),xa=2+5*m,xb=xa,swapped=t>=3.5;
- if(t>=3.7){xb=7;xa=7+clamp((t-3.7)/.5,0,1)}
- dfloor(8,blueDigits);
- var sA=swapped?1:0,sB=swapped?0:1;
- function gh(x,s){return s===1&&x>7.6&&x<8.4?.6:1}
- if(two){var fade=t>6?1-clamp((t-6)/.6,0,1):1;
-  var bumpA=t>=3.3&&t<3.5?(Math.floor(t*30)%2?2:-2):0;
-  /* A = el gato original, B = su copia */
-  var ghostIsA=swapped;
-  if(ghostIsA){dcat(xa,1,gh(xa,1)*fade,0,-2);dcat(xb,0,1,0,2)}else{dcat(xb,1,1,0,-2);dcat(xa,0,1,bumpA,2)}
- }else{dcat(t<1?2:7,0,1)}
- if(t>=1&&t<1.7)dicon("H","#e8383d",(2.5)*DT,2,Math.min(1,(t-1)/.2));
- if(t>=6&&t<6.8)dicon("H","#e8383d",7.5*DT,2,1);
- var lx=(Math.min(xa,7.2)+.5)*DT,txt,fg,bg;
- if(t<1)txt="Estado: 0";else if(t<3.3)txt="0 y 1";else if(t<4.4){txt="¡OOF!";fg="#fff";bg="#d8423d"}else if(t<6)txt="Se intercambian";else txt="Vuelve a ser uno";
- chip(dc,txt,clamp(lx,50,200),22,fg,bg)}
+function demoH(t){t%=8;var split=t>=1.2,keepPink=H_QUEDA_EL_QUE_CHOCA;
+ /* el rosa está en el pasillo; la copia azul aparece al azar en una pared (aquí, arriba a la derecha) */
+ var m=clamp((t-1.8)/1.2,0,1),xp=5+2*m,xb=11+2*m,bump=t>=3.0&&t<3.4,after=t>=3.4,fade=after?1-clamp((t-3.4)/.7,0,1):1;
+ dfloor(8,split&&(!after||!keepPink||fade>0));
+ var aB=split?(keepPink?fade:1):0,aP=keepPink?1:(split?fade:1);
+ if(aB>0){dcat(xb,1,aB,0,0,1);if(t<1.9){var k=(t-1.2)/.7;for(var i=0;i<8;i++)spark(dc,Math.round((xb+.5)*DT+Math.cos(i*.785)*(4+k*14)),Math.round(1.5*DT+Math.sin(i*.785)*(4+k*14)),2,1-k)}}
+ if(aP>0)dcat(xp,0,aP,bump?(Math.floor(t*30)%2?2:-2):0,0,3);
+ if(t>=1.0&&t<1.8)dicon("H","#e8383d",5.5*DT,26,Math.min(1,(t-1)/.2));
+ var txt,fg,bg;
+ if(t<1.2)txt="Estado: 0";else if(t<3.0)txt="Aparece otro Quibi en 1";else if(t<3.9){txt="¡OOF! Choca el rosa";fg="#fff";bg="#d8423d"}else txt=keepPink?"Desaparece el azul":"Desaparece el rosa";
+ chip(dc,txt,128,78,fg,bg)}
 function demoX(t){t%=8;var one1=t>=2.4&&t<3.9;dfloor(8,one1);
  var x=t<1.4?1+6*t/1.4:t<2.6?7:t<3.2?7+(t-2.6)/.6:t<4.2?8:t<5.6?8+4*(t-4.2)/1.4:12,bump=t>=1.4&&t<2.1,xo=bump?(Math.floor(t*14)%2?2:-2):0;
  var st=one1?1:0,al=st===1&&x>7.6&&x<8.4?.6:1;
@@ -595,7 +589,7 @@ var TUT=[
  {m:"state",t:"¡Hola! Soy el Hada de las Cartas. Quibi es un gato-qubit: su Estado es 0 (aura rosa) o 1 (aura azul)."},
  {m:"wall",t:"El piso está en estado 0 y las paredes en 1: mira los números. Quibi solo puede pisar casillas de su mismo estado."},
  {m:"cards",t:"Te entrego 4 cartas mágicas. Toca una para voltearla y leer su explicación."},
- {m:"H",chip:["H","#e8383d","Carta H · Hadamard"],t:"Carta H: ¡Quibi se divide en dos! Uno queda en 0 y el otro pasa a 1. Si el de 0 choca con una pared suena ¡OOF! y los dos intercambian su estado. H otra vez los junta."},
+ {m:"H",chip:["H","#e8383d","Carta H · Hadamard"],t:"Carta H: ¡aparece otro Quibi en el estado contrario, en una casilla al azar de ese estado! Los dos se mueven a la vez y, cuando uno choca, suena ¡OOF! y el otro desaparece."},
  {m:"X",chip:["X","#2f63d6","Carta X · NOT"],t:"Carta X: ¡Cambia 0 por 1! En 1, Quibi solo se mueve por las paredes, que también están en 1. Usa X otra vez para volver a los pasillos."},
  {m:"Z",chip:["Z","#4a9fcf","Carta Z · Fase"],t:"Carta Z: ¡Marca en secreto el camino correcto, sin revelarlo! Por ahora está bloqueada: la verás en gris."},
  {m:"C",chip:["C","#2f63d6","Carta CNOT · Enlace"],t:"Carta CNOT: ¡Enlaza dos puntos! Una palanca abre una puerta lejana. Por ahora también está bloqueada."},
@@ -721,25 +715,31 @@ function hud(){var two=cats.length===2;
 function toast(m){$("toast").textContent=m}
 /* el piso está en 0 y las paredes en 1: cada gato solo pisa casillas de su mismo estado */
 function canEnter(c,x,y){return c.s===0?!wall(x,y):inner(x,y)&&wall(x,y)}
-function planMoves(dx,dy){var bumper=null;
- cats.forEach(function(c){var nx=c.x+dx,ny=c.y+dy;if(canEnter(c,nx,ny)){c.nx=nx;c.ny=ny}else{c.nx=c.x;c.ny=c.y;if(c.s===0&&wall(nx,ny)&&!bumper)bumper=c}});
- return bumper}
+/* H: cuando uno de los dos gatos choca suena ¡OOF! y desaparece uno de ellos.
+   true  = se queda el que chocó y desaparece el otro (como en el ejemplo pedido)
+   false = desaparece el que chocó y sigue el otro */
+var H_QUEDA_EL_QUE_CHOCA=true;
+function colorDe(c){return c.s?"azul":"rosa"}
+function planMoves(dx,dy){var blocked=[];
+ cats.forEach(function(c){var nx=c.x+dx,ny=c.y+dy;if(canEnter(c,nx,ny)){c.nx=nx;c.ny=ny}else{c.nx=c.x;c.ny=c.y;blocked.push(c)}});
+ return blocked}
 function move(dx,dy){if(!running||!$("zoom").hidden)return;
- var bumper=planMoves(dx,dy);
- if(bumper&&cats.length===2){
-  /* choque en superposición: ¡OOF! y los dos gatos intercambian su estado */
-  oof();shakeUntil=performance.now()+260;
-  var other=cats[0]===bumper?cats[1]:cats[0],tmp=bumper.s;bumper.s=other.s;other.s=tmp;
-  toast("¡OOF! Los dos gatos intercambian su estado");
-  planMoves(dx,dy)}
+ var blocked=planMoves(dx,dy);
+ if(cats.length===2&&blocked.length===1){
+  var hit=blocked[0],other=cats[0]===hit?cats[1]:cats[0],keep=H_QUEDA_EL_QUE_CHOCA?hit:other,gone=keep===hit?other:hit;
+  oof();shakeUntil=performance.now()+260;cats=[keep];
+  toast("¡OOF! Chocó el gato "+colorDe(hit)+" y desapareció el "+colorDe(gone))}
  cats.forEach(function(c){c.x=c.nx;c.y=c.ny});
  hud();
  if(cats.some(function(c){return c.x===EXIT.x&&c.y===EXIT.y}))win()}
 function useCard(i){if(!running||i<0)return;if(CARDS[i].off){toast("Esta carta aún está bloqueada");return}var id=CARDS[i].id,el=hand.children[i];
  if(id==="H"){
   if(cats.length===2){var z=cats.filter(function(c){return c.s===0})[0]||cats[0];z.s=0;cats=[z];toast("H: los dos gatos se juntan en 0")}
-  else{var c0=cats[0];
-   cats.push({x:c0.x,y:c0.y,s:1-c0.s});toast("H: ¡Quibi se divide! Uno en 0 y otro en 1")}}
+  else{var c0=cats[0],ns=1-c0.s,opts=[];
+   /* la copia aparece en una casilla al azar de su mismo estado: 1 = pared interior, 0 = piso */
+   for(var yy=1;yy<MH-1;yy++)for(var xx=1;xx<MW-1;xx++)if((ns?wall(xx,yy):!wall(xx,yy))&&!(xx===c0.x&&yy===c0.y)&&!(xx===EXIT.x&&yy===EXIT.y))opts.push([xx,yy]);
+   var p=opts[Math.floor(Math.random()*opts.length)];
+   cats.push({x:p[0],y:p[1],s:ns,born:performance.now()});toast("H: ¡apareció otro Quibi en estado "+ns+"!")}}
  else if(id==="X"){
   cats.forEach(function(c){c.s=1-c.s});
   toast(cats.length===2?"X: los dos gatos invierten su estado":cats[0].s?"X: Quibi está en 1 y solo pisa paredes":"X: Quibi vuelve a 0 y a los pasillos")}
@@ -835,7 +835,8 @@ function drawGame(){var now=performance.now(),cx=gx;cx.imageSmoothingEnabled=fal
  stepBot(now);drawBot(cx);
  var order=cats.slice().sort(function(a,b){return b.s-a.s}),t=now/1000;
  order.forEach(function(c){var px=(c.x+.5)*T,base=(c.y+1)*T+2,same=cats.length===2&&cats[0].x===cats[1].x&&cats[0].y===cats[1].y,xo=same?(c.s?4:-4):0,al=(c.s===1&&wall(c.x,c.y))?.75:1;
-  aura(cx,px+xo,base-T*.5,T*(1.6+(reduce?0:.18*Math.sin(t*3.8))),c.s?COL1:COL0,al);catAt(cx,px+xo,base,T*1.75,al)});
+  aura(cx,px+xo,base-T*.5,T*(1.6+(reduce?0:.18*Math.sin(t*3.8))),c.s?COL1:COL0,al);catAt(cx,px+xo,base,T*1.75,al);
+  if(c.born&&now-c.born<900){var k=(now-c.born)/900;for(var i=0;i<8;i++)spark(cx,Math.round(px+Math.cos(i*.785)*(6+k*22)),Math.round(base-T*.5+Math.sin(i*.785)*(6+k*22)),3,1-k)}});
  cx.restore()}
 
 /* ---------- compositor: por ahora solo para armar el circuito (no afecta al juego) ---------- */
