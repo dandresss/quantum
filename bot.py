@@ -17,8 +17,8 @@ LEVELS = {
 # Intentos progresivos: el mismo entrenamiento visto en varios momentos, para que se vea aprender al bot
 ATTEMPTS = [0.10, 0.30, 0.60, 1.00]
 
-# En la carrera contra el jugador corre con la tabla Q al 80 %: al 100 % encuentra la salida muy rápido
-RACE = 0.80
+# En la carrera contra el jugador corre con la tabla Q al 60 %: más entrenado encuentra la salida muy rápido
+RACE = 0.60
 
 
 class BotRival:

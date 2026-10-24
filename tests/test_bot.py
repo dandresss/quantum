@@ -51,9 +51,9 @@ def test_bot_obeys_q_85_percent_of_moves():
     assert all(level["eps"] == 0.15 for level in LEVELS.values())
 
 
-def test_race_uses_the_q_table_at_80_percent(client):
+def test_race_uses_the_q_table_at_60_percent(client):
     grid = generate("binary_tree", 4, 3, 0.2, seed=2)
     race = client.post("/api/bot/play", json={"grid": grid}).json()["race"]
-    assert race["trained"] == 0.8
+    assert race["trained"] == 0.6
     assert race["path"][0] == [1, 1] and race["steps"] == len(race["path"]) - 1
     assert all(grid[r][c] == 0 for r, c in race["path"])
