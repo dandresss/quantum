@@ -26,6 +26,7 @@ tests/                   # pytest
 | Método | Ruta                 | Descripción                                   |
 | ------ | -------------------- | --------------------------------------------- |
 | GET    | `/api/health`        | Estado de la API y de la BD                   |
+| GET    | `/api/maze`          | Genera un laberinto (`algorithm`=`binary_tree`\|`backtracker`, `width`, `height`, `braid` 0–1, `seed`) |
 | GET    | `/api/circuits`      | Circuitos disponibles (`bell`, `ghz`, `superposition`) |
 | POST   | `/api/circuits/run`  | Ejecuta un circuito y (opcional) lo guarda    |
 | GET    | `/api/runs`          | Lista ejecuciones (`limit`, `offset`)         |

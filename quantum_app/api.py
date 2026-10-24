@@ -1,12 +1,12 @@
 from datetime import datetime
 from pathlib import Path
-from typing import Annotated
+from typing import Annotated, Literal
 
 from fastapi import Depends, FastAPI, HTTPException, Query, Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
-from quantum_app import circuits, crud
+from quantum_app import circuits, crud, maze
 from quantum_app.config import get_settings
 from quantum_app.db import Connection, get_conn, get_optional_conn
 
@@ -55,6 +55,17 @@ def health(conn: OptionalConn):
         except Exception:
             db = "error"
     return {"status": "ok", "database": db}
+
+
+@app.get("/api/maze")
+def get_maze(
+    algorithm: Literal["binary_tree", "backtracker"] = "binary_tree",
+    width: Annotated[int, Query(ge=2, le=50)] = 15,
+    height: Annotated[int, Query(ge=2, le=50)] = 10,
+    braid: Annotated[float, Query(ge=0, le=1)] = 0.2,
+    seed: int | None = None,
+):
+    return {"grid": maze.generate(algorithm, width, height, braid, seed)}
 
 
 @app.get("/api/circuits")
