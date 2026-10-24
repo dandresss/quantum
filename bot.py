@@ -17,6 +17,9 @@ LEVELS = {
 # Intentos progresivos: el mismo entrenamiento visto en varios momentos, para que se vea aprender al bot
 ATTEMPTS = [0.10, 0.30, 0.60, 1.00]
 
+# En la carrera contra el jugador corre con la tabla Q al 80 %: al 100 % encuentra la salida muy rápido
+RACE = 0.80
+
 
 class BotRival:
     def __init__(self, grid, start, goal, episodes=None, seed=1):
@@ -27,9 +30,12 @@ class BotRival:
         self.agent = QAgent(grid, start, goal, seed=seed)
         marks = {lv: max(1, int(episodes * c["train_frac"])) for lv, c in LEVELS.items()}
         attempt_marks = [max(1, int(episodes * f)) for f in ATTEMPTS]
-        snaps, self.history = self.agent.train(episodes, snapshots=set(marks.values()) | set(attempt_marks))
+        race_mark = max(1, int(episodes * RACE))
+        snapshots = set(marks.values()) | set(attempt_marks) | {race_mark}
+        snaps, self.history = self.agent.train(episodes, snapshots=snapshots)
         self.Q = {lv: snaps[ep] for lv, ep in marks.items()}
         self.Q_attempts = [snaps[ep] for ep in attempt_marks]
+        self.Q_race = snaps[race_mark]
 
     @staticmethod
     def _shortest(grid, start, goal):
@@ -57,13 +63,17 @@ class BotRival:
         return out
 
     def attempts(self, level="medium"):
-        """Una partida por cada foto de ATTEMPTS (tabla Q cada vez más entrenada)."""
+        """Una partida por cada foto de ATTEMPTS (tabla Q cada vez más entrenada),
+        más la de la carrera contra el jugador (RACE)."""
         cfg, out = LEVELS[level], []
         for frac, Q in zip(ATTEMPTS, self.Q_attempts):
             path, reached = self.agent.rollout(Q, cfg["eps"])
             out.append({"trained": frac, "path": [list(p) for p in path], "reached": reached,
                         "steps": len(path) - 1})
-        return {"attempts": out, "tick_ms": cfg["tick_ms"]}
+        path, reached = self.agent.rollout(self.Q_race, cfg["eps"])
+        race = {"trained": RACE, "path": [list(p) for p in path], "reached": reached,
+                "steps": len(path) - 1}
+        return {"attempts": out, "race": race, "tick_ms": cfg["tick_ms"]}
 
     def heatmap(self, level="medium"):
         Q, g = self.Q[level], self.agent.grid

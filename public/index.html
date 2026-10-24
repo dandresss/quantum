@@ -771,8 +771,9 @@ function enterGame(){var my=++gameRun,day=dayNum(),p=prepare(day),qd=p.qd;
  p.maze.then(function(b){if(my!==gameRun)return;
   setMaze(gridRows(b.grid));buildLayers();cats=[{x:START.x,y:START.y,s:0}];running=true;hud();
   toast(qd?"¡Corre! Bit-Bot está despertando su poder cuántico…":"¡Corre! Bit-Bot está estudiando el laberinto…");
-  p.bot.then(function(res){if(my!==gameRun||!running)return;var a=qd?res:res.attempts[res.attempts.length-1];
-   bot={path:a.path,i:0,tick:res.tick_ms,next:performance.now()+res.tick_ms,q:qd};
+  /* el clásico corre con su entrenamiento al 80 % (res.race) y 1.1 veces más rápido que en el entrenamiento */
+  p.bot.then(function(res){if(my!==gameRun||!running)return;var a=qd?res:res.race,tick=qd?res.tick_ms:res.tick_ms/1.1;
+   bot={path:a.path,i:0,tick:tick,next:performance.now()+tick,q:qd};
    toast(qd?"¡Bit-Bot obtuvo poder cuántico! Consulta todas las direcciones a la vez":"¡Bit-Bot salió a buscar la estrella!")},
   function(){if(my===gameRun&&running)toast("Bit-Bot no pudo salir hoy: el laberinto es todo tuyo")})},
  function(){if(my!==gameRun)return;running=true;toast("Sin servidor: laberinto de práctica, sin Bit-Bot")})}
@@ -813,7 +814,7 @@ function drawTrain(){var tr=train,now=performance.now();if(!tr)return;
   else{var li=document.createElement("li");li.className=a.reached?"ok":"";
    li.textContent="Entrenado al "+pct+" %: "+(a.reached?"escapó en "+a.steps+" pasos":"no escapó ("+a.steps+" pasos)");$("rsum").appendChild(li);
    if(tr.k<atts.length-1){tr.pause=now+1500;rmsg(lbl+(a.reached?" · ¡escapó!":" · no escapó")+" — siguiente intento…")}
-   else{tr.done=true;rmsg("Así aprendió Bit-Bot el laberinto. En el juego corre con el último intento.")}}}
+   else{tr.done=true;rmsg("Así aprendió Bit-Bot el laberinto. En la carrera corre con su entrenamiento al 80 %.")}}}
  rx.imageSmoothingEnabled=false;rx.drawImage(tr.layer,0,0);
  for(var j=0;j<tr.i;j++){var q=a.path[j];R(rx,q[1]*T,q[0]*T,T,T,"rgba(79,209,197,.3)")}
  var p=a.path[tr.i];bitBot(rx,p[1]*T+4,p[0]*T+2,1,Math.floor(now/250)%3-1)}
