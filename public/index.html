@@ -279,7 +279,7 @@ box-shadow:inset 0 -6px 0 #d99a14,inset 0 6px 0 #ffe58a;clip-path:polygon(0 8px,
 <div class="scene" id="s7">
 <div class="panel"><div class="col">
 <div class="topbar"><button class="pbtn" id="rback">‹ MENÚ</button><span class="lbl" id="rinfo">Entrenamiento</span><button class="pbtn" id="rspeed" aria-label="Velocidad">x1</button></div>
-<canvas class="cv" id="rv" aria-label="Entrenamiento de Bit-Bot"></canvas>
+<canvas class="cv" id="rv" aria-label="Entrenamiento del gato blanco"></canvas>
 <p class="toast" id="rmsg" aria-live="polite"></p>
 <ol class="rsum" id="rsum"></ol>
 </div></div>
@@ -464,7 +464,11 @@ var catSvg=sprite(PAL.A);
 $("pcat").innerHTML=catSvg;
 var catImg=new Image();
 catImg.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="220" height="260" viewBox="-1 -1 22 26" shape-rendering="crispEdges">'+catSvg+'</svg>');
-function catAt(c,px,base,h,alpha){if(!(catImg.complete&&catImg.naturalWidth))return;var w=h*22/26;c.globalAlpha=alpha;c.drawImage(catImg,px-w/2,base-h,w,h);c.globalAlpha=1}
+function catAt(c,px,base,h,alpha,img){img=img||catImg;if(!(img.complete&&img.naturalWidth))return;var w=h*22/26;c.globalAlpha=alpha;c.drawImage(img,px-w/2,base-h,w,h);c.globalAlpha=1}
+/* el gato blanco del menú: el rival de Quibi en la carrera */
+var whiteImg=new Image();
+whiteImg.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="220" height="260" viewBox="-1 -1 22 26" shape-rendering="crispEdges">'+sprite(PAL.B)+'</svg>');
+function whiteAt(c,x,y,alpha){catAt(c,(x+.5)*T,(y+1)*T+2,T*1.75,alpha,whiteImg)}
 function robotKing(c,x,y,s,eye){var K="#0b0b14",G1="#8a90a8",G2="#6c728c",G3="#b8bdd0",Y="#ffc83d";
  R(c,x+7*s,y,3*s,4*s,Y);R(c,x+12*s,y-s,3*s,5*s,Y);R(c,x+17*s,y,3*s,4*s,Y);R(c,x+6*s,y+4*s,15*s,2*s,Y);
  R(c,x+5*s,y+6*s,17*s,12*s,K);R(c,x+6*s,y+7*s,15*s,10*s,G1);R(c,x+6*s,y+7*s,15*s,2*s,G3);
@@ -593,7 +597,7 @@ var TUT=[
  {m:"X",chip:["X","#2f63d6","Carta X · NOT"],t:"Carta X: ¡Cambia 0 por 1! En 1, Quibi solo se mueve por las paredes, que también están en 1. Usa X otra vez para volver a los pasillos."},
  {m:"Z",chip:["Z","#4a9fcf","Carta Z · Fase"],t:"Carta Z: ¡Marca en secreto el camino correcto, sin revelarlo! Por ahora está bloqueada: la verás en gris."},
  {m:"C",chip:["C","#2f63d6","Carta CNOT · Enlace"],t:"Carta CNOT: ¡Enlaza dos puntos! Una palanca abre una puerta lejana. Por ahora también está bloqueada."},
- {m:"go",t:"¡Eso es todo! Llega a la salida naranja antes que Bit-Bot. Muévete con flechas o WASD y usa las cartas H y X con 1 y 2."}];
+ {m:"go",t:"¡Eso es todo! Llega a la salida naranja antes que el gato blanco. Muévete con flechas o WASD y usa las cartas H y X con 1 y 2."}];
 var tstep=0;
 function buildTutCards(){var h=$("tcards");h.innerHTML="";
  CARDS.forEach(function(c,i){var e=makeSlot(c,function(){if(!c.off)openZoom(i,false)});e.classList.add("deal");if(!reduce)e.style.animationDelay=(i*.15)+"s";h.appendChild(e)});fitAll()}
@@ -695,9 +699,9 @@ function buildLayers(){cv.width=MW*T;cv.height=MH*T;
 buildLayers();
 
 var cats=[],running=false,shakeUntil=0,hint=null,ticks=0;
-/* Bit-Bot: recorre la trayectoria de su Q-learning ya entrenado ([fila, col]; celdas repetidas = choque) */
+/* el gato blanco: recorre la trayectoria de su Q-learning ya entrenado ([fila, col]; celdas repetidas = choque) */
 var bot=null,gameRun=0;
-/* desde el día 5 el laberinto sale de qubits y Bit-Bot obtiene poder cuántico (Grover); el 7, sin decoherencia.
+/* desde el día 5 el laberinto sale de qubits y el gato blanco obtiene poder cuántico (Grover); el 7, sin decoherencia.
    El día se cambia con ‹ › en el HUD (se guarda en save.pick); ?dia=N en la URL lo fuerza al cargar */
 var QDAY=5,LASTDAY=7,DAYQ=parseInt(new URLSearchParams(location.search).get("dia"),10);
 function dayNum(){return clamp(Math.round(DAYQ>0?DAYQ:save.pick||save.days.length||1),1,LASTDAY)}
@@ -767,39 +771,39 @@ function enterGame(){var my=++gameRun,day=dayNum(),p=prepare(day),qd=p.qd;
  hud();$("win").hidden=true;closeZoom();go("s5");fitAll();
  $("mlbl").textContent=(qd?"Laberinto cuántico":"Laberinto")+" · 15×10";
  toast(qd?"Día "+day+": los qubits están moviendo los pasillos…":"Los pasillos se están moviendo…");
- /* Quibi se mueve apenas llega el laberinto; Bit-Bot sale cuando termina de prepararse */
+ /* Quibi se mueve apenas llega el laberinto; el gato blanco sale cuando termina de prepararse */
  p.maze.then(function(b){if(my!==gameRun)return;
   setMaze(gridRows(b.grid));buildLayers();cats=[{x:START.x,y:START.y,s:0}];running=true;hud();
-  toast(qd?"¡Corre! Bit-Bot está despertando su poder cuántico…":"¡Corre! Bit-Bot está estudiando el laberinto…");
+  toast(qd?"¡Corre! El gato blanco está despertando su poder cuántico…":"¡Corre! El gato blanco está estudiando el laberinto…");
   /* el clásico corre con su entrenamiento al 60 % (res.race) y 1.1 veces más rápido que en el entrenamiento */
   p.bot.then(function(res){if(my!==gameRun||!running)return;var a=qd?res:res.race,tick=qd?res.tick_ms:res.tick_ms/1.1;
    bot={path:a.path,i:0,tick:tick,next:performance.now()+tick,q:qd};
-   toast(qd?"¡Bit-Bot obtuvo poder cuántico! Consulta todas las direcciones a la vez":"¡Bit-Bot salió a buscar la estrella!")},
-  function(){if(my===gameRun&&running)toast("Bit-Bot no pudo salir hoy: el laberinto es todo tuyo")})},
- function(){if(my!==gameRun)return;running=true;toast("Sin servidor: laberinto de práctica, sin Bit-Bot")})}
+   toast(qd?"¡El gato blanco obtuvo poder cuántico! Consulta todas las direcciones a la vez":"¡El gato blanco salió a buscar la estrella!")},
+  function(){if(my===gameRun&&running)toast("El gato blanco no pudo salir hoy: el laberinto es todo tuyo")})},
+ function(){if(my!==gameRun)return;running=true;toast("Sin servidor: laberinto de práctica, sin el gato blanco")})}
 function stepBot(now){if(!bot||!running)return;
- if(now-bot.next>1000)bot.next=now;   /* pestaña oculta: Bit-Bot espera, igual que el reloj */
+ if(now-bot.next>1000)bot.next=now;   /* pestaña oculta: el gato blanco espera, igual que el reloj */
  while(now>=bot.next&&bot.i<bot.path.length-1){bot.i++;bot.next+=bot.tick}
  var p=bot.path[bot.i];if(p[1]===EXIT.x&&p[0]===EXIT.y)lose()}
 function drawBot(cx){if(!bot)return;
  for(var j=0;j<bot.i;j++){var q=bot.path[j];R(cx,q[1]*T,q[0]*T,T,T,bot.q?"rgba(74,168,255,.25)":"rgba(79,209,197,.22)")}
  var p=bot.path[bot.i];if(bot.q)aura(cx,(p[1]+.5)*T,(p[0]+.5)*T,T*1.3,COL1,.8);
- bitBot(cx,p[1]*T+4,p[0]*T+2,1,Math.floor(performance.now()/250)%3-1)}
+ whiteAt(cx,p[1],p[0],1)}
 function lose(){running=false;persist();
- $("winTxt").textContent=bot&&bot.q?"Bit-Bot, con poder cuántico, llegó primero a la estrella. ¡Usa tus cartas e inténtalo otra vez!":"Bit-Bot llegó primero a la estrella. ¡Inténtalo otra vez!";
+ $("winTxt").textContent=bot&&bot.q?"El gato blanco, con poder cuántico, llegó primero a la estrella. ¡Usa tus cartas e inténtalo otra vez!":"El gato blanco llegó primero a la estrella. ¡Inténtalo otra vez!";
  $("win").hidden=false;$("winOk").focus()}
 function leaveGame(){gameRun++;bot=null;closeZoom();running=false;persist();$("win").hidden=true}
 
-/* ---------- entrenamiento: los 4 intentos de Bit-Bot con su Q-learning al 10, 30, 60 y 100 % ---------- */
+/* ---------- entrenamiento: los 4 intentos del gato blanco con su Q-learning al 10, 30, 60 y 100 % ---------- */
 var rv=$("rv"),rx=rv.getContext("2d"),SPEEDS=[1,4,16],rspeed=1,train=null,trainRun=0;
 function rmsg(m){$("rmsg").textContent=m}
 function mazeCanvas(rows){var c=document.createElement("canvas"),H=rows.length,W=rows[0].length;c.width=W*T;c.height=H*T;var x=c.getContext("2d");
  R(x,0,0,c.width,c.height,"#4b3222");
  rows.forEach(function(r,y){for(var i=0;i<W;i++)if(r[i]==="#"){R(x,i*T,y*T,T,T,"#cebfa0");if(y===H-1||rows[y+1][i]!=="#")R(x,i*T,y*T+T-4,T,4,"#a8987a")}});
  R(x,T,T,T,T,"#ffc83d");R(x,(W-2)*T,(H-2)*T,T,T,"#f0845a");return c}
-/* los días cuánticos Bit-Bot no entrena: se muestra el último laberinto clásico */
+/* los días cuánticos el gato blanco no entrena: se muestra el último laberinto clásico */
 function startTrain(){var my=++trainRun,day=Math.min(dayNum(),QDAY-1),p=prepare(day);train=null;go("s7");
- $("rsum").innerHTML="";$("rinfo").textContent="Entrenamiento · día "+day;rmsg("Bit-Bot está entrenando en el laberinto…");
+ $("rsum").innerHTML="";$("rinfo").textContent="Entrenamiento · día "+day;rmsg("El gato blanco está entrenando en el laberinto…");
  Promise.all([p.maze,p.bot]).then(function(v){if(my!==trainRun)return;var rows=gridRows(v[0].grid);
   rv.width=rows[0].length*T;rv.height=rows.length*T;
   train={layer:mazeCanvas(rows),res:v[1],k:0,i:0,next:performance.now()+v[1].tick_ms,pause:0,done:false}},
@@ -814,10 +818,10 @@ function drawTrain(){var tr=train,now=performance.now();if(!tr)return;
   else{var li=document.createElement("li");li.className=a.reached?"ok":"";
    li.textContent="Entrenado al "+pct+" %: "+(a.reached?"escapó en "+a.steps+" pasos":"no escapó ("+a.steps+" pasos)");$("rsum").appendChild(li);
    if(tr.k<atts.length-1){tr.pause=now+1500;rmsg(lbl+(a.reached?" · ¡escapó!":" · no escapó")+" — siguiente intento…")}
-   else{tr.done=true;rmsg("Así aprendió Bit-Bot el laberinto. En la carrera corre con su entrenamiento al 60 %.")}}}
+   else{tr.done=true;rmsg("Así aprendió el gato blanco el laberinto. En la carrera corre con su entrenamiento al 60 %.")}}}
  rx.imageSmoothingEnabled=false;rx.drawImage(tr.layer,0,0);
  for(var j=0;j<tr.i;j++){var q=a.path[j];R(rx,q[1]*T,q[0]*T,T,T,"rgba(79,209,197,.3)")}
- var p=a.path[tr.i];bitBot(rx,p[1]*T+4,p[0]*T+2,1,Math.floor(now/250)%3-1)}
+ var p=a.path[tr.i];whiteAt(rx,p[1],p[0],1)}
 $("rspeed").addEventListener("click",function(){rspeed=SPEEDS[(SPEEDS.indexOf(rspeed)+1)%SPEEDS.length];this.textContent="x"+rspeed});
 $("rback").addEventListener("click",function(){trainRun++;train=null;go("s3")});
 function win(){running=false;persist();$("winTxt").textContent="¡Quibi recuperó la estrella! Tiempo total: "+fmt(save.secs)+".";$("win").hidden=false;$("winOk").focus()}
