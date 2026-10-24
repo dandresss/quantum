@@ -29,3 +29,18 @@ def test_bot_plays_a_valid_path(client):
 )
 def test_bot_rejects_invalid_grids(client, grid):
     assert client.post("/api/bot/play", json={"grid": grid}).status_code == 422
+
+
+def test_random_moves_always_go_to_a_free_cell():
+    from agent import QAgent
+
+    grid = generate("backtracker", 5, 4, 0.2, seed=3)
+    agent = QAgent(grid, (1, 1), (7, 9), seed=0)
+    path, _ = agent.rollout(agent.Q, eps=1.0, max_steps=300)  # every move is random
+    assert all(a != b for a, b in zip(path, path[1:], strict=False))  # never bumps a wall
+
+
+def test_bot_obeys_q_85_percent_of_moves():
+    from bot import LEVELS
+
+    assert all(level["eps"] == 0.15 for level in LEVELS.values())

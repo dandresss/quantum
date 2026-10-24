@@ -8,9 +8,10 @@ import numpy as np
 from agent import QAgent
 
 # Dificultad = cuánto entrenó (fracción de los episodios) + cuánto se equivoca + velocidad en pantalla
+# eps 0.15: el 85% de los movimientos obedece al algoritmo y el 15% es aleatorio (a una celda libre)
 LEVELS = {
-    "easy":   {"train_frac": 0.05, "eps": 0.30, "tick_ms": 420},   # básica
-    "medium": {"train_frac": 0.10, "eps": 0.30, "tick_ms": 360},   # media
+    "easy":   {"train_frac": 0.05, "eps": 0.15, "tick_ms": 420},   # básica
+    "medium": {"train_frac": 0.10, "eps": 0.15, "tick_ms": 360},   # media
 }
 
 

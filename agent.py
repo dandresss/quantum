@@ -49,11 +49,19 @@ class QAgent:
         return snaps, history
 
     # ---- partida: devuelve la trayectoria que seguirá el bot -----------
+    def free_moves(self, s):
+        """Acciones que llevan a una celda libre (no pared ni borde)."""
+        h, w = self.grid.shape
+        return [a for a, (dr, dc) in enumerate(ACTIONS)
+                if 0 <= s[0] + dr < h and 0 <= s[1] + dc < w and self.grid[s[0] + dr, s[1] + dc] == 0]
+
     def rollout(self, Q, eps, max_steps=None):
+        """eps = probabilidad de un movimiento aleatorio a una celda libre; el resto obedece a Q."""
         max_steps = max_steps or int(3 * (self.grid == 0).sum())   # límite según tamaño del mapa
         s, path = self.start, [self.start]
         for _ in range(max_steps):
-            s, _, done = self.step(s, self.choose(s, eps, Q))
+            a = int(self.rng.choice(self.free_moves(s))) if self.rng.random() < eps else self.choose(s, 0.0, Q)
+            s, _, done = self.step(s, a)
             path.append(s)
             if done:
                 return path, True

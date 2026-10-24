@@ -28,7 +28,7 @@ testpaths = ["tests"]
 [tool.ruff]
 line-length = 100
 target-version = "py312"
-# bot.py and agent.py (Q-learning bot) are kept exactly as delivered.
+# bot.py and agent.py (Q-learning bot) keep their original style; not reformatted.
 extend-exclude = ["bot.py", "agent.py"]
 
 [tool.ruff.lint]
