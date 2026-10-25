@@ -273,6 +273,13 @@ text-shadow:3px 0 var(--ink),-3px 0 var(--ink),0 3px var(--ink),0 -3px var(--ink
 .spell[hidden]{display:none}
 .spell b{font-family:"Pixelify Sans",monospace;font-weight:700;font-size:clamp(2.6rem,10vw,5.6rem);line-height:1;color:var(--gold);text-shadow:5px 0 var(--ink),-5px 0 var(--ink),0 5px var(--ink),0 -5px var(--ink),0 0 36px #ff9a3d;animation:boom .8s steps(6) both,pulse .5s steps(2) .8s infinite}
 .spell span{font-family:"Press Start 2P",monospace;font-size:clamp(.85rem,3.4vw,1.5rem);line-height:1.3;color:#fff;background:#d8423d;padding:8px 14px;border:4px solid var(--ink);letter-spacing:.12em;box-shadow:4px 4px 0 rgba(0,0,0,.5)}
+/* cada compuerta acertada del combo se anuncia como un hechizo: ¡ORÁCULO!, ¡DIFUSIÓN!, ¡REFLEXIÓN!… */
+.cast{position:fixed;left:0;right:0;top:44%;z-index:19;display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none;text-align:center}
+.cast[hidden]{display:none}
+.cast b{font-family:"Pixelify Sans",monospace;font-weight:700;font-size:clamp(1.9rem,7vw,3.6rem);line-height:1;color:#fff;text-shadow:4px 0 var(--ink),-4px 0 var(--ink),0 4px var(--ink),0 -4px var(--ink),0 0 26px var(--k)}
+.cast span{font-family:"Press Start 2P",monospace;font-size:clamp(.6rem,2.4vw,.95rem);line-height:1.4;color:#fff;background:var(--k);padding:6px 10px;border:3px solid var(--ink)}
+.cast.go{animation:castin 1.15s steps(8) both}
+@keyframes castin{0%{transform:scale(1.8);opacity:0}15%{transform:scale(1);opacity:1}80%{opacity:1}100%{opacity:0;transform:translateY(-14px)}}
 @keyframes boom{0%{transform:scale(3.2);opacity:0}100%{transform:scale(1);opacity:1}}
 @keyframes pulse{50%{transform:scale(1.08);filter:brightness(1.35)}}
 .combo{position:fixed;left:50%;top:calc(10px + env(safe-area-inset-top,0px));transform:translateX(-50%);z-index:18;width:min(760px,calc(100vw - 16px));padding:12px 14px 14px;background:rgba(26,18,48,.95);border:5px solid var(--gold);box-shadow:0 0 0 4px var(--ink),0 0 40px rgba(255,200,60,.55)}
@@ -308,7 +315,7 @@ text-shadow:3px 0 var(--ink),-3px 0 var(--ink),0 3px var(--ink),0 -3px var(--ink
 .wend .wsub{margin:0 0 12px;font-family:"Pixelify Sans",monospace;font-weight:700;font-size:clamp(1.2rem,4vw,1.6rem);color:#8a5a12}
 .wend .wfin{margin:4px 0 18px;font-family:"Press Start 2P",monospace;font-size:clamp(1.6rem,6vw,2.6rem);letter-spacing:.3em;text-indent:.3em;color:var(--navy)}
 .wend .pbtn{margin:0 4px}
-@media (prefers-reduced-motion:reduce){#s5.quake,.spell b,.ck.now,.flash.go{animation:none}}
+@media (prefers-reduced-motion:reduce){#s5.quake,.spell b,.ck.now,.flash.go,.cast.go{animation:none}}
 @media (prefers-reduced-motion:reduce){.meter,.meter b,.meter .mbar i,.portrait,.qslot.deal,.qslot.pop{animation:none}.qc,.qc .inner{transition:none}}
 </style>
 </head>
@@ -426,6 +433,7 @@ text-shadow:3px 0 var(--ink),-3px 0 var(--ink),0 3px var(--ink),0 -3px var(--ink
 <div class="ckeys" id="ckeys"></div>
 <div class="guide"><div class="gp" id="gPic"></div><div class="gb"><span class="gn" id="gName">Lov Grover</span><div class="gtx" id="gTxt" aria-live="polite"></div></div></div>
 </div>
+<div class="cast" id="cast" hidden aria-live="polite"><b id="caT"></b><span id="caS"></span></div>
 <div class="flash" id="flash"></div>
 <div class="white" id="white" hidden role="dialog" aria-label="Final"><div class="wend"><h2>¡SALVASTE A QUBITLANDIA!</h2><p class="wsub">La Estrella Dorada brilla otra vez</p><div id="wTxt"></div><div class="wfin">FIN</div><button class="pbtn gold" id="wMenu">MENÚ</button><button class="pbtn" id="wHall">SALÓN DE LA FAMA</button></div></div>
 <div class="dlg" id="win" hidden role="dialog" aria-live="polite">
@@ -700,6 +708,7 @@ var GL={
 H:["X.....X","X.....X","X.....X","XXXXXXX","X.....X","X.....X","X.....X"],
 Z:["XXXXXXX",".....XX","....XX.","...XX..","..XX...","XX.....","XXXXXXX"],
 X:["..XXXXX..",".X..X..X.","X...X...X","X...X...X","XXXXXXXXX","X...X...X","X...X...X",".X..X..X.","..XXXXX.."],
+S:[".XXXXX.","XX.....","XX.....",".XXXXX.",".....XX",".....XX",".XXXXX."],
 C:["...XXX...","..XXXXX..","...XXX...","....X....","....X....","..XXXXX..",".X..X..X.","X...X...X","X...X...X","XXXXXXXXX","X...X...X","X...X...X",".X..X..X.","..XXXXX.."]};
 function gateSvg(k,col){var g=GL[k],w=g[0].length,h=g.length,t='<svg viewBox="0 0 '+w+' '+h+'" aria-hidden="true" fill="'+(col||"#22264a")+'">';
  g.forEach(function(r,y){for(var x=0;x<w;x++){if(r[x]==="X")t+='<rect x="'+x+'" y="'+y+'" width="1" height="1"/>'}});return t+'</svg>'}
@@ -716,7 +725,11 @@ var CARDS=[
   prop:"Interferencia",back:"Deja |0⟩ igual y cambia el signo de |1⟩. Sola no se ve: las probabilidades no cambian. Entre dos H aparece la interferencia: H·Z·H = X. En el juego, H+Z+H seguidas y rápido junto a un río te hacen cruzarlo.",code:"qc.z(0)"},
  {id:"C",key:"C",off:true,c:"#2f63d6",g:"#3a7bff",px:"C",aria:"Carta CNOT",tag:"CNOT",name:"CNOT",power:"Enlace",
   desc:"Una palanca en un punto abre una puerta en otro.",
-  prop:"Entrelazamiento",back:"Si el control es |1⟩, aplica X al objetivo. Con el control en superposición los entrelaza: (|00⟩ + |11⟩)/√2.",code:"qc.cx(0, 1)"}];
+  prop:"Entrelazamiento",back:"Si el control es |1⟩, aplica X al objetivo. Con el control en superposición los entrelaza: (|00⟩ + |11⟩)/√2.",code:"qc.cx(0, 1)"},
+ /* boss: solo aparece en el hechizo final (ocupa el lugar de CNOT) */
+ {id:"S",key:"S",boss:true,c:"#8a4fd6",g:"#b48cff",px:"S",aria:"Carta S Fase un cuarto",tag:"S",name:"S",power:"Fase ¼",
+  desc:"Gira la fase de |1⟩ un cuarto de vuelta. Solo existe en el hechizo final.",
+  prop:"Fase ¼",back:"S multiplica |1⟩ por i: un cuarto de vuelta de fase, y S·S = Z. Con fases de ¼ de vuelta, Grover encuentra al Rey al 100 % aunque haya un solo qubit: es Grover exacto.",code:"qc.s(0)"}];
 var SPAL={K:"#1a1020",S:"#f1c3a0",s:"#d39a76",h:"#2e221c",g:"#4a3a30",L:"#e9f3ff",F:"#5b5470",W:"#f4f1e6",w:"#c9c2ae",C:"#2f3550",c:"#20253a",T:"#b3303a",t:"#7d1f27",M:"#a5544c",y:"#b07a4a",Y:"#d9a066",r:"#e7a39a",
  G:"#f2f2ee",n:"#a9a9b4",B:"#15121c",b:"#3a3346",P:"#b9805a",p:"#8f5c3d",Q:"#2f8f86",q:"#1e5f5a",V:"#7d8aa6",v:"#55607a",O:"#9fc6e8",o:"#6f9cc4"};
 /* retrato pixelado (20x24) de Lov Grover: guía el súper combo contra el jefe final */
@@ -838,7 +851,7 @@ var TUT=[
  {m:"go",t:"¡Eso es todo! Atrapa la estrella antes que el gato blanco. Desde el día 2 hay ríos: no se pisan, pero H + Z + H rápido en la orilla te hace cruzarlos. Muévete con flechas o WASD y usa las cartas con las teclas H, X y Z."}];
 var tstep=0;
 function buildTutCards(){var h=$("tcards");h.innerHTML="";
- CARDS.forEach(function(c,i){var e=makeSlot(c,function(){if(!c.off)openZoom(i,false)});e.classList.add("deal");if(!reduce)e.style.animationDelay=(i*.15)+"s";h.appendChild(e)});fitAll()}
+ CARDS.forEach(function(c,i){if(c.boss)return;var e=makeSlot(c,function(){if(!c.off)openZoom(i,false)});e.classList.add("deal");if(!reduce)e.style.animationDelay=(i*.15)+"s";h.appendChild(e)});fitAll()}
 function renderTut(){var S=TUT[tstep];DEMO=S.m;dstart=clock();
  $("tcount").textContent=(tstep+1)+"/"+TUT.length;$("tprog").style.width=((tstep+1)/TUT.length*100)+"%";
  $("tprev").textContent=tstep===0?"‹ HISTORIA":"‹ ATRÁS";$("tnext").textContent=tstep===TUT.length-1?"ENTRAR ›":"SIGUIENTE ›";
@@ -974,7 +987,10 @@ var hand=$("hand");
 var slots=[],hgA=document.createElement("div"),hsep=document.createElement("div"),hgB=document.createElement("div");
 hgA.className=hgB.className="hgroup";hsep.className="hsep";hsep.textContent="Cartas especiales";
 hand.appendChild(hgA);hand.appendChild(hsep);hand.appendChild(hgB);
-CARDS.forEach(function(c,i){var sl=makeSlot(c,function(){if(boss){comboKey(c.id);return}if(running&&!c.off)openZoom(i,true)});slots[i]=sl;(c.id==="H"||c.id==="X"?hgA:hgB).appendChild(sl)});
+CARDS.forEach(function(c,i){var sl=makeSlot(c,function(){if(boss){comboKey(c.id);return}if(running&&!c.off)openZoom(i,true)});slots[i]=sl;if(c.boss)sl.style.display="none";(c.id==="H"||c.id==="X"?hgA:hgB).appendChild(sl)});
+/* en el hechizo final la carta S (Fase ¼) aparece en lugar de CNOT */
+function bossHand(on){CARDS.forEach(function(c,i){if(c.boss||c.id==="C"){var sl=slots[i],show=c.boss?on:!on;sl.style.display=show?"":"none";
+ if(show&&c.boss){fitSlot(sl);if(!reduce){sl.classList.remove("deal");void sl.offsetWidth;sl.classList.add("deal")}}}})}
 
 function fmt(s){var m=Math.floor(s/60),r=s%60;return("0"+m).slice(-2)+":"+("0"+r).slice(-2)}
 function hud(){var two=cats.length===2,ph=$("hPhys");
@@ -1033,7 +1049,7 @@ function farBank(c,x,y){if(!inner(x,y))return null;var q=[[x,y,0]],seen={};seen[
   DIRS.forEach(function(d){var nx=p[0]+d[0],ny=p[1]+d[1];if(inner(nx,ny)&&!water(nx,ny)&&!seen[nx+","+ny]){seen[nx+","+ny]=1;q.push([nx,ny,p[2]+1])}})}
  return null}
 /* la primera vez que se usa una carta (en cualquier día) sale de frente y la carrera espera; después se usa directo */
-function useCard(i){if(boss&&i>=0){comboKey(CARDS[i].id);return}if(!running||paused||i<0)return;if(CARDS[i].off){toast("Esta carta aún está bloqueada");return}
+function useCard(i){if(boss&&i>=0){comboKey(CARDS[i].id);return}if(!running||paused||i<0||CARDS[i].boss)return;if(CARDS[i].off){toast("Esta carta aún está bloqueada");return}
  if(discover(CARDS[i].id)){pause();openZoom(i,true,true);return}
  applyCard(i)}
 function applyCard(i){if(!running)return;var id=CARDS[i].id,el=slots[i],now=performance.now();
@@ -1175,24 +1191,28 @@ function drawGame(){var now=performance.now(),cx=gx;cx.imageSmoothingEnabled=fal
    Al atrapar la estrella del último día el laberinto se desarma (solo queda el contorno) y baja el Rey Robot Clásico.
    Se anuncia el SÚPER HECHIZO y Lov Grover guía el SÚPER COMBO: hay que lanzar las cartas en orden (tecla o tocar la carta).
    Una carta equivocada rompe el combo y todo vuelve a empezar desde el anuncio. Al completarlo, un resplandor lo cubre todo de blanco.
-   PENDIENTE: la secuencia definitiva la define el equipo. Por ahora, Grover con 1 qubit: H, oráculo Z y difusión H·X·Z·X·H */
+   El combo es Grover exacto con un qubit (el Rey es |1⟩): con fases de media vuelta (Z) Grover se queda en 50 % cuando hay
+   solo dos lugares, así que el oráculo y la reflexión usan fases de ¼ de vuelta (S). H·S·H·S·S·S·H lleva |0⟩ a |1⟩ con 100 %:
+   la probabilidad del Rey se queda en 50 % hasta la interferencia final.
+   t = lo que Grover pide en el diálogo; n y s = el hechizo que se logra al lanzarla */
 var COMBO=[
- {g:"H",t:"Usa H: pon a Quibi en superposición."},
- {g:"Z",t:"Ahora Z: el oráculo marca al Rey."},
- {g:"H",t:"Usa H: empieza la difusión."},
- {g:"X",t:"Usa X: invierte."},
- {g:"Z",t:"Usa Z: refleja."},
- {g:"X",t:"Usa X otra vez: vuelve a invertir."},
- {g:"H",t:"Termina con H: ¡lánzalo!"}];
-var GCOL={H:"#e8383d",X:"#2f63d6",Z:"#4a9fcf"},boss=null,quakeUntil=0,actx=null;
+ {g:"H",t:"Usa H: Quibi se reparte entre los dos lugares a la vez.",n:"¡SUPERPOSICIÓN!",s:"50 % aquí · 50 % en el Rey"},
+ {g:"S",t:"Usa S, la Fase ¼: el oráculo marca al Rey girando su fase un cuarto de vuelta.",n:"¡ORÁCULO!",s:"el Rey quedó marcado · sigue 50 %"},
+ {g:"H",t:"Usa H: la difusión mezcla las dos ramas. La marca queda escondida en la fase.",n:"¡DIFUSIÓN!",s:"las ramas se mezclan"},
+ {g:"S",t:"Usa S: empieza la reflexión, el primer cuarto de vuelta.",n:"¡REFLEXIÓN!",s:"¼ de vuelta"},
+ {g:"S",t:"Otra S: segundo cuarto. Ya va media vuelta.",n:"¡REFLEXIÓN!",s:"½ vuelta"},
+ {g:"S",t:"Una S más: tres cuartos. ¡La reflexión queda completa!",n:"¡REFLEXIÓN COMPLETA!",s:"¾ de vuelta"},
+ {g:"H",t:"Termina con H: ¡la interferencia final lleva toda la probabilidad al Rey!",n:"¡INTERFERENCIA FINAL!",s:"Rey: 100 %"}];
+var GNAME={S:"S (Fase ¼)"};
+var GCOL={H:"#e8383d",X:"#2f63d6",Z:"#4a9fcf",S:"#8a4fd6"},boss=null,quakeUntil=0,actx=null;
 function beep(f,d){try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();var o=actx.createOscillator(),g=actx.createGain(),t=actx.currentTime;
  o.type="square";o.frequency.value=f;g.gain.setValueAtTime(.07,t);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g);g.connect(actx.destination);o.start(t);o.stop(t+d)}catch(e){}}
 function quake(ms){var t=performance.now()+ms;shakeUntil=Math.max(shakeUntil,t);quakeUntil=Math.max(quakeUntil,t)}
 function bossStart(sid){var c=cats[0],now=performance.now();bot=null;
  cats=[{x:c.x,y:c.y,s:0,fx:c.x,fy:c.y}];exc=0;hud();
- boss={ph:"clear",t:now,wave:0,step:0,hits:[],ox:c.x,oy:c.y};quake(1800);
+ boss={ph:"clear",t:now,wave:0,step:0,hits:[],ox:c.x,oy:c.y};quake(1800);bossHand(true);
  toast((sid?"¡"+padre(sid).n+" se unió al Salón de la Fama! ":"")+"Pero el laberinto empieza a desarmarse…")}
-function endBoss(){boss=null;quakeUntil=0;$("spell").hidden=true;$("combo").hidden=true;$("white").classList.remove("on");$("white").hidden=true;$("s5").classList.remove("quake")}
+function endBoss(){boss=null;quakeUntil=0;bossHand(false);$("spell").hidden=true;$("combo").hidden=true;$("cast").hidden=true;$("white").classList.remove("on");$("white").hidden=true;$("s5").classList.remove("quake")}
 /* borra paredes, ríos y bloques en una onda que sale desde la estrella; el contorno queda */
 function clearWave(f){var md=f*Math.hypot(MW,MH);
  MAZE=MAZE.map(function(r,y){return r.split("").map(function(ch,x){return x===0||y===0||x===MW-1||y===MH-1?"#":Math.hypot(x-boss.ox,y-boss.oy)<=md?".":ch}).join("")});buildLayers()}
@@ -1203,7 +1223,7 @@ function bossTick(now){var b=boss,e=now-b.t;
  else if(b.ph==="rise"&&e>1400)announce(now,false);
  else if(b.ph==="announce"&&e>2600){b.ph="combo";b.t=now;$("spell").hidden=true;$("combo").hidden=false;renderCombo(false)}
  else if(b.ph==="fail"&&e>1600)announce(now,true);
- else if(b.ph==="done"&&e>2200){b.ph="white";b.t=now;finale()}
+ else if(b.ph==="done"&&e>3400){b.ph="white";b.t=now;finale()}
  $("s5").classList.toggle("quake",!reduce&&now<quakeUntil)}
 function bang(top,sub){$("spT").textContent=top;$("spS").textContent=sub;var sp=$("spell"),bt=$("spT");sp.hidden=false;bt.style.animation="none";void bt.offsetWidth;bt.style.animation=""}
 function announce(now,again){var b=boss;b.ph="announce";b.t=now;b.step=0;b.hits=[];$("combo").hidden=true;
@@ -1215,19 +1235,24 @@ function renderCombo(bad){var b=boss,box=$("ckeys");box.innerHTML="";
  $("cTop").textContent="Súper combo · paso "+Math.min(b.step+1,COMBO.length)+" de "+COMBO.length+" · tecla o toca la carta";
  if(!$("gPic").firstChild)$("gPic").innerHTML=portraitSvg(BOSSSCI);
  if(!bad&&b.step<COMBO.length){var c=COMBO[b.step];$("gTxt").innerHTML=c.t.replace(c.g,'<b style="--k:'+GCOL[c.g]+'">'+c.g+'</b>')}}
+/* el hechizo que se logra con cada compuerta, en grande y del color de la carta */
+var castT=0;
+function cast(c){var e=$("cast"),my=++castT;$("caT").textContent=c.n;$("caS").textContent=c.s;e.style.setProperty("--k",GCOL[c.g]);
+ e.hidden=false;e.classList.remove("go");void e.offsetWidth;e.classList.add("go");setTimeout(function(){if(castT===my)e.hidden=true},1150)}
 function comboKey(g){var b=boss;if(!b||b.ph!=="combo")return;var now=performance.now(),want=COMBO[b.step].g;
  if(g!==want){b.ph="fail";b.t=now;oof();quake(600);var fl=$("flash");fl.classList.remove("go");void fl.offsetWidth;fl.classList.add("go");
-  renderCombo(true);$("gTxt").textContent="¡Esa era "+want+", no "+g+"! El combo se rompió: hay que empezar de nuevo.";
+  renderCombo(true);$("gTxt").textContent="¡Esa era "+(GNAME[want]||want)+", no "+(GNAME[g]||g)+"! El combo se rompió: hay que empezar de nuevo.";
   toast("¡El combo falló! Todo vuelve a empezar");return}
- b.hits.push({g:g,t:now});b.step++;beep(330+b.step*80,.18);quake(220);
+ var c=COMBO[b.step];b.hits.push({g:g,t:now});b.step++;beep(330+b.step*80,.18);quake(220);cast(c);toast(c.n+" "+c.s.charAt(0).toUpperCase()+c.s.slice(1));
  if(b.step<COMBO.length){renderCombo(false);return}
- b.ph="done";b.t=now;b.doneT=now;renderCombo(false);$("gTxt").textContent="¡SÚPER COMBO! La búsqueda de Grover encontró al Rey.";
- setTimeout(function(){if(boss&&boss.ph==="done")$("combo").hidden=true},700);
- bang("¡SÚPER COMBO!","ALGORITMO DE GROVER");quake(2200);[784,988,1175,1568].forEach(function(f,i){setTimeout(function(){beep(f,.25)},i*110)});
- toast("¡SÚPER COMBO! El súper hechizo alcanzó al Rey Robot Clásico")}
+ /* la interferencia final y, después, ¡GROVER EXACTO! */
+ b.ph="done";b.t=now;b.doneT=now;renderCombo(false);$("gTxt").textContent="¡Interferencia final! Toda la probabilidad cayó sobre el Rey: 100 %.";
+ setTimeout(function(){if(!boss||boss.ph!=="done")return;$("combo").hidden=true;$("cast").hidden=true;
+  bang("¡GROVER EXACTO!","SÚPER COMBO · REY AL 100 %");quake(2400);[784,988,1175,1568].forEach(function(f,i){setTimeout(function(){beep(f,.25)},i*110)});
+  toast("¡GROVER EXACTO! El súper hechizo encontró al Rey Robot Clásico con 100 % de probabilidad")},1100)}
 function finale(){var g=!met(BOSSSCI);if(g)save.sci.push(BOSSSCI);persist();musicOff();
  $("spell").hidden=true;$("combo").hidden=true;
- $("wTxt").innerHTML='<div class="wsci">'+portraitSvg(BOSSSCI)+'</div><p>Derrotaste al Rey Robot Clásico con el algoritmo de Grover. Tiempo total: '+fmt(save.secs)+'.'+
+ $("wTxt").innerHTML='<div class="wsci">'+portraitSvg(BOSSSCI)+'</div><p>Derrotaste al Rey Robot Clásico con Grover exacto: H · S · H · S · S · S · H encontró al Rey con 100 % de probabilidad. Tiempo total: '+fmt(save.secs)+'.'+
   (g?" Lov Grover entró al Salón de la Fama.":"")+'</p>';
  var w=$("white");w.hidden=false;void w.offsetWidth;w.classList.add("on");setTimeout(function(){if(boss)$("wMenu").focus()},2600)}
 $("wMenu").addEventListener("click",function(){leaveGame();go("s3")});
@@ -1249,12 +1274,12 @@ function drawBoss(cx,now){var b=boss,e=now-b.t,W=MW*T,H=MH*T,s=4,kw=28*s,kh=38*s
  var gone=down?now-b.doneT:0;
  if(down){var p=Math.min(1,gone/900);cx.strokeStyle=Math.floor(now/70)%2?"#fff":"#ffe27a";cx.lineWidth=6+30*p;cx.beginPath();cx.moveTo(qx,qy);cx.lineTo(mx,my);cx.stroke();glow(cx,mx,my,90+60*p,"255,255,255",.9)}
  aura(cx,mx,my,kw*1.05,"255,45,45",.3+.12*Math.sin(now/200));
- if(down)cx.globalAlpha=Math.max(0,1-gone/3400);
+ if(down)cx.globalAlpha=clamp(1-(gone-1100)/3400,0,1);
  robotKing(cx,kx+jx+s,ky,s,hurt||down?"#fff":surp?"#ffd23a":Math.floor(now/400)%2?"#ff2d2d":"#ff7a7a");cx.globalAlpha=1;
  if(surp)chip(cx,"¡¿QUÉ?!",mx,Math.max(0,ky-22),"#fff","#d8423d");
  if(laugh)chip(cx,"¡JA, JA, JA!",mx,Math.max(0,ky-22),"#fff","#d8423d");
  /* se va con el resplandor */
- if(down)say(cx,"¡Oh no, me GROVEaaste"+"e".repeat(Math.min(14,Math.floor(gone/110)))+"!",mx+(Math.floor(now/60)%2?2:-2),Math.max(4,ky-40),W);
+ if(down&&gone>1100)say(cx,"¡Oh no, me GROVEaaste"+"e".repeat(Math.min(14,Math.floor((gone-1100)/110)))+"!",mx+(Math.floor(now/60)%2?2:-2),Math.max(4,ky-40),W);
  /* vida del Rey: baja con cada carta acertada y se llena si el combo falla */
  if(b.ph!=="rise"){var hp=down?0:1-b.step/COMBO.length,bw=W*.5,bx=Math.round(W/2-bw/2),by=H-30;
   chip(cx,"REY ROBOT CLÁSICO",W/2,by-20,"#fff","#d8423d");R(cx,bx-3,by-3,bw+6,16,"#1a1020");R(cx,bx,by,bw,10,"#3a2f6a");R(cx,bx,by,Math.round(bw*hp),10,hp>.5?"#ff5a5a":"#ffc83d")}}
@@ -1302,7 +1327,7 @@ document.querySelectorAll(".cpal .gt").forEach(function(b){var g=b.dataset.g;b.i
  b.addEventListener("pointerdown",function(e){e.preventDefault();beginDrag(e,g,function(){addGate(0,g)})});
  b.addEventListener("click",function(e){if(e.detail===0){addGate(0,g);renderCirc()}})});
 /* las cartas de la mano también se pueden arrastrar al compositor */
-slots.forEach(function(slot,i){var c=CARDS[i];if(c.off)return;
+slots.forEach(function(slot,i){var c=CARDS[i];if(c.off||c.boss)return;
  slot.querySelector(".qc").addEventListener("pointerdown",function(e){if(e.pointerType==="mouse")e.preventDefault();beginDrag(e,c.id,null)})});
 $("cclear").addEventListener("click",function(){circ.forEach(function(l){l.length=0});renderCirc()});
 $("ccode").addEventListener("click",function(){var open=$("cqk").hidden;$("cqk").hidden=!open;this.setAttribute("aria-expanded",String(open))});
