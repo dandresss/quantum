@@ -159,7 +159,7 @@ box-shadow:inset 0 -6px 0 #d99a14,inset 0 6px 0 #ffe58a;clip-path:polygon(0 8px,
 .hof .fr.off{border-color:#54402a}
 .hof .fr.off .pic{background:#2b2150;box-shadow:inset 0 0 0 4px #54402a}
 .hof .who{font-family:"Press Start 2P",monospace;font-size:.6rem;line-height:1.4;color:var(--parch)}
-.hof .prop{font-size:1.5rem;line-height:1;color:var(--gold)}
+.hof .prop{font-size:1.25rem;line-height:1;color:var(--gold)}
 .hof .card{font-size:1.1rem;line-height:1;color:#9a96b8}
 /* juego */
 .gwrap{width:100%;display:flex;flex-direction:column;align-items:center;gap:12px}
@@ -229,6 +229,50 @@ box-shadow:inset 0 -6px 0 #d99a14,inset 0 6px 0 #ffe58a;clip-path:polygon(0 8px,
  #hand{flex-wrap:wrap;overflow:visible;justify-content:center;padding:6px 0}
  #hand .qslot{flex:0 0 max(120px,min(calc(50% - 6px),calc((100vh - 300px)/2.95)));width:max(120px,min(calc(50% - 6px),calc((100vh - 300px)/2.95)))}
 }
+/* científico conocido al atrapar una estrella */
+.wsci{width:80px;height:96px;margin:0 auto 10px;padding:6px;background:#ffe27a;box-shadow:inset 0 0 0 4px var(--gold)}
+.wsci svg{width:100%;height:100%}
+/* jefe final: anuncio, combo guiado por Lov Grover, destello rojo al fallar y resplandor blanco final */
+#s5.quake{animation:quake .12s steps(2) infinite}
+@keyframes quake{0%{transform:translate(-5px,3px)}50%{transform:translate(5px,-3px)}}
+.spell{position:fixed;left:0;right:0;top:30%;z-index:20;display:flex;flex-direction:column;align-items:center;gap:10px;pointer-events:none;text-align:center}
+.spell[hidden]{display:none}
+.spell b{font-family:"Pixelify Sans",monospace;font-weight:700;font-size:clamp(2.6rem,10vw,5.6rem);line-height:1;color:var(--gold);text-shadow:5px 0 var(--ink),-5px 0 var(--ink),0 5px var(--ink),0 -5px var(--ink),0 0 36px #ff9a3d;animation:boom .8s steps(6) both,pulse .5s steps(2) .8s infinite}
+.spell span{font-family:"Press Start 2P",monospace;font-size:clamp(.85rem,3.4vw,1.5rem);line-height:1.3;color:#fff;background:#d8423d;padding:8px 14px;border:4px solid var(--ink);letter-spacing:.12em;box-shadow:4px 4px 0 rgba(0,0,0,.5)}
+@keyframes boom{0%{transform:scale(3.2);opacity:0}100%{transform:scale(1);opacity:1}}
+@keyframes pulse{50%{transform:scale(1.08);filter:brightness(1.35)}}
+.combo{position:fixed;left:50%;top:calc(10px + env(safe-area-inset-top,0px));transform:translateX(-50%);z-index:18;width:min(760px,calc(100vw - 16px));padding:12px 14px 14px;background:rgba(26,18,48,.95);border:5px solid var(--gold);box-shadow:0 0 0 4px var(--ink),0 0 40px rgba(255,200,60,.55)}
+.combo[hidden]{display:none}
+.combo .ctop{font-family:"Press Start 2P",monospace;font-size:clamp(.55rem,2.2vw,.8rem);line-height:1.4;color:var(--gold);text-align:center;letter-spacing:.08em;margin:0 0 12px}
+.ckeys{display:flex;justify-content:center;gap:clamp(4px,1.4vw,10px)}
+.ck{position:relative;flex:none;width:clamp(34px,10vw,64px);height:clamp(34px,10vw,64px);display:grid;place-items:center;background:var(--k);border:4px solid var(--ink);opacity:.35}
+.ck svg{width:58%;height:58%;shape-rendering:crispEdges}
+.ck.ok{opacity:1;box-shadow:0 0 0 3px var(--gold)}
+.ck.ok::after{content:"✓";position:absolute;right:-8px;top:-12px;font-family:"Pixelify Sans",monospace;font-weight:700;font-size:1.3rem;color:var(--ink);background:var(--gold);padding:0 4px;border:2px solid var(--ink)}
+.ck.now{opacity:1;transform:scale(1.2);outline:4px solid #fff;outline-offset:2px;z-index:1;animation:pulse .6s steps(2) infinite}
+.ck.bad{opacity:1;background:#d8423d;outline-color:#d8423d}
+.guide{display:flex;align-items:center;gap:10px;margin-top:14px}
+.guide .gp{flex:none;width:58px;height:70px;padding:4px;background:#ffe27a;box-shadow:inset 0 0 0 3px var(--gold),3px 3px 0 rgba(0,0,0,.45)}
+.guide .gp svg{width:100%;height:100%}
+.guide .gb{flex:1;min-width:0;background:var(--parch);color:var(--ink);border:3px solid var(--ink);padding:6px 10px 8px;box-shadow:3px 3px 0 rgba(0,0,0,.45)}
+.guide .gn{display:block;font-family:"Press Start 2P",monospace;font-size:.55rem;line-height:1.5;color:#7a5a00}
+.guide .gtx{font-size:clamp(1.25rem,4vw,1.6rem);line-height:1.05}
+.guide .gtx b{font-family:"Pixelify Sans",monospace;font-size:1.25em;padding:0 5px;color:#fff;background:var(--k)}
+.flash{position:fixed;inset:0;z-index:19;background:#d8423d;opacity:0;pointer-events:none}
+.flash.go{animation:fl .6s steps(4)}
+@keyframes fl{0%{opacity:.65}100%{opacity:0}}
+.white{position:fixed;inset:0;z-index:40;overflow:hidden;pointer-events:none;display:flex;align-items:center;justify-content:center;padding:16px}
+.white[hidden]{display:none}
+.white.on{pointer-events:auto}
+.white::before{content:"";position:absolute;left:50%;top:45%;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;background:#fff;box-shadow:0 0 60px 40px #fff;transform:scale(0);transition:transform 2.4s cubic-bezier(.6,0,.9,.5)}
+.white.on::before{transform:scale(100)}
+.white .wend{position:relative;max-width:min(560px,100%);text-align:center;color:var(--navy);opacity:0;transition:opacity 1s 2.4s}
+.white.on .wend{opacity:1}
+.wend h2{margin:0 0 12px;font-family:"Pixelify Sans",monospace;font-weight:700;font-size:clamp(2rem,7vw,3.4rem);line-height:1.05}
+.wend p{margin:0 0 18px;font-size:1.5rem;line-height:1.1}
+.wend .wsci{margin-bottom:14px}
+.wend .pbtn{margin:0 4px}
+@media (prefers-reduced-motion:reduce){#s5.quake,.spell b,.ck.now,.flash.go{animation:none}}
 @media (prefers-reduced-motion:reduce){.meter,.meter b,.meter .mbar i,.portrait,.qslot.deal,.qslot.pop{animation:none}.qc,.qc .inner{transition:none}}
 </style>
 </head>
@@ -335,6 +379,14 @@ box-shadow:inset 0 -6px 0 #d99a14,inset 0 6px 0 #ffe58a;clip-path:polygon(0 8px,
 <p class="zhint" id="zhint">Toca la carta para voltearla. Toca fuera para cerrar.</p>
 <div class="zbtns"><button class="pbtn gold" id="zuse">USAR CARTA</button><button class="pbtn" id="zclose">CERRAR</button></div>
 </div>
+<div class="spell" id="spell" hidden aria-live="assertive"><b id="spT">¡SÚPER HECHIZO!</b><span id="spS">SÚPER COMBO</span></div>
+<div class="combo" id="combo" hidden role="dialog" aria-label="Súper combo">
+<p class="ctop" id="cTop">Súper combo · lanza las cartas en orden</p>
+<div class="ckeys" id="ckeys"></div>
+<div class="guide"><div class="gp" id="gPic"></div><div class="gb"><span class="gn" id="gName">Lov Grover</span><div class="gtx" id="gTxt" aria-live="polite"></div></div></div>
+</div>
+<div class="flash" id="flash"></div>
+<div class="white" id="white" hidden role="dialog" aria-label="Final"><div class="wend"><h2>¡Qubitlandia brilla otra vez!</h2><div id="wTxt"></div><button class="pbtn gold" id="wMenu">MENÚ</button><button class="pbtn" id="wHall">SALÓN DE LA FAMA</button></div></div>
 <div class="dlg" id="win" hidden role="dialog" aria-live="polite">
 <div id="winTxt"></div>
 <button id="winOk">Jugar otra vez</button>
@@ -624,20 +676,32 @@ var CARDS=[
  {id:"C",key:"C",off:true,c:"#2f63d6",g:"#3a7bff",px:"C",aria:"Carta CNOT",tag:"CNOT",name:"CNOT",power:"Enlace",
   desc:"Una palanca en un punto abre una puerta en otro.",
   prop:"Entrelazamiento",back:"Si el control es |1⟩, aplica X al objetivo. Con el control en superposición los entrelaza: (|00⟩ + |11⟩)/√2.",code:"qc.cx(0, 1)"}];
-/* retratos pixelados (20x24) de quienes descubrieron la propiedad de cada carta: aparecen al usarla por primera vez */
-var SPAL={K:"#1a1020",S:"#f1c3a0",s:"#d39a76",h:"#2e221c",g:"#4a3a30",L:"#e9f3ff",F:"#5b5470",W:"#f4f1e6",w:"#c9c2ae",C:"#2f3550",c:"#20253a",T:"#b3303a",t:"#7d1f27",M:"#a5544c",y:"#b07a4a",Y:"#d9a066",r:"#e7a39a"};
+var SPAL={K:"#1a1020",S:"#f1c3a0",s:"#d39a76",h:"#2e221c",g:"#4a3a30",L:"#e9f3ff",F:"#5b5470",W:"#f4f1e6",w:"#c9c2ae",C:"#2f3550",c:"#20253a",T:"#b3303a",t:"#7d1f27",M:"#a5544c",y:"#b07a4a",Y:"#d9a066",r:"#e7a39a",
+ G:"#f2f2ee",n:"#a9a9b4",B:"#15121c",b:"#3a3346",P:"#b9805a",p:"#8f5c3d",Q:"#2f8f86",q:"#1e5f5a",V:"#7d8aa6",v:"#55607a",O:"#9fc6e8",o:"#6f9cc4"};
+/* científicos (retratos 20x24). Cada estrella que atrapas te presenta a uno nuevo de la lista de ese día (POOLS):
+   repitiendo un día se conoce a otro. Lov Grover guía el súper combo contra el jefe final y entra al salón al derrotarlo */
 var SCI={
- H:{name:"Erwin Schrödinger",grid:["....................","......hhhhhhhh......","....hhhhhhhhhhhh....","...hhhgggghhhhhhh...","...hhhhhhhhhghhhh...","...hhSSSSSSShhhhh...","...hSSSSSSSSSSSSh...","...SSSSSSSSSSSSSS...","...SShhhSSSShhhSS...","...SSFFFSSSSFFFSS...","..sSFLSSFFFFLSSFSs..","..sSFSKSFSSFSKSFSs..","...SSFFFSSSSFFFSS...","...SSSSSSssSSSSSS...","....SSSSSssSSSSS....","....SSSSMMMMSSSS....",".....SSSSSSSSSS.....","......sSSSSSSs......","........SSSS........","...cCCCWTTttTTWCCCc.","..cCCCCWWTttTWWCCCCc",".cCCCCCCWWWWWWCCCCCc",".cCCCCCCCWWWWCCCCCCc",".cCCCCCCCCWWCCCCCCCc"]},
- X:{name:"Niels Bohr",grid:["....................","....................","......hSSSSSSh......","....hhSSSSSSSShh....","...hhSSSSSSSSSShh...","...hhSSSSSSSSSShh...","...hSSSSSSSSSSSSh...","...SSSSSSSSSSSSSS...","...ShhhhSSSShhhhS...","...SShhhSSSShhhSS...","..sSSSSSSSSSSSSSSs..","..sSSsKSSSSSSKsSSs..","..sSSSSSSssSSSSSSs..","..SSSSSSSssSSSSSSS..","..SSSSSSsssSSSSSSS..","..sSSSSSSSSSSSSSSs..","..sSSSSMMMMMMSSSSs..","...sSSSSSSSSSSSSs...","....ssSSSSSSSSss....","...cCCWWWWWWWWCCc...","..cCCCCWWWTTWWWCCCc.",".cCCCCCCWWTTWWCCCCCc",".cCCCCCCCWTTWCCCCCCc",".cCCCCCCCCTTCCCCCCCc"]},
- Z:{name:"Thomas Young",grid:["....................",".....yYyYyYyYy......","...yYyYyYyYyYyYy....","..yYyYyYyYyYyYyYy...","..YyYyYyYyYyYyYyYy..","..yYySSySSYSSySyYy..","..YySSSSSSSSSSSSyY..","..ySSSSSSSSSSSSSSy..","..YSSyyySSSSyyySSY..","..ySSSSSSSSSSSSSSy..","..YSSSKSSSSSSKSSSY..","..ySSSSSSssSSSSSSy..","..YSrSSSSssSSSSrSY..","...SSrrSSSSSSrrSS...","....SSSSMMMMSSSS....","..C..SSSSSSSSSS..C..","..CCWWWWWWWWWWWWCC..","..cCWWWWWWWWWWWWCc..","..cCCwWWWWWWWWwCCc..",".cCCCCwWWWWWWwCCCCc.",".cCCCCCwWWWWwCCCCCc.",".cCCCCCCWWWWCCCCCCc.",".cCCCCCCCWWCCCCCCCc.",".cCCCCCCCCCCCCCCCCc."]}};
+ planck:{name:"Max Planck",prop:"Cuantos de energía · 1900",grid:["....................","....................",".......SSSSSS.......",".....SSSSSSSSSS.....","....SSSSSSSSSSSS....","...SSSSSSSSSSSSSS...","...nSSSSSSSSSSSSn...","..nnSSSSSSSSSSSSnn..","..nnShhhSSSShhhSnn..","..nSFFFFSSSSFFFFSn..","..sFLSSFFFFFLSSFSs..","..sFSKSFSSSSFSKSFs..","...SFFFFSssSFFFFS...","...SSSSSSssSSSSSS...","...SSnnnnnnnnnnSS...","....SnnnSMMSnnnS....",".....SSSSSSSSSS.....","......sSSSSSSs......","........SSSS........","...cCCCWTTTTTWCCCc..","..cCCCCWWtTtWWCCCCc.",".cCCCCCCWWWWWWCCCCCc",".cCCCCCCCWWWWCCCCCCc",".cCCCCCCCCWWCCCCCCCc"]},
+ einstein:{name:"Albert Einstein",prop:"El fotón · 1905",grid:["..G.nG..GGn.G..Gn...",".nGGGnGGGGGGnGGGGn..","GGnGGGGGGGGGGGGnGGG.","nGGGGSSSSSSSSSSGGGGn","GGGSSSSSSSSSSSSSSGGG","GnGSSSSSSSSSSSSSSGnG","GGSSSSSSSSSSSSSSSSGG",".GSSSSSSSSSSSSSSSSG.",".GSnnnnSSSSSSnnnnSG.","..SSSSSSSSSSSSSSSS..","..sSSSSSSSSSSSSSSs..","..sSSSKSSSSSSKSSSs..","..sSSSSSSssSSSSSSs..","...SSSSSSssSSSSSS...","...SSGGGGGGGGGGSS...","...SGGnGGGGGGnGGS...",".....SSSMMMMSSS.....","......sSSSSSSs......","........SSSS........","...vVVVVWWWWVVVVv...","..vVVVVVVWWVVVVVVv..",".vVVVVVVVVVVVVVVVVv.",".vVVVVVVVVVVVVVVVVv.",".vVVVVVVVVVVVVVVVVv."]},
+ young:{name:"Thomas Young",prop:"Interferencia · 1801",grid:["....................",".....yYyYyYyYy......","...yYyYyYyYyYyYy....","..yYyYyYyYyYyYyYy...","..YyYyYyYyYyYyYyYy..","..yYySSySSYSSySyYy..","..YySSSSSSSSSSSSyY..","..ySSSSSSSSSSSSSSy..","..YSSyyySSSSyyySSY..","..ySSSSSSSSSSSSSSy..","..YSSSKSSSSSSKSSSY..","..ySSSSSSssSSSSSSy..","..YSrSSSSssSSSSrSY..","...SSrrSSSSSSrrSS...","....SSSSMMMMSSSS....","..C..SSSSSSSSSS..C..","..CCWWWWWWWWWWWWCC..","..cCWWWWWWWWWWWWCc..","..cCCwWWWWWWWWwCCc..",".cCCCCwWWWWWWwCCCCc.",".cCCCCCwWWWWwCCCCCc.",".cCCCCCCWWWWCCCCCCc.",".cCCCCCCCWWCCCCCCCc.",".cCCCCCCCCCCCCCCCCc."]},
+ bohr:{name:"Niels Bohr",prop:"Saltos cuánticos · 1913",grid:["....................","....................","......hSSSSSSh......","....hhSSSSSSSShh....","...hhSSSSSSSSSShh...","...hhSSSSSSSSSShh...","...hSSSSSSSSSSSSh...","...SSSSSSSSSSSSSS...","...ShhhhSSSShhhhS...","...SShhhSSSShhhSS...","..sSSSSSSSSSSSSSSs..","..sSSsKSSSSSSKsSSs..","..sSSSSSSssSSSSSSs..","..SSSSSSSssSSSSSSS..","..SSSSSSsssSSSSSSS..","..sSSSSSSSSSSSSSSs..","..sSSSSMMMMMMSSSSs..","...sSSSSSSSSSSSSs...","....ssSSSSSSSSss....","...cCCWWWWWWWWCCc...","..cCCCCWWWTTWWWCCCc.",".cCCCCCCWWTTWWCCCCCc",".cCCCCCCCWTTWCCCCCCc",".cCCCCCCCCTTCCCCCCCc"]},
+ schrodinger:{name:"Erwin Schrödinger",prop:"Superposición · 1926",grid:["....................","......hhhhhhhh......","....hhhhhhhhhhhh....","...hhhgggghhhhhhh...","...hhhhhhhhhghhhh...","...hhSSSSSSShhhhh...","...hSSSSSSSSSSSSh...","...SSSSSSSSSSSSSS...","...SShhhSSSShhhSS...","...SSFFFSSSSFFFSS...","..sSFLSSFFFFLSSFSs..","..sSFSKSFSSFSKSFSs..","...SSFFFSSSSFFFSS...","...SSSSSSssSSSSSS...","....SSSSSssSSSSS....","....SSSSMMMMSSSS....",".....SSSSSSSSSS.....","......sSSSSSSs......","........SSSS........","...cCCCWTTttTTWCCCc.","..cCCCCWWTttTWWCCCCc",".cCCCCCCWWWWWWCCCCCc",".cCCCCCCCWWWWCCCCCCc",".cCCCCCCCCWWCCCCCCCc"]},
+ gamow:{name:"George Gamow",prop:"Efecto túnel · 1928",grid:["....................","......hhhhhhhh......","....hhhhhhhhhhhh....","...hhhhgggghhhhhh...","...hhhhhhhhhhhhhh...","..hhSSSSSSSSSSSSShh.","..hSSSSSSSSSSSSSSSh.","..SSSSSSSSSSSSSSSSS.","..SShhhhSSSSShhhhSS.",".sSFFFFFFSSSFFFFFFSs",".sFLLSSSFFFFLLSSSFSs",".sFLSSKSFSSSFLSKSFSs","..FSSSSSFSsSFSSSSSF.","..SFFFFFSSsSSFFFFFS.","..SSSSSSSSSSSSSSSSS.","...SSSSSMMMMMMSSSS..","....SSSSSSSSSSSSS...",".....ssSSSSSSSss....","........SSSS........","...cCCCWWTTWWCCCc...","..cCCCCCWWTTWWCCCCc.",".cCCCCCCCWTTWCCCCCCc",".cCCCCCCCCTTCCCCCCCc",".cCCCCCCCCCCCCCCCCCc"]},
+ feynman:{name:"Richard Feynman",prop:"Computador cuántico · 1981",grid:["....................","....yhyhhyhhyhy.....","...hyhhyhhyhhyhh....","..hhyhhhyhhhhyhhh...","..hhhhyhhhhyhhhhhh..","..hhSSSSSSSSSSSShh..","..hSSSSSSSSSSSSSSh..","...SSSSSSSSSSSSSSS..","...SShhhSSSSShhhSS..","...SSSSSSSSSSSSSSS..","..sSSSSSSSSSSSSSSSs.","..sSSSKSSSSSSKSSSSs.","..sSSSSSSSsSSSSSSSs.","...SSSSSSSssSSSSSS..","...SSSKWWWWWWKSSSS..","....SSSKWWWWKSSSS...",".....SSSSSSSSSSS....","......sSSSSSSSs.....","........SSSS........","...oOOOOSSSSOOOOo...","..oOOOOOWSSWOOOOOo..",".oOOOOOOOWWOOOOOOOo.",".oOOOOOOOOOOOOOOOOo.",".oOOOOOOOOOOOOOOOOo."]},
+ wu:{name:"Chien-Shiung Wu",prop:"Entrelazamiento medido · 1950",grid:["....................","......BBBBBBBB......","....BBBBBBBBBBBB....","...BBBBBbBBBBBBBB...","..BBBBBBBbSSSSSBBB..","..BBBBBBBSSSSSSSBB..","..BBSSSSSSSSSSSSBB..","..BBSSSSSSSSSSSSSB..","..BBShhhSSSShhhSSB..","..BBSSSSSSSSSSSSSB..","..BBSSSSSSSSSSSSSB..","..BBSSKSSSSSSKSSSB..","..BBSSSSSssSSSSSSB..","..BBrSSSSssSSSSrSB..","..BBSSSSSSSSSSSSSB..","..BB.SSSMMMMSSS.BB..",".....SSSSSSSSSS.....","......sSSSSSSs......",".......qQQQQQq......","...qQQQQQQQQQQQQq...","..qQQQQQQYQQQQQQQq..",".qQQQQQQQYYQQQQQQQq.",".qQQQQQQQQYQQQQQQQq.",".qQQQQQQQQQQQQQQQQq."]},
+ shor:{name:"Peter Shor",prop:"Algoritmo de Shor · 1994",grid:["....................","....h.hh.hh.hh.h....","...hhhhhhhhhhhhhh...","..hhghhhhghhhhghhh..","..hhhhhhhhhhhhhhhh..","..hhSSSSSSSSSSSShh..","..hSSSSSSSSSSSSSSh..","...SSSSSSSSSSSSSS...","...ShhhhSSSShhhhS...","...SFFFFSSSSFFFFS...","..sFLSSFFFFFLSSFs...","..sFSKSFSSSSFSKSFs..","...SFFFFSssSFFFFS...","...hSSSSSssSSSSSh...","...hhSSSSSSSSSShh...","...hhhhhMMMMhhhhh...","....hhhhhhhhhhhh....",".....hhhhhhhhhh.....","........SSSS........","...bbbbbWWWWbbbbb...","..bBBBBBBWWBBBBBBb..",".bBBBBBBBBBBBBBBBBb.",".bBBBBBBBBBBBBBBBBb.",".bBBBBBBBBBBBBBBBBb."]},
+ grover:{name:"Lov Grover",prop:"Algoritmo de búsqueda · 1996",grid:["....................","......BBBBBBBB......","....BBBBBBBBBBBB....","...BBBBBBbBBBBBBB...","...BBBBBBBBBBBBBB...","...BBPPPPPPPPPPBB...","...BPPPPPPPPPPPPB...","...PPPPPPPPPPPPPP...","...PBBBBPPPPBBBBP...","...PFFFFPPPPFFFFP...","..pFLPPFFFFFLPPFPp..","..pFPKPFPPPPFPKPFp..","...PFFFFPppPFFFFP...","...PPPPPPppPPPPPP...","...PPPBBBBBBBBPPP...","....PPPPMMMMPPPP....",".....PPPPPPPPPP.....","......pPPPPPPp......","........PPPP........","...oOOOOWWWWOOOOo...","..oOOOOOOWWOOOOOOo..",".oOOOOOOOOOOOOOOOOo.",".oOOOOOOOOOOOOOOOOo.",".oOOOOOOOOOOOOOOOOo."]}};
+var POOLS={1:["planck","einstein","young"],2:["bohr","schrodinger","gamow"],3:["feynman","wu","shor"]},BOSSSCI="grover";
+/* quién descubrió la propiedad de cada carta: aparece en su reverso cuando ya lo conociste */
+var CARDSCI={H:"schrodinger",X:"bohr",Z:"young"};
 var QMARK=[".XXXXX.","XX...XX",".....XX","....XX.","...XX..","...XX..",".......","...XX..","...XX.."];
-/* sin descubrir: silueta oscura; sin científico todavía (CNOT): un signo de pregunta */
+/* id = científico. Sin conocer: silueta oscura; sin científico (CNOT): un signo de pregunta */
 function portraitSvg(id,shadow){var s=SCI[id],g=s?s.grid:QMARK,k=s?1:2,o=s?0:3,t='<svg viewBox="0 0 20 24" aria-hidden="true">';
  g.forEach(function(r,y){for(var x=0;x<r.length;x++){var ch=r[x];if(ch===".")continue;
   t+='<rect x="'+(o+x*k)+'" y="'+(o+y*k)+'" width="'+k+'" height="'+k+'" fill="'+(s&&!shadow?SPAL[ch]:'#1a1020" fill-opacity=".85')+'"/>'}});
  return t+'</svg>'}
-function backHTML(c){var s=found(c.id)&&SCI[c.id];
- return '<span class="tag">'+c.tag+'</span><div class="sci">'+portraitSvg(c.id,!s)+'</div>'+
+function backHTML(c){var sid=CARDSCI[c.id],s=met(sid)&&SCI[sid];
+ return '<span class="tag">'+c.tag+'</span><div class="sci">'+portraitSvg(sid,!s)+'</div>'+
   '<div class="who">'+(s?s.name:"¿Quién la descubrió?")+'</div><div class="prop">'+c.prop+'</div>'+
   '<p>'+c.back+'</p><div class="code">'+c.code+'</div>'}
 function cardHTML(c){return '<div class="inner">'+
@@ -656,7 +720,8 @@ if(window.ResizeObserver){new ResizeObserver(fitAll).observe(document.body)}
 var zoomIdx=-1,reveal=-1;
 function openZoom(i,canUse,first){zoomIdx=i;reveal=first?i:-1;var box=$("zbox"),c=CARDS[i];box.innerHTML="";
  var w=Math.max(150,Math.min(300,window.innerWidth*.82,(window.innerHeight-190)*260/380));
- var slot=makeSlot(c,function(b){b.classList.toggle("on");if(first&&b.classList.contains("on")&&SCI[c.id])$("zhint").textContent="¡"+SCI[c.id].name+" entró al Salón de la Fama!"});
+ var slot=makeSlot(c,function(b){b.classList.toggle("on");var s=met(CARDSCI[c.id])&&SCI[CARDSCI[c.id]];
+  if(first&&b.classList.contains("on")&&CARDSCI[c.id])$("zhint").textContent=s?"La descubrió "+s.name+", que ya está en tu Salón de la Fama":"Atrapa estrellas para conocer a quien la descubrió"});
  slot.style.width=w+"px";if(first&&!reduce)slot.classList.add("deal");box.appendChild(slot);fitSlot(slot,w);
  $("zhint").textContent=first?"¡Primera vez que usas esta carta! Tócala para ver quién descubrió su propiedad.":"Toca la carta para voltearla. Toca fuera para cerrar.";
  $("zuse").hidden=!canUse;$("zclose").hidden=!!first;$("zoom").hidden=false;
@@ -829,13 +894,19 @@ function renderStory(){$("vcount").textContent=(vstep+1)+"/"+STORY.length;$("vpr
 /* ---------- juego ---------- */
 var KEY="qml.v1",save={secs:0,days:[]};
 try{var o=JSON.parse(localStorage.getItem(KEY)||"null");if(o&&typeof o.secs==="number"&&Array.isArray(o.days))save=o}catch(e){}
-if(!Array.isArray(save.cards))save.cards=[];
-if(!Array.isArray(save.stars))save.stars=[];   /* días (1 a 7) cuya estrella ya se atrapó */   /* cartas ya usadas alguna vez (en cualquier día): sus científicos están en el salón */
+if(!Array.isArray(save.cards))save.cards=[];   /* cartas ya usadas alguna vez (en cualquier día) */
+if(!Array.isArray(save.stars))save.stars=[];   /* días cuya estrella ya se atrapó */
+/* científicos conocidos. Antes llegaban al usar cada carta: quien ya la usó conserva a ese científico */
+if(!Array.isArray(save.sci))save.sci=save.cards.map(function(id){return CARDSCI[id]}).filter(Boolean);
 function persist(){try{localStorage.setItem(KEY,JSON.stringify(save))}catch(e){}}
 function found(id){return save.cards.indexOf(id)>=0}
-/* primera vez que se usa una carta: queda descubierta para siempre y su científico pasa al salón de la fama */
-function discover(id){if(found(id))return false;save.cards.push(id);persist();
- CARDS.forEach(function(c,i){if(c.id===id)hand.children[i].querySelector(".back").innerHTML=backHTML(c)});return true}
+function met(id){return !!id&&save.sci.indexOf(id)>=0}
+/* al atrapar la estrella del día d: un científico de su lista que aún no conozcas (al azar); null si ya los conoces a todos */
+function meetNew(d){var left=(POOLS[d]||[]).filter(function(id){return !met(id)});if(!left.length)return null;
+ var id=left[Math.floor(Math.random()*left.length)];save.sci.push(id);refreshBacks();return id}
+function refreshBacks(){CARDS.forEach(function(c,i){var b=hand.children[i]&&hand.children[i].querySelector(".back");if(b)b.innerHTML=backHTML(c)})}
+/* primera vez que se usa una carta: sale de frente y queda descubierta para siempre */
+function discover(id){if(found(id))return false;save.cards.push(id);persist();return true}
 function todayKey(){var d=new Date();return d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2)}
 var T=20,cv=$("mz"),gx=cv.getContext("2d");
 function floorLayer(col){var c=document.createElement("canvas");c.width=MW*T;c.height=MH*T;var x=c.getContext("2d");
@@ -861,16 +932,18 @@ function pause(){if(!paused){paused=true;pausedAt=performance.now()}}
 function resume(){if(!paused)return;paused=false;if(bot)bot.next=performance.now()+clamp(bot.next-pausedAt,0,bot.tick)}
 /* el gato blanco: recorre la trayectoria de su Q-learning ya entrenado ([fila, col]; celdas repetidas = choque) */
 var bot=null,gameRun=0;
-/* desde el día 5 el laberinto sale de qubits y el gato blanco obtiene poder cuántico (Grover); el 7, sin decoherencia.
+/* día 1 clásico; desde el 2 hay ríos; el 3 (el último) el laberinto sale de qubits, el gato blanco obtiene poder cuántico
+   (Grover, sin decoherencia) y al atrapar la estrella aparece el jefe final.
    El día se cambia con ‹ › en el HUD (se guarda en save.pick); ?dia=N en la URL lo fuerza al cargar */
-var QDAY=5,LASTDAY=7,DAYQ=parseInt(new URLSearchParams(location.search).get("dia"),10);
+var QDAY=3,LASTDAY=3,DAYQ=parseInt(new URLSearchParams(location.search).get("dia"),10);
+save.stars=save.stars.filter(function(d){return d<=LASTDAY});   /* partidas guardadas de cuando había 7 días */
 function dayNum(){return clamp(Math.round(DAYQ>0?DAYQ:save.pick||save.days.length||1),1,LASTDAY)}
 function setDay(d){DAYQ=0;save.pick=clamp(d,1,LASTDAY);persist();enterGame()}
 $("dPrev").addEventListener("click",function(){setDay(dayNum()-1)});
 $("dNext").addEventListener("click",function(){setDay(dayNum()+1)});
 function getJSON(url,opts){return fetch(url,opts).then(function(r){if(!r.ok)throw new Error("Error "+r.status);return r.json()})}
 var hand=$("hand");
-CARDS.forEach(function(c,i){hand.appendChild(makeSlot(c,function(){if(running&&!c.off)openZoom(i,true)}))});
+CARDS.forEach(function(c,i){hand.appendChild(makeSlot(c,function(){if(boss){comboKey(c.id);return}if(running&&!c.off)openZoom(i,true)}))});
 
 function fmt(s){var m=Math.floor(s/60),r=s%60;return("0"+m).slice(-2)+":"+("0"+r).slice(-2)}
 function hud(){var two=cats.length===2,ph=$("hPhys");
@@ -878,11 +951,13 @@ function hud(){var two=cats.length===2,ph=$("hPhys");
  $("portrait").className="portrait "+(two?"s01":"s"+cats[0].s);
  ph.hidden=!two&&cats[0].s!==1;if(ph.hidden)return;var v,sub;
  if(two){v=coh/T2;sub=coh+(coh===1?" paso":" pasos")+" antes de que el entorno mida a Quibi"}
- else{v=Math.exp(-exc/T1);sub=exc?"Paso "+exc+" en 1: −"+(Math.round(Math.exp(-(exc-1)/T1)*100)-Math.round(v*100))+" %. Puede decaer a 0":"Cada paso en 1 baja la barra"}
- var p=Math.round(v*100);$("mLbl").textContent=two?"Coherencia":"Seguir en 1";$("mPct").textContent=two?coh+"/"+T2:p+" %";$("mSub").textContent=sub;
+ else{v=nextOk();sub=exc?"Paso "+exc+" en 1: −"+(Math.round(Math.exp(-exc/T1)*100)-Math.round(v*100))+" %. Si decae en un muro, ¡OOF!":"Desde que usaste X, cada paso baja la barra"}
+ var p=Math.round(v*100);$("mLbl").textContent=two?"Coherencia":"Siguiente paso en 1";$("mPct").textContent=two?coh+"/"+T2:p+" %";$("mSub").textContent=sub;
  ph.style.setProperty("--w",p+"%");ph.style.setProperty("--fc",meterCol(p));ph.classList.toggle("low",p<=35);
  var key=two+":"+(two?coh:exc);if(key!==mKey){mKey=key;ph.classList.remove("drop");void ph.offsetWidth;ph.classList.add("drop")}}
 function meterCol(p){return p>60?"#4aa8ff":p>35?"#ffc83d":"#ff5a5a"}
+/* probabilidad de que el siguiente paso aún encuentre a Quibi en 1, contando desde que usó X */
+function nextOk(){return Math.exp(-(exc+1)/T1)}
 function toast(m){$("toast").textContent=m}
 /* el piso está en 0 y las paredes en 1: cada gato solo pisa casillas de su mismo estado. El agua no se pisa nunca */
 function canEnter(c,x,y){return !water(x,y)&&!block(x,y)&&(c.s===0?!wall(x,y):inner(x,y)&&wall(x,y))}
@@ -922,7 +997,7 @@ function move(dx,dy){if(!running||paused||!$("zoom").hidden)return;var wet=false
  else relax();
  hud()}
 /* la primera vez que se usa una carta (en cualquier día) sale de frente y la carrera espera; después se usa directo */
-function useCard(i){if(!running||paused||i<0)return;if(CARDS[i].off){toast("Esta carta aún está bloqueada");return}
+function useCard(i){if(boss&&i>=0){comboKey(CARDS[i].id);return}if(!running||paused||i<0)return;if(CARDS[i].off){toast("Esta carta aún está bloqueada");return}
  if(discover(CARDS[i].id)){pause();openZoom(i,true,true);return}
  applyCard(i)}
 function applyCard(i){if(!running)return;var id=CARDS[i].id,el=hand.children[i],two=cats.length===2,p=branch(0),q=branch(1);
@@ -948,12 +1023,12 @@ var preps={};
 function prepare(day){var k=todayKey(),id=k+"/"+day;if(preps[id])return preps[id];
  var qd=day>=QDAY,q="algorithm=backtracker&width=15&height=10&braid=0.2&seed="+k.replace(/-/g,"")+day+(qd?"&quantum=true":"");
  var maze=getJSON("/api/maze?"+q).then(function(b){if(day>=RIVERDAY)b.grid=withRivers(b.grid,riverSeed(day));return b}),
-  botp=maze.then(function(b){var g=b.grid.map(function(r){return r.map(function(v){return v?1:0})}),body=qd?{grid:g,level:day>=7?"expert":"hard"}:{grid:g};
+  botp=maze.then(function(b){var g=b.grid.map(function(r){return r.map(function(v){return v?1:0})}),body=qd?{grid:g,level:day>=LASTDAY?"expert":"hard"}:{grid:g};
   return getJSON(qd?"/api/bot/quantum":"/api/bot/play",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)})});
  var p=preps[id]={qd:qd,maze:maze,bot:botp};
  botp.catch(function(){if(preps[id]===p)delete preps[id]});   /* si falló, se vuelve a pedir la próxima vez */
  return p}
-function enterGame(){var my=++gameRun,day=dayNum(),p=prepare(day),qd=p.qd;
+function enterGame(){var my=++gameRun,day=dayNum(),p=prepare(day),qd=p.qd;endBoss();
  cats=[quibi()];running=false;paused=false;bot=null;
  var k=todayKey();if(save.days.indexOf(k)<0){save.days.push(k);persist()}
  hud();$("win").hidden=true;closeZoom();go("s5");fitAll();
@@ -985,7 +1060,7 @@ function drawBot(cx){if(!bot)return;
 function lose(){running=false;musicOff();persist();
  $("winTxt").textContent=bot&&bot.q?"El gato blanco, con poder cuántico, llegó primero a la estrella. ¡Usa tus cartas e inténtalo otra vez!":"El gato blanco llegó primero a la estrella. ¡Inténtalo otra vez!";
  $("win").hidden=false;$("winOk").focus()}
-function leaveGame(){gameRun++;bot=null;running=false;closeZoom();musicOff();persist();$("win").hidden=true}
+function leaveGame(){gameRun++;bot=null;running=false;endBoss();closeZoom();musicOff();persist();$("win").hidden=true}
 /* pestaña oculta: la música se pausa igual que el reloj y el gato blanco */
 document.addEventListener("visibilitychange",function(){if(document.hidden)musicOff();else if(running&&cur==="s5")musicOn(false)});
 
@@ -1020,19 +1095,21 @@ function drawTrain(){var tr=train,now=performance.now();if(!tr)return;
 $("rspeed").addEventListener("click",function(){rspeed=SPEEDS[(SPEEDS.indexOf(rspeed)+1)%SPEEDS.length];this.textContent="x"+rspeed});
 $("rback").addEventListener("click",function(){trainRun++;train=null;go("s3")});
 /* cada día de la aventura tiene su estrella: se guarda la primera vez que se atrapa */
-function win(){running=false;musicOff();var d=dayNum(),had=save.stars.indexOf(d)>=0;if(!had)save.stars.push(d);persist();
- $("winTxt").textContent=(had?"¡Estrella atrapada otra vez! ":"¡Estrella atrapada! ")+save.stars.length+"/"+LASTDAY+" estrellas. Tiempo total: "+fmt(save.secs)+".";
+function win(){running=false;musicOff();var d=dayNum(),had=save.stars.indexOf(d)>=0,sid;if(!had)save.stars.push(d);sid=meetNew(d);persist();
+ if(d===LASTDAY){bossStart(sid);return}
+ $("winTxt").innerHTML=(sid?'<div class="wsci">'+portraitSvg(sid)+'</div>':"")+(had?"¡Estrella atrapada otra vez! ":"¡Estrella atrapada! ")+save.stars.length+"/"+LASTDAY+" estrellas. "+
+  (sid?"Conociste a "+SCI[sid].name+" ("+SCI[sid].prop+"): ya está en el Salón de la Fama.":"Ya conoces a todos los científicos del día "+d+".")+" Tiempo total: "+fmt(save.secs)+".";
  $("win").hidden=false;$("winOk").focus()}
 $("winOk").addEventListener("click",enterGame);
 setInterval(function(){if(running&&!paused&&!document.hidden){save.secs++;ticks++;if(ticks%5===0)persist();$("hTime").textContent="Tiempo: "+fmt(save.secs)}},1000);
 window.addEventListener("pagehide",persist);
 
-function drawGame(){var now=performance.now(),cx=gx;cx.imageSmoothingEnabled=false;
- cx.save();if(now<shakeUntil)cx.translate(Math.floor(now/40)%2?3:-3,0);
+function drawGame(){var now=performance.now(),cx=gx;cx.imageSmoothingEnabled=false;if(boss)bossTick(now);
+ cx.save();if(now<shakeUntil){var sa=boss?6:3;cx.translate(Math.floor(now/40)%2?sa:-sa,boss?(Math.floor(now/60)%2?3:-3):0)}
  R(cx,-4,-4,cv.width+8,cv.height+8,"#4b3222");
  cx.drawImage(cats.some(function(c){return c.s===0})?FLOOR1:FLOOR0,0,0);
  cx.drawImage(cats.some(function(c){return c.s===1})?WALL1:WALL0,0,0);
- drawWater(cx,MAZE,now);drawBlocks(cx,now);R(cx,START.x*T,START.y*T,T,T,"#ffc83d");drawStar(cx,(EXIT.x+.5)*T,(EXIT.y+.5)*T,.45+.2*Math.sin(now/260));
+ drawWater(cx,MAZE,now);drawBlocks(cx,now);if(!boss){R(cx,START.x*T,START.y*T,T,T,"#ffc83d");drawStar(cx,(EXIT.x+.5)*T,(EXIT.y+.5)*T,.45+.2*Math.sin(now/260))}
  stepBot(now);drawBot(cx);
  var order=cats.slice().sort(function(a,b){return b.s-a.s}),t=now/1000,two=cats.length===2,
   same=two&&cats[0].x===cats[1].x&&cats[0].y===cats[1].y,neg=two&&cats[0].a*cats[1].a<0;
@@ -1042,10 +1119,93 @@ function drawGame(){var now=performance.now(),cx=gx;cx.imageSmoothingEnabled=fal
   if(c.born&&now-c.born<900){var k=(now-c.born)/900;for(var i=0;i<8;i++)spark(cx,Math.round(px+Math.cos(i*.785)*(6+k*22)),Math.round(base-T*.5+Math.sin(i*.785)*(6+k*22)),3,1-k)}});
  if(two)order.forEach(function(c){var px=(c.x+.5)*T+(same?(c.s?24:-24):0),y=Math.max(0,(c.y+1)*T+2-T*1.75-18);
   chip(cx,pct(c)+(c.s&&neg?" · fase −":""),px,y,c.s?"#fff":"#1a1020",c.s?"#2f63d6":"#ffb3df")});
- /* mini barra de T1 sobre Quibi en estado 1 */
- else if(cats[0].s===1){var c=cats[0],v=Math.exp(-exc/T1),w=T*1.6,bx=Math.round((c.x+.5)*T-w/2),by=Math.max(2,(c.y+1)*T+2-T*1.75-10);
-  R(cx,bx-2,by-2,w+4,9,"#1a1020");R(cx,bx,by,Math.round(w*v),5,meterCol(Math.round(v*100)))}
+ /* sobre Quibi en estado 1: % de que el siguiente paso siga en 1 y su mini barra */
+ else if(cats[0].s===1){var c=cats[0],v=nextOk(),p=Math.round(v*100),col=meterCol(p),w=T*1.6,px=(c.x+.5)*T,bx=Math.round(px-w/2),
+   top=Math.max(0,(c.y+1)*T+2-T*1.75-28),by=top+20;
+  chip(cx,p+" %",px,top,p>35&&p<=60?"#1a1020":"#fff",col);
+  R(cx,bx-2,by-2,w+4,9,"#1a1020");R(cx,bx,by,Math.round(w*v),5,col)}
+ if(boss)drawBoss(cx,now);
  cx.restore()}
+
+/* ---------- jefe final ----------
+   Al atrapar la estrella del último día el laberinto se desarma (solo queda el contorno) y baja el Rey Robot Clásico.
+   Se anuncia el SÚPER HECHIZO y Lov Grover guía el SÚPER COMBO: hay que lanzar las cartas en orden (tecla o tocar la carta).
+   Una carta equivocada rompe el combo y todo vuelve a empezar desde el anuncio. Al completarlo, un resplandor lo cubre todo de blanco.
+   PENDIENTE: la secuencia definitiva la define el equipo. Por ahora, Grover con 1 qubit: H, oráculo Z y difusión H·X·Z·X·H */
+var COMBO=[
+ {g:"H",t:"Usa H: pon a Quibi en superposición."},
+ {g:"Z",t:"Ahora Z: el oráculo marca al Rey."},
+ {g:"H",t:"Usa H: empieza la difusión."},
+ {g:"X",t:"Usa X: invierte."},
+ {g:"Z",t:"Usa Z: refleja."},
+ {g:"X",t:"Usa X otra vez: vuelve a invertir."},
+ {g:"H",t:"Termina con H: ¡lánzalo!"}];
+var GCOL={H:"#e8383d",X:"#2f63d6",Z:"#4a9fcf"},boss=null,quakeUntil=0,actx=null;
+function beep(f,d){try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();var o=actx.createOscillator(),g=actx.createGain(),t=actx.currentTime;
+ o.type="square";o.frequency.value=f;g.gain.setValueAtTime(.07,t);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g);g.connect(actx.destination);o.start(t);o.stop(t+d)}catch(e){}}
+function quake(ms){var t=performance.now()+ms;shakeUntil=Math.max(shakeUntil,t);quakeUntil=Math.max(quakeUntil,t)}
+function bossStart(sid){var c=cats[0],now=performance.now();bot=null;
+ cats=[{x:c.x,y:c.y,s:0,a:1,fx:c.x,fy:c.y}];exc=0;hud();
+ boss={ph:"clear",t:now,wave:0,step:0,hits:[],ox:c.x,oy:c.y};quake(1800);
+ toast((sid?"¡"+SCI[sid].name+" se unió al Salón de la Fama! ":"")+"Pero el laberinto empieza a desarmarse…")}
+function endBoss(){boss=null;quakeUntil=0;$("spell").hidden=true;$("combo").hidden=true;$("white").classList.remove("on");$("white").hidden=true;$("s5").classList.remove("quake")}
+/* borra paredes, ríos y bloques en una onda que sale desde la estrella; el contorno queda */
+function clearWave(f){var md=f*Math.hypot(MW,MH);
+ MAZE=MAZE.map(function(r,y){return r.split("").map(function(ch,x){return x===0||y===0||x===MW-1||y===MH-1?"#":Math.hypot(x-boss.ox,y-boss.oy)<=md?".":ch}).join("")});buildLayers()}
+function bossTick(now){var b=boss,e=now-b.t;
+ if(b.ph==="clear"){var k=Math.min(10,Math.floor(e/160)+1);if(k>b.wave){b.wave=k;clearWave(k/10)}
+  if(e>1800){b.ph="rise";b.t=now;var c=cats[0];c.x=6;c.y=Math.floor(MH/2);c.fx=c.x;c.fy=c.y;c.born=now;musicOn(true);
+   toast("¡El Rey Robot Clásico bajó al laberinto vacío!")}}
+ else if(b.ph==="rise"&&e>1400)announce(now,false);
+ else if(b.ph==="announce"&&e>2600){b.ph="combo";b.t=now;$("spell").hidden=true;$("combo").hidden=false;renderCombo(false)}
+ else if(b.ph==="fail"&&e>1600)announce(now,true);
+ else if(b.ph==="done"&&e>2200){b.ph="white";b.t=now;finale()}
+ $("s5").classList.toggle("quake",!reduce&&now<quakeUntil)}
+function bang(top,sub){$("spT").textContent=top;$("spS").textContent=sub;var sp=$("spell"),bt=$("spT");sp.hidden=false;bt.style.animation="none";void bt.offsetWidth;bt.style.animation=""}
+function announce(now,again){var b=boss;b.ph="announce";b.t=now;b.step=0;b.hits=[];$("combo").hidden=true;
+ bang(again?"¡OTRA VEZ!":"¡SÚPER HECHIZO!","SÚPER COMBO");quake(2600);[523,659,784,1047].forEach(function(f,i){setTimeout(function(){beep(f,.2)},i*130)});
+ toast(again?"El Rey se rió… ¡vuelve a lanzar el súper combo desde el principio!":"¡El Rey Robot no se lo esperaba! Lov Grover te enseña el súper combo")}
+function renderCombo(bad){var b=boss,box=$("ckeys");box.innerHTML="";
+ COMBO.forEach(function(c,i){var e=document.createElement("div");e.className="ck"+(i<b.step?" ok":i===b.step?" now"+(bad?" bad":""):"");
+  e.style.setProperty("--k",GCOL[c.g]);e.innerHTML=gateSvg(c.g,"#fff");e.setAttribute("aria-label",c.g);box.appendChild(e)});
+ $("cTop").textContent="Súper combo · paso "+Math.min(b.step+1,COMBO.length)+" de "+COMBO.length+" · tecla o toca la carta";
+ if(!$("gPic").firstChild)$("gPic").innerHTML=portraitSvg(BOSSSCI);
+ if(!bad&&b.step<COMBO.length){var c=COMBO[b.step];$("gTxt").innerHTML=c.t.replace(c.g,'<b style="--k:'+GCOL[c.g]+'">'+c.g+'</b>')}}
+function comboKey(g){var b=boss;if(!b||b.ph!=="combo")return;var now=performance.now(),want=COMBO[b.step].g;
+ if(g!==want){b.ph="fail";b.t=now;oof();quake(600);var fl=$("flash");fl.classList.remove("go");void fl.offsetWidth;fl.classList.add("go");
+  renderCombo(true);$("gTxt").textContent="¡Esa era "+want+", no "+g+"! El combo se rompió: hay que empezar de nuevo.";
+  toast("¡El combo falló! Todo vuelve a empezar");return}
+ b.hits.push({g:g,t:now});b.step++;beep(330+b.step*80,.18);quake(220);
+ if(b.step<COMBO.length){renderCombo(false);return}
+ b.ph="done";b.t=now;renderCombo(false);$("gTxt").textContent="¡SÚPER COMBO! La búsqueda de Grover encontró al Rey.";
+ setTimeout(function(){if(boss&&boss.ph==="done")$("combo").hidden=true},700);
+ bang("¡SÚPER COMBO!","ALGORITMO DE GROVER");quake(2200);[784,988,1175,1568].forEach(function(f,i){setTimeout(function(){beep(f,.25)},i*110)});
+ toast("¡SÚPER COMBO! El súper hechizo alcanzó al Rey Robot Clásico")}
+function finale(){var g=!met(BOSSSCI);if(g){save.sci.push(BOSSSCI);refreshBacks()}persist();musicOff();
+ $("spell").hidden=true;$("combo").hidden=true;
+ $("wTxt").innerHTML='<div class="wsci">'+portraitSvg(BOSSSCI)+'</div><p>Derrotaste al Rey Robot Clásico con el algoritmo de Grover. Tiempo total: '+fmt(save.secs)+'.'+
+  (g?" Lov Grover entró al Salón de la Fama.":"")+'</p>';
+ var w=$("white");w.hidden=false;void w.offsetWidth;w.classList.add("on");setTimeout(function(){if(boss)$("wMenu").focus()},2600)}
+$("wMenu").addEventListener("click",function(){leaveGame();go("s3")});
+$("wHall").addEventListener("click",function(){leaveGame();startHall()});
+function drawBoss(cx,now){var b=boss,e=now-b.t,W=MW*T,H=MH*T,s=4,kw=28*s,kh=38*s,kx=Math.round(W*.68-kw/2),ky=Math.round(H/2-kh/2)+10,mx=kx+kw/2,my=ky+kh/2;
+ if(b.ph==="clear"){var r=Math.min(1,e/1800)*Math.hypot(MW,MH)*T;
+  for(var i=0;i<32;i++){var a=i*.19635+e/700;spark(cx,Math.round((b.ox+.5)*T+Math.cos(a)*r),Math.round((b.oy+.5)*T+Math.sin(a)*r),3,1-e/1800)}return}
+ if(b.ph==="rise")ky=Math.round(-kh-10+(ky+kh+10)*Math.min(1,e/1100)),my=ky+kh/2;
+ var last=b.hits[b.hits.length-1],hurt=last&&now-last.t<320,surp=b.ph==="announce",laugh=b.ph==="fail",down=b.ph==="done"||b.ph==="white",
+  jx=surp||down||laugh?(Math.floor(now/50)%2?4:-4):hurt?8:0,q=cats[0],qx=(q.x+.5)*T,qy=(q.y+.1)*T;
+ /* rayos: uno por carta acertada y el súper rayo final */
+ b.hits.forEach(function(h){var k=(now-h.t)/380;if(k<1){cx.globalAlpha=1-k;cx.strokeStyle=GCOL[h.g];cx.lineWidth=10*(1-k)+2;cx.beginPath();cx.moveTo(qx,qy);cx.lineTo(mx,my);cx.stroke();
+  for(var j=0;j<6;j++)spark(cx,Math.round(mx+Math.cos(j+now/90)*30*k),Math.round(my+Math.sin(j+now/90)*30*k),3,1-k);cx.globalAlpha=1}});
+ if(down){var p=Math.min(1,e/900);cx.strokeStyle=Math.floor(now/70)%2?"#fff":"#ffe27a";cx.lineWidth=6+30*p;cx.beginPath();cx.moveTo(qx,qy);cx.lineTo(mx,my);cx.stroke();glow(cx,mx,my,90+60*p,"255,255,255",.9)}
+ aura(cx,mx,my,kw*1.05,"255,45,45",.3+.12*Math.sin(now/200));
+ if(down)cx.globalAlpha=Math.max(0,1-e/2000);
+ robotKing(cx,kx+jx+s,ky,s,hurt||down?"#fff":surp?"#ffd23a":Math.floor(now/400)%2?"#ff2d2d":"#ff7a7a");cx.globalAlpha=1;
+ if(surp)chip(cx,"¡¿QUÉ?!",mx,Math.max(0,ky-22),"#fff","#d8423d");
+ if(laugh)chip(cx,"¡JA, JA, JA!",mx,Math.max(0,ky-22),"#fff","#d8423d");
+ /* vida del Rey: baja con cada carta acertada y se llena si el combo falla */
+ if(b.ph!=="rise"){var hp=down?0:1-b.step/COMBO.length,bw=W*.5,bx=Math.round(W/2-bw/2),by=H-30;
+  chip(cx,"REY ROBOT CLÁSICO",W/2,by-20,"#fff","#d8423d");R(cx,bx-3,by-3,bw+6,16,"#1a1020");R(cx,bx,by,bw,10,"#3a2f6a");R(cx,bx,by,Math.round(bw*hp),10,hp>.5?"#ff5a5a":"#ffc83d")}}
 
 /* ---------- compositor: por ahora solo para armar el circuito (no afecta al juego) ---------- */
 var NQ=2,MAXG=10,circ=[],drag=null,suppressClick=false;for(var q=0;q<NQ;q++)circ.push([]);
@@ -1096,13 +1256,16 @@ $("ccopy").addEventListener("click",function(){var t=qiskitCode();
  try{navigator.clipboard.writeText(t).then(function(){toast("Código Qiskit copiado")},fallback)}catch(e){fallback()}});
 renderCirc();
 
-/* ---------- salón de la fama: quienes descubrieron la propiedad de cada carta ---------- */
-function startHall(){var g=$("hof"),n=0;g.innerHTML="";
- CARDS.forEach(function(c){var s=found(c.id)&&SCI[c.id],f=document.createElement("div");if(s)n++;
-  f.className="fr"+(s?"":" off");f.style.setProperty("--c",c.c);f.style.setProperty("--g",c.g);
-  f.innerHTML='<div class="pic">'+portraitSvg(c.id,!s)+'</div><div class="who">'+(s?s.name:"???")+'</div><div class="prop">'+c.prop+'</div><div class="card">Carta '+c.tag+(c.off?" · bloqueada":"")+'</div>';
+/* ---------- salón de la fama: los científicos de cada día y el guía del jefe final ---------- */
+var HOFCOL={1:["#e8383d","#ff4d52"],2:["#2f63d6","#3a7bff"],3:["#4a9fcf","#b9e3f8"],boss:["#d99a14","#ffe27a"]};
+function startHall(){var g=$("hof"),n=0,all=[];g.innerHTML="";
+ for(var d=1;d<=LASTDAY;d++)POOLS[d].forEach(function(id){all.push([id,"Día "+d,HOFCOL[d]])});
+ all.push([BOSSSCI,"Jefe final",HOFCOL.boss]);
+ all.forEach(function(a){var s=met(a[0])&&SCI[a[0]],f=document.createElement("div");if(s)n++;
+  f.className="fr"+(s?"":" off");f.style.setProperty("--c",a[2][0]);f.style.setProperty("--g",a[2][1]);
+  f.innerHTML='<div class="pic">'+portraitSvg(a[0],!s)+'</div><div class="who">'+(s?s.name:"???")+'</div><div class="prop">'+(s?s.prop:"&nbsp;")+'</div><div class="card">'+a[1]+'</div>';
   g.appendChild(f)});
- $("hofn").textContent="Descubiertos: "+n+" de "+CARDS.length+". Usa cada carta por primera vez para conocer a quien descubrió su propiedad.";
+ $("hofn").textContent="Descubiertos: "+n+" de "+all.length+". Cada estrella te presenta a un científico de ese día: repite un día para conocer a otro.";
  go("s8")}
 
 /* ---------- estrellas: la de cada día de la aventura ---------- */
@@ -1142,6 +1305,7 @@ document.addEventListener("keydown",function(e){
  if(e.key==="Escape"&&(cur==="s8"||cur==="s9")){go("s3");return}
  if(cur==="s5"){
   var m={ArrowUp:[0,-1],w:[0,-1],W:[0,-1],ArrowDown:[0,1],s:[0,1],S:[0,1],ArrowLeft:[-1,0],a:[-1,0],A:[-1,0],ArrowRight:[1,0],d:[1,0],D:[1,0]}[e.key];
+  if(boss){var g=e.key.toUpperCase();if(GCOL[g]&&!e.repeat&&!e.ctrlKey&&!e.metaKey&&!e.altKey){e.preventDefault();comboKey(g)}return}
   if(m){e.preventDefault();move(m[0],m[1]);return}
   /* cada carta con la letra de su compuerta (H, X, Z, C) o con su número en la mano; sin Ctrl/Alt para no pisar atajos */
   var ci=-1,n=parseInt(e.key,10),k=e.key.toUpperCase();CARDS.forEach(function(c,i){if(c.key===k)ci=i});if(n>=1&&n<=CARDS.length)ci=n-1;
